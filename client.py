@@ -6,8 +6,9 @@ Using AIJack for federated learning with DP-SGD support.
 import base64
 import json
 import logging
-from typing import List, Optional, Dict
+from typing import List, Optional, Dict, Tuple
 import numpy as np
+import pandas as pd
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -55,6 +56,92 @@ class MovieLensDataset(Dataset):
     def __getitem__(self, idx):
         user_id, item_id, rating = self.interactions[idx]
         return torch.LongTensor([user_id]), torch.LongTensor([item_id]), torch.FloatTensor([rating])
+
+
+def load_ratings_csv(csv_path: str, binarize: bool = True, threshold: float = 4.0) -> Tuple[List[tuple], int, int, Dict[int, int], Dict[int, int]]:
+    """
+    Load ratings from CSV file and preprocess according to expose requirements.
+    
+    Args:
+        csv_path: Path to ratings.csv file (columns: userId, movieId, rating, timestamp)
+        binarize: If True, convert ratings to binary (≥threshold → 1.0, <threshold → 0.0)
+        threshold: Rating threshold for binarization (default 4.0 as per expose)
+    
+    Returns:
+        interactions: List of (user_id, item_id, rating) tuples with 0-indexed IDs
+        num_users: Number of unique users
+        num_items: Number of unique items
+        user_id_map: Mapping from original userId to 0-indexed user_id
+        item_id_map: Mapping from original movieId to 0-indexed item_id
+    """
+    logger.info(f"Loading ratings from {csv_path}...")
+    
+    # Load CSV file
+    df = pd.read_csv(csv_path)
+    
+    logger.info(f"Loaded {len(df)} ratings from CSV")
+    
+    # Get unique users and items, create mapping to 0-indexed
+    unique_users = sorted(df['userId'].unique())
+    unique_items = sorted(df['movieId'].unique())
+    
+    user_id_map = {original_id: idx for idx, original_id in enumerate(unique_users)}
+    item_id_map = {original_id: idx for idx, original_id in enumerate(unique_items)}
+    
+    num_users = len(unique_users)
+    num_items = len(unique_items)
+    
+    logger.info(f"Found {num_users} unique users and {num_items} unique items")
+    
+    # Map to 0-indexed and process ratings
+    interactions = []
+    for _, row in df.iterrows():
+        user_idx = user_id_map[row['userId']]
+        item_idx = item_id_map[row['movieId']]
+        
+        if binarize:
+            # Binarize rating: ≥threshold → 1.0, <threshold → 0.0
+            rating = 1.0 if row['rating'] >= threshold else 0.0
+        else:
+            rating = float(row['rating'])
+        
+        interactions.append((user_idx, item_idx, rating))
+    
+    logger.info(f"Preprocessed {len(interactions)} interactions")
+    if binarize:
+        positive_count = sum(1 for _, _, r in interactions if r >= threshold)
+        logger.info(f"Positive ratings (≥{threshold}): {positive_count}, Negative: {len(interactions) - positive_count}")
+    
+    return interactions, num_users, num_items, user_id_map, item_id_map
+
+
+def split_train_test(interactions: List[tuple], test_ratio: float = 0.2, random_seed: int = 42) -> Tuple[List[tuple], List[tuple]]:
+    """
+    Split interactions into train and test sets.
+    
+    Args:
+        interactions: List of (user_id, item_id, rating) tuples
+        test_ratio: Ratio of test data (default 0.2 = 20%)
+        random_seed: Random seed for reproducibility
+    
+    Returns:
+        train_interactions: Training set
+        test_interactions: Test set
+    """
+    np.random.seed(random_seed)
+    indices = np.random.permutation(len(interactions))
+    
+    split_idx = int(len(interactions) * (1 - test_ratio))
+    
+    train_indices = indices[:split_idx]
+    test_indices = indices[split_idx:]
+    
+    train_interactions = [interactions[i] for i in train_indices]
+    test_interactions = [interactions[i] for i in test_indices]
+    
+    logger.info(f"Split data: {len(train_interactions)} training, {len(test_interactions)} test")
+    
+    return train_interactions, test_interactions
 
 
 def create_matrix_factorization_model(num_users: int, num_items: int, embedding_dim: int = 16):
@@ -197,13 +284,15 @@ class FederatedClient:
             config.num_users, config.num_items, config.embedding_dim
         )
         
-        # Create dataset and dataloader
+        # Create dataset and dataloader (only if we have training data)
         self.dataset = MovieLensDataset(local_data)
-        self.dataloader = DataLoader(
-            self.dataset,
-            batch_size=config.batch_size,
-            shuffle=True
-        )
+        self.dataloader = None
+        if len(local_data) > 0:
+            self.dataloader = DataLoader(
+                self.dataset,
+                batch_size=config.batch_size,
+                shuffle=True
+            )
         
         self.encoder = ModelParamsEncoder()
         self.dp_noise = DPNoise()
@@ -239,6 +328,14 @@ class FederatedClient:
         Returns:
             Training metrics
         """
+        if self.dataloader is None or len(self.local_data) == 0:
+            logger.warning("No training data available. Skipping local training.")
+            return {
+                "loss": 0.0,
+                "samples": 0,
+                "epochs": 0
+            }
+        
         self.model.train()
         optimizer = optim.SGD(self.model.parameters(), lr=self.config.learning_rate)
         criterion = nn.MSELoss()
@@ -329,6 +426,115 @@ class FederatedClient:
             **train_metrics,
             **upload_info
         }
+    
+    def evaluate(self, test_data: List[tuple]) -> Dict:
+        """
+        Evaluate model on test data.
+        
+        Args:
+            test_data: List of (user_id, item_id, rating) tuples for testing
+        
+        Returns:
+            Evaluation metrics (MSE, MAE, accuracy for binary classification)
+        """
+        self.model.eval()
+        criterion = nn.MSELoss()
+        
+        if len(test_data) == 0:
+            return {"mse": 0.0, "mae": 0.0, "accuracy": 0.0}
+        
+        # Create test dataset and dataloader
+        test_dataset = MovieLensDataset(test_data)
+        test_loader = DataLoader(test_dataset, batch_size=64, shuffle=False)
+        
+        total_loss = 0.0
+        total_mae = 0.0
+        correct_predictions = 0
+        total_samples = 0
+        
+        with torch.no_grad():
+            for user_ids, item_ids, ratings in test_loader:
+                user_ids = user_ids.squeeze()
+                item_ids = item_ids.squeeze()
+                ratings = ratings.squeeze()
+                
+                predictions = self.model(user_ids, item_ids)
+                loss = criterion(predictions, ratings)
+                
+                total_loss += loss.item() * len(ratings)
+                total_mae += torch.abs(predictions - ratings).sum().item()
+                
+                # For binary classification accuracy (assuming binarized ratings)
+                pred_binary = (predictions > 0.5).float()
+                correct_predictions += (pred_binary == ratings).sum().item()
+                total_samples += len(ratings)
+        
+        mse = total_loss / total_samples
+        mae = total_mae / total_samples
+        accuracy = correct_predictions / total_samples if total_samples > 0 else 0.0
+        
+        return {
+            "mse": mse,
+            "mae": mae,
+            "accuracy": accuracy,
+            "samples": total_samples
+        }
+
+
+def evaluate_model(model: nn.Module, test_data: List[tuple], batch_size: int = 64) -> Dict:
+    """
+    Standalone function to evaluate a model on test data.
+    
+    Args:
+        model: PyTorch model to evaluate
+        test_data: List of (user_id, item_id, rating) tuples for testing
+        batch_size: Batch size for evaluation
+    
+    Returns:
+        Evaluation metrics (MSE, MAE, accuracy for binary classification)
+    """
+    model.eval()
+    criterion = nn.MSELoss()
+    
+    if len(test_data) == 0:
+        return {"mse": 0.0, "mae": 0.0, "accuracy": 0.0, "samples": 0}
+    
+    # Create test dataset and dataloader
+    test_dataset = MovieLensDataset(test_data)
+    test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
+    
+    total_loss = 0.0
+    total_mae = 0.0
+    correct_predictions = 0
+    total_samples = 0
+    
+    with torch.no_grad():
+        for user_ids, item_ids, ratings in test_loader:
+            user_ids = user_ids.squeeze()
+            item_ids = item_ids.squeeze()
+            ratings = ratings.squeeze()
+            
+            predictions = model(user_ids, item_ids)
+            loss = criterion(predictions, ratings)
+            
+            total_loss += loss.item() * len(ratings)
+            total_mae += torch.abs(predictions - ratings).sum().item()
+            
+            # For binary classification accuracy (assuming binarized ratings)
+            pred_binary = (predictions > 0.5).float()
+            correct_predictions += (pred_binary == ratings).sum().item()
+            total_samples += len(ratings)
+    
+    mse = total_loss / total_samples if total_samples > 0 else 0.0
+    mae = total_mae / total_samples if total_samples > 0 else 0.0
+    accuracy = correct_predictions / total_samples if total_samples > 0 else 0.0
+    
+    return {
+        "mse": mse,
+        "mae": mae,
+        "accuracy": accuracy,
+        "samples": total_samples
+    }
 
 
 def create_non_iid_split(interactions: List[tuple], num_clients: int, alpha: float = 0.5):
