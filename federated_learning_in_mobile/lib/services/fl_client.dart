@@ -138,22 +138,22 @@ class FederatedLearningClient {
         }
         
         // Average gradients
-        final batchSize = batch.length;
+        final actualBatchSize = batch.length;
         for (int u = 0; u < numUsers; u++) {
           for (int j = 0; j < embeddingDim; j++) {
-            userGrad[u][j] /= batchSize;
+            userGrad[u][j] /= actualBatchSize;
           }
         }
         for (int i = 0; i < numItems; i++) {
           for (int j = 0; j < embeddingDim; j++) {
-            itemGrad[i][j] /= batchSize;
+            itemGrad[i][j] /= actualBatchSize;
           }
         }
         
         // Update parameters
         model!.updateParameters(userGrad, itemGrad, learningRate);
         
-        totalLoss += batchLoss / batchSize;
+        totalLoss += batchLoss / actualBatchSize;
         numBatches++;
       }
     }
@@ -195,7 +195,7 @@ class FederatedLearningClient {
   
   /// Execute one complete federated learning round
   Future<Map<String, dynamic>> runTrainingRound() async {
-    // 1. Fetch global model
+    // 1. Fetch global model (will throw if not initialized)
     await fetchGlobalModel();
     
     // 2. Train locally

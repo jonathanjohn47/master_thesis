@@ -1,16 +1,21 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../utils/model_encoder.dart';
 
 /// API client for communicating with the federated learning server
 class ApiClient {
-  final String serverUrl;
+  final String _baseUrl;
   
-  ApiClient({required this.serverUrl});
+  ApiClient({required String serverUrl}) 
+      : _baseUrl = serverUrl.endsWith('/') 
+          ? serverUrl.substring(0, serverUrl.length - 1) 
+          : serverUrl;
+  
+  /// Get normalized base URL (without trailing slash)
+  String get baseUrl => _baseUrl;
   
   /// Check if server is available
   Future<Map<String, dynamic>> healthCheck() async {
-    final url = Uri.parse('$serverUrl/healthz');
+    final url = Uri.parse('$_baseUrl/healthz');
     final response = await http.get(url);
     
     if (response.statusCode == 200) {
@@ -22,7 +27,7 @@ class ApiClient {
   
   /// Register client with server
   Future<Map<String, dynamic>> register(String clientId) async {
-    final url = Uri.parse('$serverUrl/register');
+    final url = Uri.parse('$_baseUrl/register');
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
@@ -38,12 +43,17 @@ class ApiClient {
   
   /// Fetch global model parameters from server
   Future<Map<String, dynamic>> fetchGlobalParams() async {
-    final url = Uri.parse('$serverUrl/global-params-json');
+    final url = Uri.parse('$_baseUrl/global-params-json');
     final response = await http.get(url);
     
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body) as Map<String, dynamic>;
       return data;
+    } else if (response.statusCode == 404) {
+      // Model not initialized on server
+      throw Exception('Model not initialized on server. Please initialize the model first:\n\n'
+          'Run on your PC: curl -X POST "$_baseUrl/init-model?num_users=943&num_items=1682&embedding_dim=16"\n\n'
+          'Or use the API docs at: $_baseUrl/docs');
     } else {
       throw Exception('Failed to fetch global params: ${response.statusCode} - ${response.body}');
     }
@@ -55,7 +65,7 @@ class ApiClient {
     required List<Map<String, dynamic>> params,
     required int sampleCount,
   }) async {
-    final url = Uri.parse('$serverUrl/upload-params-json');
+    final url = Uri.parse('$_baseUrl/upload-params-json');
     final payload = {
       'client_id': clientId,
       'params': params,

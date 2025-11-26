@@ -7,8 +7,8 @@ class MatrixFactorization {
   final int embeddingDim;
   
   // Embedding matrices: [num_users x embedding_dim], [num_items x embedding_dim]
-  List<List<double>> userEmbeddings;
-  List<List<double>> itemEmbeddings;
+  late List<List<double>> userEmbeddings;
+  late List<List<double>> itemEmbeddings;
   
   MatrixFactorization({
     required this.numUsers,
@@ -91,7 +91,7 @@ class MatrixFactorization {
   }
   
   /// Get all trainable parameters (flattened for gradient computation)
-  List<List<double>> getParameters() {
+  List<List<List<double>>> getParameters() {
     return [userEmbeddings, itemEmbeddings];
   }
   

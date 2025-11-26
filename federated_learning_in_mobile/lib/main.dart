@@ -32,7 +32,7 @@ class FederatedLearningHomePage extends StatefulWidget {
 
 class _FederatedLearningHomePageState extends State<FederatedLearningHomePage> {
   final TextEditingController _serverUrlController = TextEditingController(
-    text: 'http://localhost:8000', // Default, user should update
+    text: '', // User must enter their PC's IP address (e.g., http://192.168.x.x:8000)
   );
   final TextEditingController _clientIdController = TextEditingController(
     text: 'android_client_${DateTime.now().millisecondsSinceEpoch % 10000}',
@@ -63,8 +63,22 @@ class _FederatedLearningHomePageState extends State<FederatedLearningHomePage> {
   }
   
   Future<void> _connectToServer() async {
-    if (_serverUrlController.text.isEmpty) {
-      _showError('Please enter server URL');
+    final serverUrl = _serverUrlController.text.trim();
+    
+    if (serverUrl.isEmpty) {
+      _showError('Please enter server URL (e.g., http://192.168.1.100:8000)\n\nOn your PC, run: ipconfig\nto find your IP address');
+      return;
+    }
+    
+    // Warn if using localhost
+    if (serverUrl.contains('localhost') || serverUrl.contains('127.0.0.1')) {
+      _showError('localhost/127.0.0.1 will not work from mobile device!\n\nUse your PC\'s IP address instead (e.g., http://192.168.1.100:8000)\n\nRun "ipconfig" on your PC to find your IP');
+      return;
+    }
+    
+    // Validate URL format
+    if (!serverUrl.startsWith('http://') && !serverUrl.startsWith('https://')) {
+      _showError('Server URL must start with http:// or https://');
       return;
     }
     
@@ -74,7 +88,7 @@ class _FederatedLearningHomePageState extends State<FederatedLearningHomePage> {
     });
     
     try {
-      final apiClient = ApiClient(serverUrl: _serverUrlController.text);
+      final apiClient = ApiClient(serverUrl: serverUrl);
       await apiClient.healthCheck();
       
       _addLog('Server health check passed');
@@ -82,7 +96,7 @@ class _FederatedLearningHomePageState extends State<FederatedLearningHomePage> {
       // Create client
       _client = FederatedLearningClient(
         clientId: _clientIdController.text,
-        serverUrl: _serverUrlController.text,
+        serverUrl: serverUrl,
         numUsers: 943, // Will be updated after fetching model
         numItems: 1682, // Will be updated after fetching model
         embeddingDim: 16,
@@ -98,9 +112,14 @@ class _FederatedLearningHomePageState extends State<FederatedLearningHomePage> {
       
       _addLog('Client registered: ${_clientIdController.text}');
       
-      // Fetch initial model to get actual dimensions
-      await _client!.fetchGlobalModel();
-      _addLog('Global model fetched');
+      // Try to fetch initial model (optional - model might not be initialized yet)
+      try {
+        await _client!.fetchGlobalModel();
+        _addLog('Global model fetched');
+      } catch (e) {
+        _addLog('Model not initialized yet. Initialize model on server first.');
+        _addLog('You can still connect and fetch model later when starting training.');
+      }
       
     } catch (e) {
       setState(() {
@@ -200,10 +219,12 @@ class _FederatedLearningHomePageState extends State<FederatedLearningHomePage> {
                       controller: _serverUrlController,
                       decoration: const InputDecoration(
                         labelText: 'Server URL',
-                        hintText: 'http://your-server:8000',
+                        hintText: 'http://192.168.x.x:8000 (Use your PC IP, NOT localhost)',
+                        helperText: 'Find your PC IP: ipconfig (Windows) or ifconfig (Mac/Linux)',
                         border: OutlineInputBorder(),
                       ),
                       enabled: !_isConnected,
+                      keyboardType: TextInputType.url,
                     ),
                     const SizedBox(height: 8),
                     TextField(
