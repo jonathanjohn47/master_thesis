@@ -7,8 +7,11 @@ import base64
 import io
 import json
 import logging
+import os
+from pathlib import Path
 from typing import Dict, List, Optional
 from collections import defaultdict
+from datetime import datetime
 import numpy as np
 import torch
 import torch.nn as nn
@@ -42,6 +45,12 @@ class ClientParams(BaseModel):
 class RegisterRequest(BaseModel):
     """Client registration request"""
     client_id: str
+
+
+class MobileResultsRequest(BaseModel):
+    """Mobile client experiment results"""
+    experiment_id: str
+    experiment_data: Dict  # Full experiment data JSON
 
 
 class ServerState:
@@ -379,6 +388,109 @@ async def reset():
     server_state.reset()
     logger.info("Server state reset")
     return {"status": "reset"}
+
+
+@app.post("/upload-mobile-results")
+async def upload_mobile_results(request: MobileResultsRequest):
+    """
+    Receive and save mobile client experiment results to local PC.
+    
+    This endpoint allows Android devices/emulators to save results directly
+    to the server's local filesystem, making it easy to access results.
+    
+    Args:
+        request: Mobile results with experiment_id and full experiment_data
+        
+    Returns:
+        Success status and file paths
+    """
+    try:
+        # Create mobile_results directory if it doesn't exist
+        results_dir = Path("mobile_results")
+        results_dir.mkdir(exist_ok=True)
+        
+        experiment_id = request.experiment_id
+        experiment_data = request.experiment_data
+        
+        # Add server timestamp
+        experiment_data["server_received_at"] = datetime.now().isoformat()
+        
+        # Save JSON file
+        json_file = results_dir / f"{experiment_id}.json"
+        with open(json_file, 'w') as f:
+            json.dump(experiment_data, f, indent=2)
+        
+        logger.info(f"Saved mobile results: {json_file}")
+        
+        # Also save CSV summary if rounds exist
+        csv_file = None
+        if "rounds" in experiment_data and len(experiment_data["rounds"]) > 0:
+            csv_file = results_dir / f"{experiment_id}_summary.csv"
+            
+            import csv
+            with open(csv_file, 'w', newline='') as f:
+                writer = csv.writer(f)
+                
+                # Header
+                writer.writerow([
+                    'Round', 'Train_Loss', 'NDCG@10', 'Hit@10', 'Precision@10',
+                    'Recall@10', 'MSE', 'MAE', 'Accuracy', 'Num_Clients',
+                    'Total_Samples', 'Training_Time_MS', 'Battery_Drain'
+                ])
+                
+                # Round data
+                for round_data in experiment_data["rounds"]:
+                    test_metrics = round_data.get("test_metrics", {})
+                    agg = round_data.get("aggregation", {})
+                    resource_metrics = round_data.get("resource_metrics", {})
+                    
+                    writer.writerow([
+                        round_data.get("round", ""),
+                        round_data.get("train_loss", ""),
+                        test_metrics.get("NDCG@10", ""),
+                        test_metrics.get("Hit@10", ""),
+                        test_metrics.get("Precision@10", ""),
+                        test_metrics.get("Recall@10", ""),
+                        test_metrics.get("mse", ""),
+                        test_metrics.get("mae", ""),
+                        test_metrics.get("accuracy", ""),
+                        agg.get("num_clients", ""),
+                        agg.get("total_samples", ""),
+                        resource_metrics.get("training_time_ms", ""),
+                        resource_metrics.get("battery_drain", ""),
+                    ])
+                
+                # Final metrics row
+                final = experiment_data.get("final_metrics", {})
+                writer.writerow([
+                    "FINAL",
+                    "",
+                    final.get("NDCG@10", ""),
+                    final.get("Hit@10", ""),
+                    final.get("Precision@10", ""),
+                    final.get("Recall@10", ""),
+                    final.get("mse", ""),
+                    final.get("mae", ""),
+                    final.get("accuracy", ""),
+                    "",
+                    "",
+                    "",
+                    "",
+                ])
+            
+            logger.info(f"Saved CSV summary: {csv_file}")
+        
+        return {
+            "status": "saved",
+            "experiment_id": experiment_id,
+            "json_file": str(json_file),
+            "csv_file": str(csv_file) if csv_file else None,
+            "message": f"Results saved to {results_dir.absolute()}"
+        }
+        
+    except Exception as e:
+        logger.error(f"Failed to save mobile results: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Failed to save results: {str(e)}")
 
 
 if __name__ == "__main__":

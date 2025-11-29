@@ -116,6 +116,11 @@ class MetricsCollector {
   /// Get the results directory path (for display)
   String get resultsPath => resultsDir.path;
   
+  /// Get the full experiment data as a Map (for uploading to server)
+  Map<String, dynamic> getExperimentData() {
+    return Map<String, dynamic>.from(experimentData);
+  }
+  
   /// Get list of all result files
   Future<List<File>> getResultFiles() async {
     try {

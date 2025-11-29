@@ -53,14 +53,14 @@ class _FederatedLearningHomePageState extends State<FederatedLearningHomePage> {
   MetricsCollector? _metricsCollector;
   int _trainingRound = 0;
   String? _deviceId;
-  
+
   @override
   void dispose() {
     _serverUrlController.dispose();
     _clientIdController.dispose();
     super.dispose();
-  }
-  
+}
+
   void _addLog(String message) {
     final logMessage = '${DateTime.now().toString().substring(11, 19)}: $message';
     // Debug print to console
@@ -329,14 +329,34 @@ class _FederatedLearningHomePageState extends State<FederatedLearningHomePage> {
           resourceMetrics: resourceMetrics,
         );
         
-        // Save results after each round
+        // Save results after each round (both locally and to server)
         try {
+          // Save locally first
           final jsonPath = await _metricsCollector!.saveJson();
           final csvPath = await _metricsCollector!.saveCsvSummary();
           
-          _addLog('Results saved:');
+          _addLog('Results saved locally:');
           _addLog('  JSON: ${jsonPath.split('/').last}');
           _addLog('  CSV: ${csvPath.split('/').last}');
+          
+          // Also upload to server (saves to PC automatically!)
+          try {
+            final experimentData = _metricsCollector!.getExperimentData();
+            final uploadResponse = await _client!.apiClient.uploadMobileResults(
+              experimentId: _metricsCollector!.experimentId,
+              experimentData: experimentData,
+            );
+            
+            _addLog('Results uploaded to server (PC):');
+            _addLog('  Location: ${uploadResponse['message']}');
+            _addLog('  JSON: mobile_results/${_metricsCollector!.experimentId}.json');
+            if (uploadResponse['csv_file'] != null) {
+              _addLog('  CSV: mobile_results/${_metricsCollector!.experimentId}_summary.csv');
+            }
+          } catch (uploadError) {
+            _addLog('Warning: Failed to upload to server: $uploadError');
+            _addLog('Results are saved locally only');
+          }
         } catch (e) {
           _addLog('Warning: Failed to save results: $e');
         }
@@ -483,7 +503,7 @@ class _FederatedLearningHomePageState extends State<FederatedLearningHomePage> {
       _showError('Failed to share files: $e');
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -515,7 +535,7 @@ class _FederatedLearningHomePageState extends State<FederatedLearningHomePage> {
                         hintText: 'http://192.168.x.x:8000 (Use your PC IP, NOT localhost)',
                         helperText: 'Find your PC IP: ipconfig (Windows) or ifconfig (Mac/Linux)',
                         border: OutlineInputBorder(),
-                      ),
+      ),
                       enabled: !_isConnected,
                       keyboardType: TextInputType.url,
                     ),
@@ -544,7 +564,7 @@ class _FederatedLearningHomePageState extends State<FederatedLearningHomePage> {
             Card(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Column(
+        child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Row(
@@ -569,7 +589,7 @@ class _FederatedLearningHomePageState extends State<FederatedLearningHomePage> {
                       onPressed: (_isConnected && !_isTraining) ? _runTrainingRound : null,
                       child: _isTraining
                           ? const Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 SizedBox(
                                   width: 16,

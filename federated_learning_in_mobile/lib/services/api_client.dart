@@ -165,5 +165,40 @@ class ApiClient {
     // For now, we'll include it in upload-params or create a separate endpoint
     // Implementation depends on server capability
   }
+  
+  /// Upload mobile experiment results to server (saves to PC)
+  Future<Map<String, dynamic>> uploadMobileResults({
+    required String experimentId,
+    required Map<String, dynamic> experimentData,
+  }) async {
+    final url = Uri.parse('$_baseUrl/upload-mobile-results');
+    final payload = {
+      'experiment_id': experimentId,
+      'experiment_data': experimentData,
+    };
+    
+    print('[API_CLIENT] Upload mobile results: POST $url');
+    print('[API_CLIENT] Experiment ID: $experimentId');
+    
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(payload),
+      );
+      
+      print('[API_CLIENT] Upload results response: ${response.statusCode}');
+      
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body) as Map<String, dynamic>;
+      } else {
+        throw Exception('Upload failed: ${response.statusCode} - ${response.body}');
+      }
+    } catch (e, stackTrace) {
+      print('[API_CLIENT_ERROR] Upload results failed: $e');
+      print('[API_CLIENT_ERROR] Stack trace: $stackTrace');
+      rethrow;
+    }
+  }
 }
 
