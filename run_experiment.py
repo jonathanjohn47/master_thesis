@@ -15,6 +15,10 @@ from client import (
 import torch
 import numpy as np
 
+# Import metrics collection
+from scripts.metrics_collector import MetricsCollector, create_experiment_id
+from scripts.recommendation_metrics import evaluate_recommendations_simple
+
 SERVER_URL = "http://localhost:8000"
 MAX_WAIT_TIME = 30  # Maximum seconds to wait for server
 
@@ -102,14 +106,45 @@ print(f"Dataset loaded: {num_users} users, {num_items} items, {len(all_interacti
 train_interactions, test_interactions = split_train_test(all_interactions, test_ratio=0.2)
 
 # Step 3: Initialize server model with actual data dimensions
-print(f"\nInitializing server model: {num_users} users, {num_items} items...")
-if not initialize_model(SERVER_URL, num_users=num_users, num_items=num_items, embedding_dim=16):
+embedding_dim = 16
+print(f"\nInitializing server model: {num_users} users, {num_items} items, embedding_dim={embedding_dim}...")
+if not initialize_model(SERVER_URL, num_users=num_users, num_items=num_items, embedding_dim=embedding_dim):
     print("\nFailed to initialize model. Exiting.")
     sys.exit(1)
 
-# Step 4: Create non-IID data splits across clients (using training data only)
-num_clients = 3
-alpha = 0.5  # Dirichlet parameter (lower = more heterogeneous)
+# Step 4: Set up metrics collection
+experiment_config = {
+    "num_users": num_users,
+    "num_items": num_items,
+    "embedding_dim": embedding_dim,
+    "num_clients": 3,
+    "alpha": 0.5,
+    "dp_epsilon": None,  # No DP for baseline
+    "use_dp": False,
+    "num_rounds": 3,
+    "local_epochs": 1,
+    "learning_rate": 0.01,
+    "batch_size": 32,
+    "seed": 42
+}
+
+experiment_id = create_experiment_id(
+    dp_epsilon=experiment_config["dp_epsilon"],
+    alpha=experiment_config["alpha"],
+    embedding_dim=embedding_dim,
+    num_clients=experiment_config["num_clients"],
+    seed=experiment_config["seed"]
+)
+
+collector = MetricsCollector(experiment_id=experiment_id, results_dir="results")
+collector.set_config(experiment_config)
+
+print(f"\nExperiment ID: {experiment_id}")
+print(f"Results will be saved to: results/{experiment_id}.json")
+
+# Step 5: Create non-IID data splits across clients (using training data only)
+num_clients = experiment_config["num_clients"]
+alpha = experiment_config["alpha"]
 
 print(f"\nSplitting training data across {num_clients} clients (non-IID, α={alpha})...")
 client_data_splits = create_non_iid_split(train_interactions, num_clients, alpha=alpha)
@@ -117,26 +152,30 @@ client_data_splits = create_non_iid_split(train_interactions, num_clients, alpha
 # Print client data distribution
 for i, split in enumerate(client_data_splits):
     print(f"  Client {i}: {len(split)} samples")
+    collector.add_client_metrics(f"client_{i}", {"samples": len(split)})
 
-# Step 5: Run multiple training rounds
-num_rounds = 3
+# Step 6: Run multiple training rounds
+num_rounds = experiment_config["num_rounds"]
 
 for round_num in range(num_rounds):
-    print(f"\n=== Round {round_num + 1} ===")
+    print(f"\n=== Round {round_num + 1}/{num_rounds} ===")
     
     # Each client participates
     clients = []
+    client_metrics_list = []
+    total_train_loss = 0.0
+    
     for client_id in range(num_clients):
         config = ClientConfig(
             client_id=f"client_{client_id}",
             server_url=SERVER_URL,
             num_users=num_users,
             num_items=num_items,
-            embedding_dim=16,
-            local_epochs=1,
-            learning_rate=0.01,
-            batch_size=32,
-            use_dp=False,  # Set to True to enable DP-SGD
+            embedding_dim=embedding_dim,
+            local_epochs=experiment_config["local_epochs"],
+            learning_rate=experiment_config["learning_rate"],
+            batch_size=experiment_config["batch_size"],
+            use_dp=experiment_config["use_dp"],
             dp_sigma=1.0,
             dp_clip_norm=1.0,
             dp_delta=1e-5
@@ -149,33 +188,100 @@ for round_num in range(num_rounds):
         try:
             client.register()
             metrics = client.run_training_round()
-            print(f"Client {client_id} completed: {metrics}")
+            print(f"Client {client_id} completed: loss={metrics.get('loss', 0):.4f}, samples={metrics.get('samples', 0)}")
+            
+            # Collect client metrics
+            client_metrics_list.append({
+                "client_id": f"client_{client_id}",
+                "loss": metrics.get('loss', 0.0),
+                "samples": metrics.get('samples', 0),
+                "epochs": metrics.get('epochs', 0)
+            })
+            
+            total_train_loss += metrics.get('loss', 0.0)
+            
         except Exception as e:
             print(f"Client {client_id} error: {e}")
     
+    avg_train_loss = total_train_loss / len(client_metrics_list) if client_metrics_list else 0.0
+    
     # Aggregate
     print("\nAggregating parameters...")
+    aggregation_info = {}
     try:
         response = requests.post(f"{SERVER_URL}/aggregate", timeout=30)
         response.raise_for_status()
-        print(f"[OK] Aggregation result: {response.json()}")
+        aggregation_info = response.json()
+        print(f"[OK] Aggregation result: {aggregation_info}")
     except requests.exceptions.RequestException as e:
         print(f"[ERROR] Aggregation failed: {e}")
         continue
     
+    # Evaluate on test set after each round
+    print(f"\nEvaluating model on test set after round {round_num + 1}...")
+    try:
+        # Fetch current global model
+        test_model = create_matrix_factorization_model(num_users, num_items, embedding_dim=embedding_dim)
+        encoder = ModelParamsEncoder()
+        
+        response = requests.get(f"{SERVER_URL}/global-params-json")
+        response.raise_for_status()
+        data = response.json()
+        params = data["params"]
+        test_model = encoder.json_params_to_model(params, test_model)
+        
+        # Basic evaluation metrics
+        basic_metrics = evaluate_model(test_model, test_interactions)
+        
+        # Recommendation metrics (NDCG@10, Hit@10, etc.)
+        rec_metrics = evaluate_recommendations_simple(
+            test_model,
+            test_interactions,
+            num_users,
+            num_items,
+            k=10
+        )
+        
+        # Combine all metrics
+        test_metrics = {**basic_metrics, **rec_metrics}
+        
+        print(f"  NDCG@10: {test_metrics.get('NDCG@10', 0):.4f}")
+        print(f"  Hit@10: {test_metrics.get('Hit@10', 0):.4f}")
+        print(f"  MSE: {test_metrics.get('mse', 0):.4f}")
+        print(f"  Accuracy: {test_metrics.get('accuracy', 0):.4f}")
+        
+        # Save round metrics
+        collector.add_round_metrics(
+            round_num=round_num + 1,
+            train_loss=avg_train_loss,
+            test_metrics=test_metrics,
+            aggregation_info=aggregation_info,
+            client_metrics=client_metrics_list
+        )
+        
+    except Exception as e:
+        print(f"[ERROR] Evaluation failed: {e}")
+        # Still save round metrics without test results
+        collector.add_round_metrics(
+            round_num=round_num + 1,
+            train_loss=avg_train_loss,
+            test_metrics={},
+            aggregation_info=aggregation_info,
+            client_metrics=client_metrics_list
+        )
+    
     time.sleep(1)  # Brief pause between rounds
 
-# Step 6: Evaluate final model on test set
+# Step 7: Final evaluation (comprehensive)
 print("\n" + "="*60)
-print("Evaluating final model on test set...")
+print("Final Model Evaluation")
 print("="*60)
 
-# Create a model instance and fetch global parameters
+# Fetch final global model
 print("Fetching final global model...")
-test_model = create_matrix_factorization_model(num_users, num_items, embedding_dim=16)
+test_model = create_matrix_factorization_model(num_users, num_items, embedding_dim=embedding_dim)
 encoder = ModelParamsEncoder()
 
-# Fetch global model parameters from server
 try:
     response = requests.get(f"{SERVER_URL}/global-params-json")
     response.raise_for_status()
@@ -183,21 +289,74 @@ try:
     params = data["params"]
     test_model = encoder.json_params_to_model(params, test_model)
     print(f"[OK] Fetched global model from round {data.get('round', 0)}")
+    
+    # Comprehensive evaluation
+    print(f"\nEvaluating on {len(test_interactions)} test samples...")
+    
+    # Basic metrics
+    basic_metrics = evaluate_model(test_model, test_interactions)
+    
+    # Recommendation metrics
+    print("Computing recommendation metrics (NDCG@10, Hit@10, etc.)...")
+    rec_metrics = evaluate_recommendations_simple(
+        test_model,
+        test_interactions,
+        num_users,
+        num_items,
+        k=10
+    )
+    
+    # Combine all final metrics
+    final_metrics = {**basic_metrics, **rec_metrics}
+    
+    collector.add_final_metrics(final_metrics)
+    
+    print("\n" + "="*60)
+    print("Final Test Set Evaluation Results:")
+    print("="*60)
+    print("Recommendation Metrics:")
+    print(f"  NDCG@10: {final_metrics.get('NDCG@10', 0):.4f}")
+    print(f"  Hit@10: {final_metrics.get('Hit@10', 0):.4f}")
+    print(f"  Precision@10: {final_metrics.get('Precision@10', 0):.4f}")
+    print(f"  Recall@10: {final_metrics.get('Recall@10', 0):.4f}")
+    print("\nRegression Metrics:")
+    print(f"  MSE: {final_metrics.get('mse', 0):.4f}")
+    print(f"  MAE: {final_metrics.get('mae', 0):.4f}")
+    print(f"  Accuracy (Binary): {final_metrics.get('accuracy', 0):.4f}")
+    print(f"  Test Samples: {final_metrics.get('samples', 0)}")
+    print("="*60)
+    
 except requests.exceptions.RequestException as e:
     print(f"[ERROR] Failed to fetch global model: {e}")
-    eval_metrics = {"mse": 0.0, "mae": 0.0, "accuracy": 0.0, "samples": 0}
-else:
-    # Evaluate on test set using standalone function
-    print(f"Evaluating on {len(test_interactions)} test samples...")
-    eval_metrics = evaluate_model(test_model, test_interactions)
+    final_metrics = {}
+except Exception as e:
+    print(f"[ERROR] Evaluation failed: {e}")
+    final_metrics = {}
+    collector.add_final_metrics(final_metrics)
 
+# Step 8: Save results
 print("\n" + "="*60)
-print("Test Set Evaluation Results:")
+print("Saving Results")
 print("="*60)
-print(f"MSE (Mean Squared Error): {eval_metrics['mse']:.4f}")
-print(f"MAE (Mean Absolute Error): {eval_metrics['mae']:.4f}")
-print(f"Accuracy (Binary Classification): {eval_metrics['accuracy']:.4f}")
-print(f"Test Samples: {eval_metrics['samples']}")
+
+json_path = collector.save_json()
+csv_path = collector.save_csv_summary()
+
+print(f"[OK] Results saved to:")
+print(f"  JSON: {json_path}")
+print(f"  CSV:  {csv_path}")
+
+# Print summary
+summary = collector.get_summary()
+print("\n" + "="*60)
+print("Experiment Summary")
+print("="*60)
+print(f"Experiment ID: {summary['experiment_id']}")
+print(f"Rounds: {summary['num_rounds']}")
+print(f"Final NDCG@10: {summary.get('final_ndcg@10', 'N/A')}")
+print(f"Final Hit@10: {summary.get('final_hit@10', 'N/A')}")
+print(f"Best NDCG@10: {summary.get('best_ndcg@10', 'N/A')}")
+print(f"Best Hit@10: {summary.get('best_hit@10', 'N/A')}")
 print("="*60)
 
 print("\n" + "="*60)
@@ -209,4 +368,6 @@ print(f"Total users: {num_users}")
 print(f"Total items: {num_items}")
 print(f"Training rounds: {num_rounds}")
 print(f"Clients per round: {num_clients}")
+print("="*60)
+print(f"\nAll metrics saved to: results/{experiment_id}.json")
 print("="*60)

@@ -8,7 +8,7 @@ import sys
 
 SERVER_URL = "http://localhost:8000"
 
-def initialize_model(num_users=943, num_items=1682, embedding_dim=16):
+def initialize_model(num_users=50, num_items=4032, embedding_dim=16):
     """Initialize the global model on the server"""
     try:
         print(f"Initializing model on server at {SERVER_URL}...")

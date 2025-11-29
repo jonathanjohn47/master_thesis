@@ -15,11 +15,17 @@ class ResourceMonitor {
   
   /// Initialize monitoring (record initial state)
   Future<void> initialize() async {
-    _startTime = DateTime.now();
-    _initialBatteryLevel = await _battery.batteryLevel;
-    
-    // Note: Detailed memory/CPU monitoring requires platform-specific code
-    // This is a simplified version
+    print('[RESOURCE_MONITOR] Initializing resource monitoring...');
+    try {
+      _startTime = DateTime.now();
+      _initialBatteryLevel = await _battery.batteryLevel;
+      print('[RESOURCE_MONITOR] Initial battery level: $_initialBatteryLevel%');
+      print('[RESOURCE_MONITOR] Start time: $_startTime');
+    } catch (e, stackTrace) {
+      print('[RESOURCE_MONITOR_ERROR] Initialization failed: $e');
+      print('[RESOURCE_MONITOR_ERROR] Stack trace: $stackTrace');
+      rethrow;
+    }
   }
   
   /// Get current battery level
@@ -62,25 +68,35 @@ class ResourceMonitor {
   
   /// Get resource metrics (for reporting)
   Future<Map<String, dynamic>> getMetrics() async {
-    final batteryLevel = await getBatteryLevel();
-    final batteryDrain = await getBatteryDrain();
-    final deviceInfo = await getDeviceInfo();
-    
-    final elapsedSeconds = _startTime != null
-        ? DateTime.now().difference(_startTime!).inSeconds
-        : 0;
-    
-    return {
-      'battery_level': batteryLevel,
-      'battery_drain': batteryDrain,
-      'elapsed_seconds': elapsedSeconds,
-      'device_info': deviceInfo,
-      'timestamp': DateTime.now().toIso8601String(),
-      // Note: CPU and memory monitoring requires platform channels
-      // For thesis, you can add estimates or use platform-specific packages
-      'cpu_percent': _estimateCpuUsage(), // Placeholder
-      'memory_mb': _estimateMemoryUsage(), // Placeholder
-    };
+    print('[RESOURCE_MONITOR] Getting resource metrics...');
+    try {
+      final batteryLevel = await getBatteryLevel();
+      final batteryDrain = await getBatteryDrain();
+      final deviceInfo = await getDeviceInfo();
+      
+      final elapsedSeconds = _startTime != null
+          ? DateTime.now().difference(_startTime!).inSeconds
+          : 0;
+      
+      final metrics = {
+        'battery_level': batteryLevel,
+        'battery_drain': batteryDrain,
+        'elapsed_seconds': elapsedSeconds,
+        'device_info': deviceInfo,
+        'timestamp': DateTime.now().toIso8601String(),
+        // Note: CPU and memory monitoring requires platform channels
+        // For thesis, you can add estimates or use platform-specific packages
+        'cpu_percent': _estimateCpuUsage(), // Placeholder
+        'memory_mb': _estimateMemoryUsage(), // Placeholder
+      };
+      
+      print('[RESOURCE_MONITOR] Metrics collected: battery=$batteryLevel%, drain=$batteryDrain%, elapsed=${elapsedSeconds}s');
+      return metrics;
+    } catch (e, stackTrace) {
+      print('[RESOURCE_MONITOR_ERROR] Failed to get metrics: $e');
+      print('[RESOURCE_MONITOR_ERROR] Stack trace: $stackTrace');
+      rethrow;
+    }
   }
   
   /// Estimate CPU usage (placeholder - requires platform channels for real measurement)
