@@ -114,14 +114,14 @@ if not initialize_model(SERVER_URL, num_users=num_users, num_items=num_items, em
 
 # Step 4: Set up metrics collection
 # Configuration for thesis experiments:
-# - 50 simulated Python clients
+# - 100 simulated Python clients
 # - 2 Android devices/emulators (connected separately)
 # - 10 training rounds minimum for meaningful results
 experiment_config = {
     "num_users": num_users,
     "num_items": num_items,
     "embedding_dim": embedding_dim,
-    "num_clients": 50,  # 50 simulated clients (plus 2 Android devices)
+    "num_clients": 100,  # 100 simulated clients (plus 2 Android devices)
     "alpha": 0.5,
     "dp_epsilon": None,  # No DP for baseline
     "use_dp": False,
@@ -152,6 +152,7 @@ print(f"  Simulated Clients: {experiment_config['num_clients']}")
 print(f"  Android Devices: 2 (connect separately)")
 print(f"  Total Clients: {experiment_config['num_clients']} + 2 = {experiment_config['num_clients'] + 2}")
 print(f"  Training Rounds: {experiment_config['num_rounds']}")
+print(f"  Total Training Operations: {experiment_config['num_clients']} clients × {experiment_config['num_rounds']} rounds = {experiment_config['num_clients'] * experiment_config['num_rounds']}")
 print(f"  Data Heterogeneity (α): {experiment_config['alpha']}")
 print(f"  Embedding Dimension: {embedding_dim}")
 print(f"{'='*60}")
@@ -223,7 +224,7 @@ for round_num in range(num_rounds):
             metrics = client.run_training_round()
             
             # Show progress for every 10th client, or first/last few
-            if client_id < 3 or client_id >= num_clients - 3 or (client_id + 1) % 10 == 0:
+            if client_id < 3 or client_id >= num_clients - 3 or (client_id + 1) % 20 == 0:
                 print(f"  Client {client_id}: loss={metrics.get('loss', 0):.4f}, samples={metrics.get('samples', 0)}")
             
             # Collect client metrics
@@ -253,7 +254,8 @@ for round_num in range(num_rounds):
     print("\nAggregating parameters from all clients (simulated + Android)...")
     aggregation_info = {}
     try:
-        response = requests.post(f"{SERVER_URL}/aggregate", timeout=60)  # Longer timeout for many clients
+        # Longer timeout for 100+ clients
+        response = requests.post(f"{SERVER_URL}/aggregate", timeout=120)
         response.raise_for_status()
         aggregation_info = response.json()
         print(f"[OK] Aggregation result:")

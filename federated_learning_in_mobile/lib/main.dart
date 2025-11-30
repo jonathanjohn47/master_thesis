@@ -5,8 +5,6 @@ import 'services/api_client.dart';
 import 'utils/metrics_collector.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:path_provider/path_provider.dart';
-import 'dart:io';
 
 void main() {
   runApp(const FederatedLearningApp());
@@ -255,50 +253,52 @@ class _FederatedLearningHomePageState extends State<FederatedLearningHomePage> {
     
     setState(() {
       _isTraining = true;
-      _status = 'Training...';
+      _status = 'Training Round $_trainingRound...';
     });
     
     try {
       // First, make sure we have the global model (it updates numUsers and numItems)
-      _addLog('Fetching global model...');
-      try {
-        await _client!.fetchGlobalModel();
-        _addLog('Global model fetched. Model: ${_client!.numUsers} users, ${_client!.numItems} items');
-      } catch (e) {
-        _addLog('Warning: Could not fetch model, using current dimensions');
-      }
-      
-      // Load some sample data (in real app, this would come from device)
-      // For demo, create minimal sample data
-      if (_client!.localData.isEmpty) {
-        // Generate sample data based on ACTUAL model dimensions (updated after fetchGlobalModel)
-        final sampleData = <List<dynamic>>[];
-        final random = DateTime.now().millisecondsSinceEpoch;
-        final numUsers = _client!.numUsers;
-        final numItems = _client!.numItems;
-        
-        _addLog('Generating sample data for $numUsers users, $numItems items...');
-        
-        for (int i = 0; i < 10; i++) {
-          final userId = (random + i) % numUsers;
-          final itemId = (random + i * 2) % numItems;
-          
-          // Validate IDs are in range (just to be safe)
-          if (userId >= 0 && userId < numUsers && itemId >= 0 && itemId < numItems) {
-            sampleData.add([
-              userId,
-              itemId,
-              1.0, // Binarized rating
-            ]);
-          } else {
-            _addLog('Warning: Skipping invalid sample: user=$userId (max=$numUsers), item=$itemId (max=$numItems)');
-          }
+      if (_trainingRound == 1) {
+        _addLog('Fetching global model...');
+        try {
+          await _client!.fetchGlobalModel();
+          _addLog('Global model fetched. Model: ${_client!.numUsers} users, ${_client!.numItems} items');
+        } catch (e) {
+          _addLog('Warning: Could not fetch model, using current dimensions');
         }
-        _client!.loadLocalData(sampleData);
-        _addLog('Loaded ${sampleData.length} sample interactions');
+        
+        // Load some sample data (in real app, this would come from device)
+        // For demo, create minimal sample data
+        if (_client!.localData.isEmpty) {
+          // Generate sample data based on ACTUAL model dimensions (updated after fetchGlobalModel)
+          final sampleData = <List<dynamic>>[];
+          final random = DateTime.now().millisecondsSinceEpoch;
+          final numUsers = _client!.numUsers;
+          final numItems = _client!.numItems;
+          
+          _addLog('Generating sample data for $numUsers users, $numItems items...');
+          
+          for (int i = 0; i < 10; i++) {
+            final userId = (random + i) % numUsers;
+            final itemId = (random + i * 2) % numItems;
+            
+            // Validate IDs are in range (just to be safe)
+            if (userId >= 0 && userId < numUsers && itemId >= 0 && itemId < numItems) {
+              sampleData.add([
+                userId,
+                itemId,
+                1.0, // Binarized rating
+              ]);
+            } else {
+              _addLog('Warning: Skipping invalid sample: user=$userId (max=$numUsers), item=$itemId (max=$numItems)');
+            }
+          }
+          _client!.loadLocalData(sampleData);
+          _addLog('Loaded ${sampleData.length} sample interactions');
+        }
       }
       
-      _addLog('Starting training round...');
+      _addLog('Starting training round $_trainingRound...');
       
       // Run training round
       final metrics = await _client!.runTrainingRound();
@@ -308,12 +308,14 @@ class _FederatedLearningHomePageState extends State<FederatedLearningHomePage> {
       // Collect metrics
       if (_metricsCollector != null) {
         final trainMetrics = metrics['train'] as Map<String, dynamic>? ?? {};
+        final testMetrics = metrics['test'] as Map<String, dynamic>? ?? {};
         final uploadMetrics = metrics['upload'] as Map<String, dynamic>? ?? {};
         final resourceMetrics = uploadMetrics['resource_metrics'] as Map<String, dynamic>? ?? {};
         
         _metricsCollector!.addRoundMetrics(
-          roundNum: _trainingRound,
+          roundNum: _trainingRound - 1, // Use round number before increment
           trainLoss: (trainMetrics['loss'] as num?)?.toDouble() ?? 0.0,
+          testMetrics: testMetrics,
           aggregationInfo: {
             'num_clients': 1,
             'total_samples': trainMetrics['samples'] ?? 0,
@@ -340,23 +342,7 @@ class _FederatedLearningHomePageState extends State<FederatedLearningHomePage> {
           _addLog('  CSV: ${csvPath.split('/').last}');
           
           // Also upload to server (saves to PC automatically!)
-          try {
-            final experimentData = _metricsCollector!.getExperimentData();
-            final uploadResponse = await _client!.apiClient.uploadMobileResults(
-              experimentId: _metricsCollector!.experimentId,
-              experimentData: experimentData,
-            );
-            
-            _addLog('Results uploaded to server (PC):');
-            _addLog('  Location: ${uploadResponse['message']}');
-            _addLog('  JSON: mobile_results/${_metricsCollector!.experimentId}.json');
-            if (uploadResponse['csv_file'] != null) {
-              _addLog('  CSV: mobile_results/${_metricsCollector!.experimentId}_summary.csv');
-            }
-          } catch (uploadError) {
-            _addLog('Warning: Failed to upload to server: $uploadError');
-            _addLog('Results are saved locally only');
-          }
+          await _uploadResultsToServer();
         } catch (e) {
           _addLog('Warning: Failed to save results: $e');
         }
@@ -365,12 +351,27 @@ class _FederatedLearningHomePageState extends State<FederatedLearningHomePage> {
       setState(() {
         _lastMetrics = metrics;
         _resourceMetrics = metrics['upload']?['resource_metrics'];
-        _status = 'Training complete';
+        _status = 'Round ${_trainingRound - 1} complete';
         _isTraining = false;
       });
       
-      _addLog('Training round $_trainingRound complete');
+      _addLog('Training round ${_trainingRound - 1} complete');
       _addLog('Loss: ${metrics['train']?['loss']?.toStringAsFixed(4) ?? "N/A"}');
+      _addLog('Accuracy: ${metrics['test']?['accuracy']?.toStringAsFixed(4) ?? "N/A"}');
+      
+      // Show success message after 10 rounds
+      if (_trainingRound > 10) {
+        _addLog('🎉 All 10 rounds complete!');
+        _addLog('Results have been uploaded to your PC automatically.');
+        
+        // Calculate and add final metrics
+        _calculateFinalMetrics();
+        
+        // Show dialog after final round
+        Future.delayed(const Duration(seconds: 1), () {
+          _uploadResultsToServer(showSuccessDialog: true);
+        });
+      }
       
     } catch (e, stackTrace) {
       setState(() {
@@ -384,6 +385,158 @@ class _FederatedLearningHomePageState extends State<FederatedLearningHomePage> {
       _addLog('Training error: $e');
       _showError('Training failed: $e');
     }
+  }
+  
+  /// Run 10 rounds automatically
+  Future<void> _runAll10Rounds() async {
+    if (_client == null || !_isConnected) {
+      _showError('Please connect to server first');
+      return;
+    }
+    
+    if (_isTraining) {
+      _showError('Training already in progress');
+      return;
+    }
+    
+    // Reset round counter
+    _trainingRound = 0;
+    
+    // Confirm action
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Run 10 Training Rounds'),
+        content: const Text(
+          'This will automatically run 10 training rounds.\n\n'
+          'The training will continue until all 10 rounds are complete.\n'
+          'You can stop by closing the app if needed.\n\n'
+          'Proceed?'
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Start'),
+          ),
+        ],
+      ),
+    );
+    
+    if (confirmed != true) {
+      return;
+    }
+    
+    setState(() {
+      _status = 'Running 10 rounds...';
+    });
+    
+    _addLog('Starting automatic 10-round training...');
+    
+    // Run 10 rounds sequentially
+    for (int round = 1; round <= 10; round++) {
+      if (!_isConnected || _client == null) {
+        _addLog('Training stopped: connection lost');
+        break;
+      }
+      
+      _addLog('=== Round $round/10 ===');
+      await _runTrainingRound();
+      
+      // Small delay between rounds
+      await Future.delayed(const Duration(milliseconds: 500));
+    }
+    
+    if (_trainingRound > 10) {
+      setState(() {
+        _status = 'All 10 rounds complete!';
+      });
+    }
+  }
+  
+  /// Calculate final metrics after all rounds are complete
+  void _calculateFinalMetrics() {
+    if (_metricsCollector == null) return;
+    
+    final rounds = _metricsCollector!.experimentData['rounds'] as List;
+    if (rounds.isEmpty) return;
+    
+    // Get metrics from last round
+    final lastRound = rounds.last as Map<String, dynamic>;
+    final lastTestMetrics = lastRound['test_metrics'] as Map<String, dynamic>? ?? {};
+    
+    // Calculate averages across all rounds
+    double avgAccuracy = 0.0;
+    double avgLoss = 0.0;
+    double avgHit10 = 0.0;
+    double avgNDCG10 = 0.0;
+    int count = 0;
+    
+    for (var round in rounds) {
+      final roundMap = round as Map<String, dynamic>;
+      final testMetrics = roundMap['test_metrics'] as Map<String, dynamic>? ?? {};
+      
+      if (testMetrics['accuracy'] != null) {
+        avgAccuracy += (testMetrics['accuracy'] as num).toDouble();
+        avgLoss += (roundMap['train_loss'] as num?)?.toDouble() ?? 0.0;
+        avgHit10 += (testMetrics['Hit@10'] as num?)?.toDouble() ?? 0.0;
+        avgNDCG10 += (testMetrics['NDCG@10'] as num?)?.toDouble() ?? 0.0;
+        count++;
+      }
+    }
+    
+    if (count > 0) {
+      avgAccuracy /= count;
+      avgLoss /= count;
+      avgHit10 /= count;
+      avgNDCG10 /= count;
+    }
+    
+    // Set final metrics
+    _metricsCollector!.addFinalMetrics({
+      'accuracy': lastTestMetrics['accuracy'] ?? avgAccuracy,
+      'mse': lastTestMetrics['mse'] ?? 0.0,
+      'mae': lastTestMetrics['mae'] ?? 0.0,
+      'Hit@10': lastTestMetrics['Hit@10'] ?? avgHit10,
+      'NDCG@10': lastTestMetrics['NDCG@10'] ?? avgNDCG10,
+      'Precision@10': lastTestMetrics['Precision@10'] ?? 0.0,
+      'Recall@10': lastTestMetrics['Recall@10'] ?? 0.0,
+      'final_train_loss': avgLoss,
+      'avg_accuracy': avgAccuracy,
+      'avg_Hit@10': avgHit10,
+      'avg_NDCG@10': avgNDCG10,
+    });
+    
+    // Add client metrics summary
+    _metricsCollector!.addClientMetrics(_clientIdController.text, {
+      'total_rounds': rounds.length,
+      'total_samples': (rounds.last as Map)['aggregation']?['total_samples'] ?? 0,
+      'final_loss': avgLoss,
+      'final_accuracy': avgAccuracy,
+    });
+    
+    // Add mobile metrics summary
+    double totalBatteryDrain = 0.0;
+    int totalTimeMs = 0;
+    for (var round in rounds) {
+      final roundMap = round as Map<String, dynamic>;
+      final resourceMetrics = roundMap['resource_metrics'] as Map<String, dynamic>? ?? {};
+      totalBatteryDrain += (resourceMetrics['battery_drain'] as num?)?.toDouble() ?? 0.0;
+      totalTimeMs += (resourceMetrics['training_time_ms'] as num?)?.toInt() ?? 0;
+    }
+    
+    _metricsCollector!.addMobileMetrics(_deviceId ?? 'unknown', {
+      'total_rounds': rounds.length,
+      'total_battery_drain': totalBatteryDrain,
+      'total_training_time_ms': totalTimeMs,
+      'avg_battery_drain_per_round': rounds.isNotEmpty ? totalBatteryDrain / rounds.length : 0.0,
+      'avg_training_time_ms_per_round': rounds.isNotEmpty ? totalTimeMs / rounds.length : 0.0,
+    });
+    
+    _addLog('Final metrics calculated and saved');
   }
   
   void _showError(String message) {
@@ -503,6 +656,126 @@ class _FederatedLearningHomePageState extends State<FederatedLearningHomePage> {
       _showError('Failed to share files: $e');
     }
   }
+  
+  /// Upload results to server (saves directly to PC)
+  Future<void> _uploadResultsToServer({bool showSuccessDialog = false}) async {
+    if (_client == null || !_isConnected) {
+      _showError('Please connect to server first');
+      return;
+    }
+    
+    if (_metricsCollector == null) {
+      _showError('No results to upload. Run training rounds first.');
+      return;
+    }
+    
+    setState(() {
+      _status = 'Uploading results to PC...';
+    });
+    
+    try {
+      final experimentData = _metricsCollector!.getExperimentData();
+      
+      _addLog('Uploading results to server (PC)...');
+      _addLog('Experiment ID: ${_metricsCollector!.experimentId}');
+      
+      final uploadResponse = await _client!.apiClient.uploadMobileResults(
+        experimentId: _metricsCollector!.experimentId,
+        experimentData: experimentData,
+      );
+      
+      final jsonPath = uploadResponse['json_file'] as String? ?? 'mobile_results/${_metricsCollector!.experimentId}.json';
+      final csvPath = uploadResponse['csv_file'] as String?;
+      final message = uploadResponse['message'] as String? ?? 'Results saved to PC';
+      
+      _addLog('✓ Results uploaded successfully!');
+      _addLog('  Saved on PC: $message');
+      _addLog('  JSON: $jsonPath');
+      if (csvPath != null) {
+        _addLog('  CSV: $csvPath');
+      }
+      
+      setState(() {
+        _status = 'Results uploaded to PC';
+      });
+      
+      if (showSuccessDialog) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('✓ Results Uploaded to PC'),
+            content: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    'Your results have been saved directly to your PC!',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Location on your PC:',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+                  SelectableText(
+                    jsonPath,
+                    style: const TextStyle(fontFamily: 'monospace', fontSize: 12),
+                  ),
+                  if (csvPath != null) ...[
+                    const SizedBox(height: 8),
+                    SelectableText(
+                      csvPath,
+                      style: const TextStyle(fontFamily: 'monospace', fontSize: 12),
+                    ),
+                  ],
+                  const SizedBox(height: 16),
+                  const Text(
+                    'How to access:',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    '1. Go to your project folder\n'
+                    '2. Open the "mobile_results" folder\n'
+                    '3. Find your JSON and CSV files\n\n'
+                    'Or check your server terminal - it shows the full path!',
+                    style: TextStyle(fontSize: 12),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+      
+    } catch (uploadError) {
+      _addLog('✗ Upload failed: $uploadError');
+      setState(() {
+        _status = 'Upload failed';
+      });
+      
+      String errorMsg = 'Failed to upload results to PC.\n\n';
+      if (uploadError.toString().contains('Connection refused') ||
+          uploadError.toString().contains('SocketException')) {
+        errorMsg += 'Cannot connect to server.\n';
+        errorMsg += '• Make sure server is running\n';
+        errorMsg += '• Check server URL is correct\n';
+        errorMsg += '• Verify both devices are on same network';
+      } else {
+        errorMsg += 'Error: $uploadError';
+      }
+      
+      _showError(errorMsg);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -585,28 +858,70 @@ class _FederatedLearningHomePageState extends State<FederatedLearningHomePage> {
                       ],
                     ),
                     const SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: (_isConnected && !_isTraining) ? _runTrainingRound : null,
-                      child: _isTraining
-                          ? const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SizedBox(
-                                  width: 16,
-                                  height: 16,
-                                  child: CircularProgressIndicator(strokeWidth: 2),
-                                ),
-                                SizedBox(width: 8),
-                                Text('Training...'),
-                              ],
-                            )
-                          : const Text('Run Training Round'),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: ElevatedButton.icon(
+                            onPressed: (_isConnected && !_isTraining) ? _runAll10Rounds : null,
+                            icon: const Icon(Icons.play_arrow),
+                            label: const Text('Run 10 Rounds'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.green,
+                              foregroundColor: Colors.white,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: ElevatedButton.icon(
+                            onPressed: (_isConnected && !_isTraining) ? _runTrainingRound : null,
+                            icon: const Icon(Icons.add),
+                            label: const Text('Run 1 Round'),
+                          ),
+                        ),
+                      ],
                     ),
+                    if (_isTraining) ...[
+                      const SizedBox(height: 8),
+                      const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          ),
+                          SizedBox(width: 8),
+                          Text('Training...'),
+                        ],
+                      ),
+                    ],
                     if (_metricsCollector != null && _trainingRound > 0) ...[
                       const SizedBox(height: 8),
-                      OutlinedButton(
-                        onPressed: _showResultsLocation,
-                        child: const Text('Show Results Location'),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: OutlinedButton.icon(
+                              onPressed: (_isConnected && !_isTraining) ? _uploadResultsToServer : null,
+                              icon: const Icon(Icons.cloud_upload),
+                              label: const Text('Upload to PC'),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: OutlinedButton.icon(
+                              onPressed: _showResultsLocation,
+                              icon: const Icon(Icons.folder),
+                              label: const Text('Show Location'),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      const Text(
+                        'Results auto-upload after each round. Use "Upload to PC" to manually upload.',
+                        style: TextStyle(fontSize: 11, fontStyle: FontStyle.italic),
+                        textAlign: TextAlign.center,
                       ),
                     ],
                   ],
