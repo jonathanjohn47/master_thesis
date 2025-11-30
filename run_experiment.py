@@ -113,15 +113,19 @@ if not initialize_model(SERVER_URL, num_users=num_users, num_items=num_items, em
     sys.exit(1)
 
 # Step 4: Set up metrics collection
+# Configuration for thesis experiments:
+# - 50 simulated Python clients
+# - 2 Android devices/emulators (connected separately)
+# - 10 training rounds minimum for meaningful results
 experiment_config = {
     "num_users": num_users,
     "num_items": num_items,
     "embedding_dim": embedding_dim,
-    "num_clients": 3,
+    "num_clients": 50,  # 50 simulated clients (plus 2 Android devices)
     "alpha": 0.5,
     "dp_epsilon": None,  # No DP for baseline
     "use_dp": False,
-    "num_rounds": 3,
+    "num_rounds": 10,  # 10 rounds minimum for thesis
     "local_epochs": 1,
     "learning_rate": 0.01,
     "batch_size": 32,
@@ -141,30 +145,59 @@ collector.set_config(experiment_config)
 
 print(f"\nExperiment ID: {experiment_id}")
 print(f"Results will be saved to: results/{experiment_id}.json")
+print(f"\n{'='*60}")
+print("EXPERIMENT CONFIGURATION")
+print(f"{'='*60}")
+print(f"  Simulated Clients: {experiment_config['num_clients']}")
+print(f"  Android Devices: 2 (connect separately)")
+print(f"  Total Clients: {experiment_config['num_clients']} + 2 = {experiment_config['num_clients'] + 2}")
+print(f"  Training Rounds: {experiment_config['num_rounds']}")
+print(f"  Data Heterogeneity (α): {experiment_config['alpha']}")
+print(f"  Embedding Dimension: {embedding_dim}")
+print(f"{'='*60}")
 
 # Step 5: Create non-IID data splits across clients (using training data only)
 num_clients = experiment_config["num_clients"]
 alpha = experiment_config["alpha"]
 
-print(f"\nSplitting training data across {num_clients} clients (non-IID, α={alpha})...")
+print(f"\nSplitting training data across {num_clients} simulated clients (non-IID, α={alpha})...")
+print(f"Note: Android devices will use their own local data (not included in this split)")
 client_data_splits = create_non_iid_split(train_interactions, num_clients, alpha=alpha)
 
-# Print client data distribution
-for i, split in enumerate(client_data_splits):
-    print(f"  Client {i}: {len(split)} samples")
-    collector.add_client_metrics(f"client_{i}", {"samples": len(split)})
+# Print client data distribution (sample of first 5 and last 5)
+print(f"\nClient data distribution (showing first 5 and last 5):")
+for i in range(min(5, len(client_data_splits))):
+    print(f"  Client {i}: {len(client_data_splits[i])} samples")
+    collector.add_client_metrics(f"client_{i}", {"samples": len(client_data_splits[i])})
+
+if len(client_data_splits) > 10:
+    print(f"  ... ({len(client_data_splits) - 10} more clients) ...")
+    for i in range(max(5, len(client_data_splits) - 5), len(client_data_splits)):
+        print(f"  Client {i}: {len(client_data_splits[i])} samples")
+        collector.add_client_metrics(f"client_{i}", {"samples": len(client_data_splits[i])})
+else:
+    for i in range(5, len(client_data_splits)):
+        print(f"  Client {i}: {len(client_data_splits[i])} samples")
+        collector.add_client_metrics(f"client_{i}", {"samples": len(client_data_splits[i])})
+
+total_samples = sum(len(split) for split in client_data_splits)
+print(f"\nTotal samples across {num_clients} simulated clients: {total_samples}")
+print(f"Average samples per client: {total_samples / num_clients:.1f}")
 
 # Step 6: Run multiple training rounds
 num_rounds = experiment_config["num_rounds"]
 
 for round_num in range(num_rounds):
-    print(f"\n=== Round {round_num + 1}/{num_rounds} ===")
+    print(f"\n{'='*60}")
+    print(f"=== Round {round_num + 1}/{num_rounds} ===")
+    print(f"{'='*60}")
     
-    # Each client participates
+    # Each simulated client participates
     clients = []
     client_metrics_list = []
     total_train_loss = 0.0
     
+    print(f"Training {num_clients} simulated clients...")
     for client_id in range(num_clients):
         config = ClientConfig(
             client_id=f"client_{client_id}",
@@ -188,7 +221,10 @@ for round_num in range(num_rounds):
         try:
             client.register()
             metrics = client.run_training_round()
-            print(f"Client {client_id} completed: loss={metrics.get('loss', 0):.4f}, samples={metrics.get('samples', 0)}")
+            
+            # Show progress for every 10th client, or first/last few
+            if client_id < 3 or client_id >= num_clients - 3 or (client_id + 1) % 10 == 0:
+                print(f"  Client {client_id}: loss={metrics.get('loss', 0):.4f}, samples={metrics.get('samples', 0)}")
             
             # Collect client metrics
             client_metrics_list.append({
@@ -201,18 +237,29 @@ for round_num in range(num_rounds):
             total_train_loss += metrics.get('loss', 0.0)
             
         except Exception as e:
-            print(f"Client {client_id} error: {e}")
+            print(f"  [ERROR] Client {client_id} error: {e}")
+    
+    print(f"\nCompleted: {len(client_metrics_list)}/{num_clients} simulated clients trained")
+    print(f"Note: Android devices should also participate in this round (connect them separately)")
     
     avg_train_loss = total_train_loss / len(client_metrics_list) if client_metrics_list else 0.0
     
-    # Aggregate
-    print("\nAggregating parameters...")
+    # Wait a moment for Android devices to finish (if they're participating)
+    print("\nWaiting 5 seconds for Android devices to complete training...")
+    print("(Make sure your 2 Android devices are also running training rounds)")
+    time.sleep(5)
+    
+    # Aggregate (includes both simulated clients and Android devices)
+    print("\nAggregating parameters from all clients (simulated + Android)...")
     aggregation_info = {}
     try:
-        response = requests.post(f"{SERVER_URL}/aggregate", timeout=30)
+        response = requests.post(f"{SERVER_URL}/aggregate", timeout=60)  # Longer timeout for many clients
         response.raise_for_status()
         aggregation_info = response.json()
-        print(f"[OK] Aggregation result: {aggregation_info}")
+        print(f"[OK] Aggregation result:")
+        print(f"  Total clients aggregated: {aggregation_info.get('num_clients', 'N/A')}")
+        print(f"  Total samples: {aggregation_info.get('total_samples', 'N/A')}")
+        print(f"  Round: {aggregation_info.get('round', 'N/A')}")
     except requests.exceptions.RequestException as e:
         print(f"[ERROR] Aggregation failed: {e}")
         continue
