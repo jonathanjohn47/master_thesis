@@ -45,7 +45,7 @@ class _FederatedLearningHomePageState extends State<FederatedLearningHomePage> {
   bool _isConnected = false;
   bool _isTraining = false;
   String _status = 'Ready';
-  List<String> _logs = [];
+  final List<String> _logs = [];
   Map<String, dynamic>? _lastMetrics;
   Map<String, dynamic>? _resourceMetrics;
   MetricsCollector? _metricsCollector;

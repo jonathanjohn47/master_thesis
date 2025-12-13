@@ -1,5 +1,6 @@
 /// Matrix Factorization model for movie recommendations
 /// Pure Dart implementation compatible with PyTorch server model
+library;
 
 class MatrixFactorization {
   final int numUsers;

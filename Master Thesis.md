@@ -8,73 +8,73 @@
 
 [Background and Related Work	5](#background-and-related-work)
 
-[Federated Learning Fundamentals	6](#federated-learning-fundamentals)
+[Federated Learning Fundamentals	8](#federated-learning-fundamentals)
 
-[Privacy-Preserving Mechanisms in Federated Learning	6](#privacy-preserving-mechanisms-in-federated-learning)
+[Privacy-Preserving Mechanisms in Federated Learning	8](#privacy-preserving-mechanisms-in-federated-learning)
 
-[Mobile Recommendation Systems	6](#mobile-recommendation-systems)
+[Mobile Recommendation Systems	8](#mobile-recommendation-systems)
 
-[Accuracy-Privacy Trade-offs in Machine Learning	6](#accuracy-privacy-trade-offs-in-machine-learning)
+[Accuracy-Privacy Trade-offs in Machine Learning	8](#accuracy-privacy-trade-offs-in-machine-learning)
 
-[Existing Work on Federated Learning for Recommendation Systems	6](#existing-work-on-federated-learning-for-recommendation-systems)
+[Existing Work on Federated Learning for Recommendation Systems	8](#existing-work-on-federated-learning-for-recommendation-systems)
 
-[Methodology	6](#methodology)
+[Methodology	8](#methodology)
 
-[Data Preparation and Partitioning	6](#data-preparation-and-partitioning)
+[Data Preparation and Partitioning	8](#data-preparation-and-partitioning)
 
-[Model Architectures	6](#model-architectures)
+[Model Architectures	8](#model-architectures)
 
-[Federated Learning Setup and Training	6](#federated-learning-setup-and-training)
+[Federated Learning Setup and Training	8](#federated-learning-setup-and-training)
 
-[Differential Privacy Implementation	6](#differential-privacy-implementation)
+[Differential Privacy Implementation	8](#differential-privacy-implementation)
 
-[Privacy Attack Models	6](#privacy-attack-models)
+[Privacy Attack Models	8](#privacy-attack-models)
 
-[Resource Profiling and Metrics	6](#resource-profiling-and-metrics)
+[Resource Profiling and Metrics	8](#resource-profiling-and-metrics)
 
-[Experimental Setup	6](#experimental-setup)
+[Experimental Setup	8](#experimental-setup)
 
-[Experimental Design	6](#experimental-design)
+[Experimental Design	8](#experimental-design)
 
-[Hyperparameters and Training Details	6](#hyperparameters-and-training-details)
+[Hyperparameters and Training Details	8](#hyperparameters-and-training-details)
 
-[Evaluation Metrics and Acceptable Thresholds	6](#evaluation-metrics-and-acceptable-thresholds)
+[Evaluation Metrics and Acceptable Thresholds	8](#evaluation-metrics-and-acceptable-thresholds)
 
-[Results	6](#results)
+[Results	8](#results)
 
-[Impact of Differential Privacy on Model Accuracy	6](#impact-of-differential-privacy-on-model-accuracy)
+[Impact of Differential Privacy on Model Accuracy	9](#impact-of-differential-privacy-on-model-accuracy)
 
-[Effectiveness of Privacy Attacks under DP Budgets	6](#effectiveness-of-privacy-attacks-under-dp-budgets)
+[Effectiveness of Privacy Attacks under DP Budgets	9](#effectiveness-of-privacy-attacks-under-dp-budgets)
 
-[Influence of Data Heterogeneity and Client Sparsity	6](#influence-of-data-heterogeneity-and-client-sparsity)
+[Influence of Data Heterogeneity and Client Sparsity	9](#influence-of-data-heterogeneity-and-client-sparsity)
 
-[Resource Utilization Analysis	6](#resource-utilization-analysis)
+[Resource Utilization Analysis	9](#resource-utilization-analysis)
 
-[Pareto Frontiers of Accuracy, Privacy, and Resource Consumption	7](#pareto-frontiers-of-accuracy,-privacy,-and-resource-consumption)
+[Pareto Frontiers of Accuracy, Privacy, and Resource Consumption	9](#pareto-frontiers-of-accuracy,-privacy,-and-resource-consumption)
 
-[Discussion	7](#discussion)
+[Discussion	9](#discussion)
 
-[Interpretation of Accuracy-Privacy Trade-offs	7](#interpretation-of-accuracy-privacy-trade-offs)
+[Interpretation of Accuracy-Privacy Trade-offs	9](#interpretation-of-accuracy-privacy-trade-offs)
 
-[Implications of Data Heterogeneity and Sparsity	7](#implications-of-data-heterogeneity-and-sparsity)
+[Implications of Data Heterogeneity and Sparsity	9](#implications-of-data-heterogeneity-and-sparsity)
 
-[Feasibility for Mobile Deployment	7](#feasibility-for-mobile-deployment)
+[Feasibility for Mobile Deployment	9](#feasibility-for-mobile-deployment)
 
-[Comparison with Centralized Baselines	7](#comparison-with-centralized-baselines)
+[Comparison with Centralized Baselines	9](#comparison-with-centralized-baselines)
 
-[Limitations of the Study	7](#limitations-of-the-study)
+[Limitations of the Study	9](#limitations-of-the-study)
 
-[Conclusion and Future Work	7](#conclusion-and-future-work)
+[Conclusion and Future Work	9](#conclusion-and-future-work)
 
-[Summary of Findings	7](#summary-of-findings)
+[Summary of Findings	9](#summary-of-findings)
 
-[Practical Recommendations for Mobile FL Deployment	7](#practical-recommendations-for-mobile-fl-deployment)
+[Practical Recommendations for Mobile FL Deployment	9](#practical-recommendations-for-mobile-fl-deployment)
 
-[Future Research Directions	7](#future-research-directions)
+[Future Research Directions	9](#future-research-directions)
 
 ## **Introduction** {#introduction}
 
-The most important component in all existing digital platforms such as social media, movie providers such as Netflix, e-commerce providers such as Amazon etc. is what we term as a Recommendation System. Recommendation Systems have long since since gone beyond the mere filtering mechanism. They have been transformed into the sophisticated engines of personalization. The essence of these recommendation systems is to solve and cross the challenge consumers experience when they are offered excessive your choice (the paradox of choice). In the case of such services as Netflix and Spotify, these tools (probably algorithms or personalization options) are of utmost importance since they assist in retaining users. They do this by creating special lists of shows or music to Heather, which are customized and personalized to each individual and they watch and listen to more and do not cancel their subscription. These systems build complete inventories, yet it only presents a user with a limited, well-selected choice. This makes the users satisfied with their decision over the long run. Social media applications such as Tik Tok and Instagram have a recommendation system that focuses on displaying the user all the highly engaging and personalized material. They do this to ensure that the user is scrolling, liking, and sharing as long as possible by ensuring that the information is something that stimulates and has a lot of relevance in their interests.
+The most important component in all existing digital platforms such as social media, movie providers such as Netflix, e-commerce providers such as Amazon etc. is what we term as a Recommendation System. Recommendation Systems have long since since gone beyond the mere filtering mechanism. They have been transformed into the sophisticated engines of personalization. The essence of these recommendation systems is to solve and cross the challenge consumers experience when they are offered excessive your choice (the paradox of choice). In the case of such services as Netflix and Spotify, these tools (probably algorithms or personalization options) are of utmost importance since they assist in retaining users. They do this by creating special lists of shows or music to Heather, which are customized and personalized to each individual and they watch and listen to more and do not cancel their subscription. These systems build complete inventories, yet it only presents a user with a limited, well-selected choice. This makes the users satisfied with their decision over the long run. Social media applications such as TikTok and Instagram have a recommendation system that focuses on displaying the user all the highly engaging and personalized material. They do this to ensure that the user is scrolling, liking, and sharing as long as possible by ensuring that the information is something that stimulates and has a lot of relevance in their interests.
 
 Along with retention and engagement, recommendation systems also are pure revenue generators particularly in e-commerce. Giants like Amazon use them as customized virtual store assistants, and they sell similar items with the features like “frequently bought together”. It directly affects the increase in the average order value (AOV) and the establishment of the high cross-selling opportunities. And lastly, it is either the driver of sales in online shops, time spent on watches in streaming or time spent in social networks but either way, these systems are two inseparable factors that lead to the user discovery, platform stickiness and business profitability in the digital economy.
 
@@ -106,7 +106,7 @@ Also, there are network constraints, i.e. variable bandwidth, high latency, and 
 
 The study design is based on a comprehensive and intense exploration of the use and effectiveness of the mechanisms of differential privacy (DP) in machine learning. The experiment essentially consists of systematic exploration of all sorts of DP mechanisms, including Gaussian and Laplace noise addition, to training data or model updates. This cognitive approach is crucial to the advocacy of the delicate trade-offs involved in privacy-conscious machine learning. The study will attempt to create a clear and empirical basis of the behaviour of various privacy techniques in varying conditions by carefully managing the experimental variables.
 
-One of the most important elements of this study is the measurement of the influence of privacy budgets (), on the utility of the models. Privacy budget is a formalized expression of the privacy loss an individual is prepared to suffer where lower that the budget, the higher is the privacy, but generally results in a higher loss of model performance (utility). The project will be conducted through a profound testing to chart this negative dependence, giving tangible measures, i.e. accuracy, F1-score or AUC, versus the parameter of the epsilon. Such quantification will assist practitioners to select the best privacy-utility trade off to apply in deploying scenarios.
+One of the most important elements of this study is the measurement of the influence of privacy budgets, on the utility of the models. Privacy budget is a formalized expression of the privacy loss an individual is prepared to suffer where lower that the budget, the higher is the privacy, but generally results in a higher loss of model performance (utility). The project will be conducted through a profound testing to chart this negative dependence, giving tangible measures, i.e. accuracy, F1-score or AUC, versus the parameter of the epsilon. Such quantification will assist practitioners to select the best privacy-utility trade off to apply in deploying scenarios.
 
 Moreover, the study will be used to assess the efficiency of the implemented DP mechanisms against perceived privacy threats. This involves thorough testing of inference attacks where an attacker tries to infer the property of the training data (e.g., membership inference), and inversion attacks where an attacker tries to recreate the original data samples. Along with the hypothetical guarantees, the study will give empirical support to the defensive strength of differential privacy by simulating such adversarial situations and turn the theoretical guarantees into practical security assessments.
 
@@ -117,6 +117,30 @@ The practical objective of this work is to define certain, practically useful li
 This study is a useful contribution because it offers practical considerations to the developers and system administrators of mobile recommendation systems. In particular, it is concerned with a severe issue of how to achieve a good compromise between protecting the privacy of the user that is required in many cases to be strong \- especially during the work with sensitive mobile data \- and the necessity to provide the high quality of personalized recommendations, and all that under the resources limitations imposed by a mobile configuration \- limited battery life, processing power, and bandwidth. This will assist the practitioners to make effective trade-off decisions between the various privacy enhancing methods and the effects they have on system performance and accuracy of the recommendations.
 
 ## **Background and Related Work** {#background-and-related-work}
+
+Federated learning (FL) is a promising paradigm shift to designing advanced movie recommendation systems, especially under the conditions of increased concerns over data privacy issues. This distributed machine learning model is basically the source of privacy conserving collaborative model training since it would permit numerous clients (e.g., individual user devices or local servers of streaming services) to descend a shared universal model employing their own information locally. Most importantly, the model updates (gradients or weights) are only sent to a central server to be aggregated, but not the actual, sensitive user data itself, e.g. viewing history or demographic data.
+
+This distributed system is a direct answer to the issue of concentrating large volumes of user data, and this is often a precondition of standard training of a recommendation system, and a major point of weakness in case of data breaches. FL naturally addresses these privacy risks by storing user information in the edge devices.
+
+Nonetheless, application of FL in this area entails serious and substantially recorded trade-offs, the main one being the dilemma of the model accuracy versus the degree of privacy protection obtained. Privacy levels This could create perturbations that reduce the fidelity and hence the predictive accuracy of the end recommendation model, especially when privacy is high, usually by using methods such as differential privacy (adding calibrated noise to the model updates) or secure multi-party computation. The aim to achieve high accuracy, in turn, may require less aggressive privacy controls, and the model updates may be vulnerable to advanced inference attacks that attempt to repeat the properties of the original training data. As such the effectiveness of the federated movie recommendation system implementation depends on the ability to fine-tune the FL parameters and privacy protecting technologies to achieve an optimal pragmatic balance that meets the regulatory demands (such as the GDPR) and the expectations of users on the quality of recommendations.
+
+The natural conflict between customized service provision and user data privacy, especially in the systems based on massive data compilation, has prompted much research to attend to privacy-preserving systems. One of the most notable areas of focus has been recommendation systems a prime example of such data-intensive services. These important trade-offs have been investigated in multiple studies, especially the effectiveness of how sophisticated machine learning paradigms such as Federated Learning can mediate this conflict.
+
+As an example, the article by David Neumann et al. (2023) demonstrated a strong example of a privacy-sensitive movie recommendation system. Their strategy was based on the architecture of federated learning in the sense that models are trained in more than one decentralized edge device with local data samples but no data exchange. One of the most important conclusions was the fact that the system had a strong defense against the more complex data reconstruction attacks, which effectively block such attacks in the presence of the potential malicious users trying to reverse-engineer the aggregated model updates to get access to the original and sensitive user preferences or data points. The results of this study confirmed the possibility of decoupling utility (good recommendations) and the risk of centralized data exposure that can happen as a result of federated learning.
+
+To supplement this, the study performed by Muhammad Ammad-ud-din et al. (2019) was specifically based on the use of federated collaborative filtering. Collaborative filtering systems usually combine the data on user-item interactions in order to detect the patterns and provide predictions. Their results established that when training process is distributed through a federated model, then indeed the system would be capable of ensuring a high accuracy of recommendations. More importantly, this accuracy was done without compromising the privacy of users since the raw record of user interaction and sensitive user profile information were never transferred outside the users local computer and hence minimized the effect of the risk involved in holding and running large volumes of personal information in a central server. All these research works positively support the claim that Federated Learning is an architecture that can be used to construct high-utility and privacy-aware recommendation systems.
+
+Privacy preserving machine learning is an expanding research field that is supported by a number of important mechanisms that aim to protect sensitive information in the process of training the model and inferring outcomes. These are the basic privacy tools, which are described by Zehua Sun and his colleagues (2022) and include, namely, differential privacy (DP), homomorphic encryption (HE), and secure multi-party computation (SMPC).
+
+Differential Privacy (DP) is a mathematical assurance that defends against the indivual contributions of data by existing noisiness or the learning procedure. This also makes the model output statistically the same with the presence or absence of the record of the single individual in the model training data hence avoiding the inference of certain personal information.
+
+Homomorphic Encryption (HE) enables calculations to be done to encrypted data without having to decrypt the data. It is especially useful in federated or centralized learning tasks where an encrypted update of the model or data can be processed by a single server or third party, ensuring the privacy of the whole process.
+
+Secure Multi-Party Computation (SMPC) is a model that allows multiple parties to collectively compute a function on their inputs and retain said inputs as private information. In machine learning, this enables various data owners to jointly train a model without each data owner having any idea of what the other has.
+
+In addition to these basic technical mechanisms, studies have been conducted on how to maximize their use to ensure the effectiveness of the entire learning process. A. As shown by Bietti et al. (2022), one of the most important findings is that the performance trade-off between local and centralized learning in relation to model accuracy is considerable, which can be optimally achieved through the coordination of the two-levels of learning. The given approach implies that a hybrid model, with the balance in the data-processing functions and role of individual devices (local learning) and an aggregator (centralized learning) can be used to obtain a superior utility of the model and be compatible with stringent privacy requirements.
+
+Nonetheless, the quest to achieve a higher level of privacy is not devoid of concerns especially in the context of equity and discrimination. The article by Xiuting Gu et al. (2022) introduced the interaction between privacy and model discrimination as an important and pressing topic that is rather problematic and multifaceted. Their study highlighted that by introducing more stringent privacy restrictions, like reducing the privacy budget (epsilon) in DP, there is a possible increase in model discrimination against some groups of the population. This observation underscores the inter-relationships of these conflicting ethical and technical desires, and points out that privacy-preserving methods must be created and implemented considering the fact that they can affect model fairness and fair treatment of all user populations in a holistic manner. This tension between the conflicting goals of robust privacy, great model precision, and fair treatment is one of the most prominent, perplexing issues of privacy-conscious machine learning development.
 
 ### **Federated Learning Fundamentals** {#federated-learning-fundamentals}
 

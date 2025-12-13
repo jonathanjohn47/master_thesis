@@ -201,9 +201,7 @@ class MetricsCollector {
   Future<String> saveJson([String? filename]) async {
     await initialize();
     
-    if (filename == null) {
-      filename = '$experimentId.json';
-    }
+    filename ??= '$experimentId.json';
     
     final file = File('${resultsDir.path}/$filename');
     
@@ -219,9 +217,7 @@ class MetricsCollector {
   Future<String> saveCsvSummary([String? filename]) async {
     await initialize();
     
-    if (filename == null) {
-      filename = '${experimentId}_summary.csv';
-    }
+    filename ??= '${experimentId}_summary.csv';
     
     final file = File('${resultsDir.path}/$filename');
     
