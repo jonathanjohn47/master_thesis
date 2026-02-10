@@ -70,8 +70,12 @@ def train_centralized_model(train_data, test_data, num_users, num_items, embeddi
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     
     # Training setup
-    optimizer = optim.SGD(model.parameters(), lr=learning_rate)
-    criterion = nn.MSELoss()
+    optimizer = optim.SGD(
+        model.parameters(),
+        lr=learning_rate,
+        weight_decay=1e-5  # L2 regularization for stability
+    )
+    criterion = nn.BCELoss()  # Binary cross-entropy for binary classification
     
     print(f"\nTraining centralized model...")
     print(f"  Training samples: {len(train_data)}")
@@ -167,7 +171,7 @@ def main():
     train_interactions, test_interactions = split_train_test(all_interactions, test_ratio=0.2)
     
     # Training configuration
-    embedding_dim = 16
+    embedding_dim = 64  # Increased from 16 to 64 for better item representation
     num_epochs = 50
     learning_rate = 0.01
     batch_size = 64

@@ -351,7 +351,7 @@ def main():
     train_interactions, test_interactions = split_train_test(all_interactions, test_ratio=0.2)
     
     # Initialize server model
-    embedding_dim = 16
+    embedding_dim = 64  # Increased from 16 to 64 for better item representation
     if not initialize_model(SERVER_URL, num_users, num_items, embedding_dim):
         sys.exit(1)
     
@@ -360,7 +360,7 @@ def main():
     num_clients = 100
     alpha = 0.5
     num_rounds = 10
-    local_epochs = 1
+    local_epochs = 3  # Increased from 1 to 3 for better local convergence
     learning_rate = 0.01
     batch_size = 32
     seeds = [42, 123, 456]  # 3 seeds for statistical significance

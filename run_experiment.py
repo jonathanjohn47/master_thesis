@@ -106,7 +106,7 @@ print(f"Dataset loaded: {num_users} users, {num_items} items, {len(all_interacti
 train_interactions, test_interactions = split_train_test(all_interactions, test_ratio=0.2)
 
 # Step 3: Initialize server model with actual data dimensions
-embedding_dim = 16
+embedding_dim = 64  # Increased from 16 to 64 for better item representation
 print(f"\nInitializing server model: {num_users} users, {num_items} items, embedding_dim={embedding_dim}...")
 if not initialize_model(SERVER_URL, num_users=num_users, num_items=num_items, embedding_dim=embedding_dim):
     print("\nFailed to initialize model. Exiting.")
@@ -126,7 +126,7 @@ experiment_config = {
     "dp_epsilon": None,  # No DP for baseline
     "use_dp": False,
     "num_rounds": 10,  # 10 rounds minimum for thesis
-    "local_epochs": 1,
+    "local_epochs": 3,  # Increased from 1 to 3 for better local convergence
     "learning_rate": 0.01,
     "batch_size": 32,
     "seed": 42

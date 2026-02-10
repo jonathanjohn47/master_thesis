@@ -29,7 +29,7 @@ class ClientConfig:
     num_users: int
     num_items: int
     embedding_dim: int = 16
-    local_epochs: int = 1
+    local_epochs: int = 3  # Increased from 1 to 3 for better local convergence
     learning_rate: float = 0.01
     batch_size: int = 32
     
@@ -162,13 +162,14 @@ def create_matrix_factorization_model(num_users: int, num_items: int, embedding_
             self.user_embedding = nn.Embedding(num_users, embedding_dim)
             self.item_embedding = nn.Embedding(num_items, embedding_dim)
             
-            nn.init.normal_(self.user_embedding.weight, std=0.01)
-            nn.init.normal_(self.item_embedding.weight, std=0.01)
+            nn.init.normal_(self.user_embedding.weight, std=0.1)  # Increased from 0.01 to 0.1
+            nn.init.normal_(self.item_embedding.weight, std=0.1)  # Increased from 0.01 to 0.1
             
         def forward(self, user_ids, item_ids):
             user_emb = self.user_embedding(user_ids)
             item_emb = self.item_embedding(item_ids)
-            return (user_emb * item_emb).sum(dim=1)
+            logits = (user_emb * item_emb).sum(dim=1)
+            return torch.sigmoid(logits)  # Add sigmoid for binary classification
             
         def predict(self, user_ids, item_ids):
             return self.forward(user_ids, item_ids)
@@ -337,8 +338,12 @@ class FederatedClient:
             }
         
         self.model.train()
-        optimizer = optim.SGD(self.model.parameters(), lr=self.config.learning_rate)
-        criterion = nn.MSELoss()
+        optimizer = optim.SGD(
+            self.model.parameters(),
+            lr=self.config.learning_rate,
+            weight_decay=1e-5  # L2 regularization for stability
+        )
+        criterion = nn.BCELoss()  # Binary cross-entropy for binary classification
         
         total_loss = 0.0
         num_batches = 0

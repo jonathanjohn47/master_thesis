@@ -95,13 +95,14 @@ def create_matrix_factorization_model(num_users: int, num_items: int, embedding_
             self.item_embedding = nn.Embedding(num_items, embedding_dim)
             
             # Initialize embeddings
-            nn.init.normal_(self.user_embedding.weight, std=0.01)
-            nn.init.normal_(self.item_embedding.weight, std=0.01)
+            nn.init.normal_(self.user_embedding.weight, std=0.1)  # Increased from 0.01 to 0.1
+            nn.init.normal_(self.item_embedding.weight, std=0.1)  # Increased from 0.01 to 0.1
             
         def forward(self, user_ids, item_ids):
             user_emb = self.user_embedding(user_ids)
             item_emb = self.item_embedding(item_ids)
-            return (user_emb * item_emb).sum(dim=1)
+            logits = (user_emb * item_emb).sum(dim=1)
+            return torch.sigmoid(logits)  # Add sigmoid for binary classification
             
         def predict(self, user_ids, item_ids):
             return self.forward(user_ids, item_ids)
