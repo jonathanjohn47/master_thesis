@@ -345,7 +345,7 @@ def main():
     
     print("Loading MovieLens 100K dataset...")
     all_interactions, num_users, num_items, user_id_map, item_id_map = load_ratings_csv(
-        csv_path, binarize=True, threshold=4.0
+        csv_path, binarize=False  # Use original ratings (1-5) for regression
     )
     
     train_interactions, test_interactions = split_train_test(all_interactions, test_ratio=0.2)

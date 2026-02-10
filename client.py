@@ -109,7 +109,7 @@ def load_ratings_csv(csv_path: str, binarize: bool = True, threshold: float = 4.
     
     logger.info(f"Preprocessed {len(interactions)} interactions")
     if binarize:
-        positive_count = sum(1 for _, _, r in interactions if r >= threshold)
+        positive_count = sum(1 for _, _, r in interactions if r >= 0.5)  # Count binarized positive ratings
         logger.info(f"Positive ratings (≥{threshold}): {positive_count}, Negative: {len(interactions) - positive_count}")
     
     return interactions, num_users, num_items, user_id_map, item_id_map
@@ -168,8 +168,7 @@ def create_matrix_factorization_model(num_users: int, num_items: int, embedding_
         def forward(self, user_ids, item_ids):
             user_emb = self.user_embedding(user_ids)
             item_emb = self.item_embedding(item_ids)
-            logits = (user_emb * item_emb).sum(dim=1)
-            return torch.sigmoid(logits)  # Add sigmoid for binary classification
+            return (user_emb * item_emb).sum(dim=1)  # Predict rating directly (no sigmoid)
             
         def predict(self, user_ids, item_ids):
             return self.forward(user_ids, item_ids)
@@ -343,7 +342,7 @@ class FederatedClient:
             lr=self.config.learning_rate,
             weight_decay=1e-5  # L2 regularization for stability
         )
-        criterion = nn.BCELoss()  # Binary cross-entropy for binary classification
+        criterion = nn.MSELoss()  # MSE loss for rating prediction
         
         total_loss = 0.0
         num_batches = 0
@@ -352,9 +351,9 @@ class FederatedClient:
             epoch_loss = 0.0
             
             for batch_idx, (user_ids, item_ids, ratings) in enumerate(self.dataloader):
-                user_ids = user_ids.squeeze()
-                item_ids = item_ids.squeeze()
-                ratings = ratings.squeeze()
+                user_ids = user_ids.squeeze(1)  # Squeeze only dim 1, preserve batch dimension
+                item_ids = item_ids.squeeze(1)
+                ratings = ratings.squeeze(1)
                 
                 # Forward pass
                 predictions = self.model(user_ids, item_ids)

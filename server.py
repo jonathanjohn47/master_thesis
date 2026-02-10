@@ -101,8 +101,7 @@ def create_matrix_factorization_model(num_users: int, num_items: int, embedding_
         def forward(self, user_ids, item_ids):
             user_emb = self.user_embedding(user_ids)
             item_emb = self.item_embedding(item_ids)
-            logits = (user_emb * item_emb).sum(dim=1)
-            return torch.sigmoid(logits)  # Add sigmoid for binary classification
+            return (user_emb * item_emb).sum(dim=1)  # Predict rating directly (no sigmoid)
             
         def predict(self, user_ids, item_ids):
             return self.forward(user_ids, item_ids)

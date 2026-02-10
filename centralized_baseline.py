@@ -75,7 +75,7 @@ def train_centralized_model(train_data, test_data, num_users, num_items, embeddi
         lr=learning_rate,
         weight_decay=1e-5  # L2 regularization for stability
     )
-    criterion = nn.BCELoss()  # Binary cross-entropy for binary classification
+    criterion = nn.MSELoss()  # MSE loss for rating prediction
     
     print(f"\nTraining centralized model...")
     print(f"  Training samples: {len(train_data)}")
@@ -162,7 +162,7 @@ def main():
     
     print("Loading MovieLens 100K dataset...")
     all_interactions, num_users, num_items, user_id_map, item_id_map = load_ratings_csv(
-        csv_path, binarize=True, threshold=4.0
+        csv_path, binarize=False  # Use original ratings (1-5) for regression
     )
     
     print(f"Dataset loaded: {num_users} users, {num_items} items, {len(all_interactions)} interactions")

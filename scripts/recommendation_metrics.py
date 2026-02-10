@@ -173,16 +173,19 @@ def evaluate_recommendations(
             top_k_items = [item_id for item_id, _ in item_scores[:k]]
             top_k_scores = [score for _, score in item_scores[:k]]
             
-            # Check relevance of top-k
-            top_k_relevant = [item_id in ground_truth_items for item_id in top_k_items]
+            # Check relevance of top-k (relevant = rating >= 4.0)
+            top_k_relevant = [
+                item_id in ground_truth_items and ground_truth_ratings.get(item_id, 0.0) >= 4.0
+                for item_id in top_k_items
+            ]
             
-            # Get relevance scores for NDCG (use actual ratings if available, else 1.0 for relevant)
+            # Get relevance scores for NDCG (use actual ratings 1-5 as relevance)
             relevance_scores = []
             for item_id in top_k_items:
                 if item_id in ground_truth_items:
-                    # Use actual rating as relevance (binarized: ≥4.0 → 1.0, else 0.0)
+                    # Use actual rating (1-5) as relevance score for NDCG
                     rating = ground_truth_ratings.get(item_id, 0.0)
-                    relevance = 1.0 if rating >= 4.0 else 0.0
+                    relevance = rating
                 else:
                     relevance = 0.0
                 relevance_scores.append(relevance)

@@ -95,9 +95,8 @@ if not os.path.exists(csv_path):
 print(f"\nLoading dataset from {csv_path}...")
 # Load and preprocess data (binarize ratings as per expose: ≥4 → positive)
 all_interactions, num_users, num_items, user_id_map, item_id_map = load_ratings_csv(
-    csv_path, 
-    binarize=True, 
-    threshold=4.0
+    csv_path,
+    binarize=False  # Use original ratings (1-5) for regression
 )
 
 print(f"Dataset loaded: {num_users} users, {num_items} items, {len(all_interactions)} interactions")
