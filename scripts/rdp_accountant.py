@@ -98,7 +98,7 @@ class RDPAccountant:
                                   batch_size: int,
                                   clip_norm: float = 1.0,
                                   sigma_min: float = 0.1,
-                                  sigma_max: float = 10.0,
+                                  sigma_max: float = 200.0,
                                   tolerance: float = 0.1) -> Optional[float]:
         """
         Find noise multiplier (sigma) that achieves target epsilon.
