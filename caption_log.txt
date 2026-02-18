@@ -1,0 +1,43 @@
+Opening document...
+Scanning for manual captions...
+Found 33 manual captions.
+Processing: Figure 1
+Processing: Figure 2
+Processing: Figure 3
+Processing: Figure 4
+Processing: Figure 5
+Processing: Figure 6
+Processing: Figure 7
+Processing: Figure 8: NDCG@10 and Hit@10 as a function of DP budget (e). The red dashed line indicates the centralized baseline. Error bars show ±1 standard deviation across 3 seeds.
+Processing: Figure 8 NDCG@10 and Hit@10 as a function of DP budget (e). The red dashed line indicates the centralized baseline. Error bars show ±1 standard deviation across 3 seeds.Figure 1 illustrates the substantial gap between the centralized baseline (NDCG@10 = 0.225, Hit@10 = 0.38) and all federated configurations. Even without differential privacy (e = 8), the federated model achieves only NDCG@10 = 0.054, representing a 76% degradation from the centralized baseline. This large federated-to-centralized gap is the dominant factor in the overall performance loss, with DP adding a comparatively modest additional penalty of approximately 13–16% relative to the no-DP federated baseline.
+Processing: Figure 9: Relative accuracy loss (%) vs. DP budget (e), measured against the centralized baseline. The red dashed line marks the 5% target threshold. Error bars show ±1 standard deviation.
+Processing: Figure 3 depicts the training loss and NDCG@10 convergence across communication rounds for each DP configuration.
+Processing: Figure 10: Training loss convergence (left) and NDCG@10 convergence (right) over 10 communication rounds for each e configuration. Note the dramatically different loss scales for high-noise configurations.
+Processing: Figure 11: Privacy attack effectiveness as a function of DP budget. Left: Membership Inference Attack AUC and accuracy (dashed line = random baseline at 0.5). Right: Model Inversion Attack top-K accuracy (all values are 0.0).
+Processing: Figure 12 Privacy attack effectiveness as a function of DP budget. Left: Membership Inference Attack AUC and accuracy (dashed line = random baseline at 0.5). Right: Model Inversion Attack top-K accuracy (all values are 0.0).Figure 4 provides a comprehensive visualization of both attack types. The MIA panel shows a clear monotonic relationship between e and attack success: as privacy protection increases (lower e), the AUC converges toward 0.5. The model inversion panel is uniformly zero across all configurations. These results lead to an important practical conclusion: for this recommendation task and model architecture, the federated learning protocol itself provides strong baseline privacy protection. Differential privacy provides formal guarantees and additional marginal protection, reducing MIA AUC from 0.548 to 0.500, but the practical privacy risk is already minimal without DP.
+Processing: Figure 12: NDCG@10 and Hit@10 as a function of data heterogeneity (a). Error bars show ±1 standard deviation across 3 seeds. No differential privacy is applied (e = 8).
+Processing: Figure 13: Distribution of training samples per client under Dirichlet partitioning (a = 0.5). Left: histogram showing the frequency of client dataset sizes. Right: box plot showing the median, quartiles, and outliers.
+Processing: Figure 14 Distribution of training samples per client under Dirichlet partitioning (a = 0.5). Left: histogram showing the frequency of client dataset sizes. Right: box plot showing the median, quartiles, and outliers.Figure 6 reveals that the Dirichlet partitioning with a = 0.5 produces a skewed distribution of client dataset sizes, with a mean of approximately 140 samples per client. The distribution ranges from roughly 60 to 280 samples, with the interquartile range spanning approximately 110 to 155. One outlier client holds roughly 280 samples. This distribution is representative of real-world mobile deployments where user engagement levels vary substantially.
+Processing: Figure 14: Aggregation statistics over 10 communication rounds. Left: number of participating clients per round (constant at 48). Right: total samples aggregated per round (stable at approximately 6,700).
+Processing: Figure 7 confirms consistent aggregation behavior across all 10 rounds. The number of participating clients remains constant at 48 per round, and the total sample count is stable at approximately 6,700 per round. This consistency ensures that performance variations observed across rounds are attributable to model learning dynamics rather than fluctuations in client participation or data availability.
+Processing: Figure 15: Recommendation metrics (Hit@10, Precision@10, Recall@10) tracked over 10 training rounds for the no-DP federated configuration.
+Processing: Figure 17 Recommendation metrics (Hit@10, Precision@10, Recall@10) tracked over 10 training rounds for the no-DP federated configuration.Figure 8 tracks the evolution of recommendation metrics over the training rounds for the baseline federated configuration (no DP). Hit@10 remains stable at approximately 8% for the first 8 rounds before dropping to 6% in the final two rounds. Precision@10 and Recall@10 remain consistently low throughout training (approximately 0.8% and 0.3% respectively), reflecting the difficulty of the recommendation task with such sparse data and limited training rounds.
+Processing: Figure 16
+Processing: Figure 17
+Processing: Figure 18
+Processing: Figure 19
+Processing: Figure 20
+Processing: Figure 21
+Processing: Figure 22
+Processing: Figure 23
+Processing: Figure 24
+Processing: Figure 25
+Processing: Figure 26
+Processing: Figure 27
+Updating fields...
+Saved after caption conversion.
+Starting cross-reference linking...
+Available Caption Items: 0
+No captions found to link! Exiting Part 2.
+Final Save complete.
+Done.
