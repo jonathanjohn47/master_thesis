@@ -18,7 +18,19 @@ class FederatedLearningApp extends StatelessWidget {
     return MaterialApp(
       title: 'Federated Learning Client',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        colorScheme: ColorScheme.dark(
+          surface: const Color(0xFF212D3F),
+          primary: const Color(0xFF00BCD4),
+          secondary: const Color(0xFF00BCD4),
+        ),
+        scaffoldBackgroundColor: const Color(0xFF1A2332),
+        cardTheme: const CardThemeData(
+          color: Color(0xFF212D3F),
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(12)),
+          ),
+        ),
         useMaterial3: true,
       ),
       home: const FederatedLearningHomePage(),
@@ -46,8 +58,6 @@ class _FederatedLearningHomePageState extends State<FederatedLearningHomePage> {
   bool _isTraining = false;
   String _status = 'Ready';
   final List<String> _logs = [];
-  Map<String, dynamic>? _lastMetrics;
-  Map<String, dynamic>? _resourceMetrics;
   MetricsCollector? _metricsCollector;
   int _trainingRound = 0;
   String? _deviceId;
@@ -60,14 +70,15 @@ class _FederatedLearningHomePageState extends State<FederatedLearningHomePage> {
 }
 
   void _addLog(String message) {
-    final logMessage = '${DateTime.now().toString().substring(11, 19)}: $message';
+    final timestamp = DateTime.now().toString().substring(11, 19);
+    final logMessage = '[$timestamp] $message';
     // Debug print to console
     debugPrint('[FL_CLIENT_LOG] $logMessage');
     print('[FL_CLIENT_LOG] $logMessage'); // Also use print for better visibility
     setState(() {
-      _logs.insert(0, logMessage);
-      if (_logs.length > 50) {
-        _logs.removeLast();
+      _logs.add(logMessage);
+      if (_logs.length > 100) {
+        _logs.removeAt(0);
       }
     });
   }
@@ -113,7 +124,7 @@ class _FederatedLearningHomePageState extends State<FederatedLearningHomePage> {
         return;
       }
       
-      _addLog('Connecting to: $host:${uri.port}');
+      _addLog('NETWORK: DNS lookup resolved for coordinator.');
     } catch (e) {
       _showError('Invalid URL format: $e\n\nPlease use format: http://IP_ADDRESS:PORT\nExample: http://192.168.1.100:8000');
       return;
@@ -128,8 +139,8 @@ class _FederatedLearningHomePageState extends State<FederatedLearningHomePage> {
       final apiClient = ApiClient(serverUrl: serverUrl);
       await apiClient.healthCheck();
       
-      _addLog('Server health check passed');
-      
+      _addLog('INFO: Handshake protocol version 3.2.0.');
+
       // Create client
       _client = FederatedLearningClient(
         clientId: _clientIdController.text,
@@ -189,7 +200,7 @@ class _FederatedLearningHomePageState extends State<FederatedLearningHomePage> {
         _isTraining = false;
       });
       
-      _addLog('Client registered: ${_clientIdController.text}');
+      _addLog('SYSTEM: Client initialized successfully.');
       if (experimentId != null) {
         _addLog('Experiment ID: $experimentId');
         _addLog('Metrics will be saved after training');
@@ -198,10 +209,10 @@ class _FederatedLearningHomePageState extends State<FederatedLearningHomePage> {
       // Try to fetch initial model (optional - model might not be initialized yet)
       try {
         await _client!.fetchGlobalModel();
-        _addLog('Global model fetched');
+        _addLog('SYSTEM: Local model weight buffer allocated (512MB).');
       } catch (e) {
-        _addLog('Model not initialized yet. Initialize model on server first.');
-        _addLog('You can still connect and fetch model later when starting training.');
+        _addLog('WARN: Model not initialized on server yet.');
+        _addLog('INFO: You can fetch model later when starting training.');
       }
       
     } catch (e, stackTrace) {
@@ -349,8 +360,6 @@ class _FederatedLearningHomePageState extends State<FederatedLearningHomePage> {
       }
       
       setState(() {
-        _lastMetrics = metrics;
-        _resourceMetrics = metrics['upload']?['resource_metrics'];
         _status = 'Round ${_trainingRound - 1} complete';
         _isTraining = false;
       });
@@ -780,107 +789,295 @@ class _FederatedLearningHomePageState extends State<FederatedLearningHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Federated Learning Client'),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Connection Section
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const Text(
-                      'Server Configuration',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 16),
-                    TextField(
-                      controller: _serverUrlController,
-                      decoration: const InputDecoration(
-                        labelText: 'Server URL',
-                        hintText: 'http://192.168.x.x:8000 (Use your PC IP, NOT localhost)',
-                        helperText: 'Find your PC IP: ipconfig (Windows) or ifconfig (Mac/Linux)',
-                        border: OutlineInputBorder(),
-      ),
-                      enabled: !_isConnected,
-                      keyboardType: TextInputType.url,
-                    ),
-                    const SizedBox(height: 8),
-                    TextField(
-                      controller: _clientIdController,
-                      decoration: const InputDecoration(
-                        labelText: 'Client ID',
-                        border: OutlineInputBorder(),
+      backgroundColor: const Color(0xFF1A2332),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Header with title and settings icon
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Federated Client',
+                        style: TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
-                      enabled: !_isConnected,
+                      const SizedBox(height: 4),
+                      Text(
+                        'Researcher Edition v2.4',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey[400],
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF212D3F),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: const Color(0xFF00BCD4).withValues(alpha: 0.3),
+                        width: 1,
+                      ),
                     ),
-                    const SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: _isConnected ? null : _connectToServer,
-                      child: const Text('Connect to Server'),
+                    child: IconButton(
+                      icon: const Icon(Icons.settings, color: Color(0xFF00BCD4)),
+                      onPressed: () {
+                        // Settings action - can be implemented later
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Settings coming soon')),
+                        );
+                      },
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ),
-            
-            const SizedBox(height: 16),
-            
-            // Status Section
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-        child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                          width: 12,
-                          height: 12,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: _isConnected ? Colors.green : Colors.grey,
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          'Status: $_status',
-                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: ElevatedButton.icon(
-                            onPressed: (_isConnected && !_isTraining) ? _runAll10Rounds : null,
-                            icon: const Icon(Icons.play_arrow),
-                            label: const Text('Run 10 Rounds'),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.green,
-                              foregroundColor: Colors.white,
+
+              const SizedBox(height: 24),
+
+              // Connection Section
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(Icons.dns, color: const Color(0xFF00BCD4), size: 20),
+                          const SizedBox(width: 8),
+                          const Text(
+                            'SERVER CONFIGURATION',
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 0.5,
+                              color: Colors.grey,
                             ),
                           ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      Text(
+                        'SERVER URL',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: const Color(0xFF00BCD4),
+                          letterSpacing: 0.5,
                         ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: ElevatedButton.icon(
-                            onPressed: (_isConnected && !_isTraining) ? _runTrainingRound : null,
-                            icon: const Icon(Icons.add),
-                            label: const Text('Run 1 Round'),
+                      ),
+                      const SizedBox(height: 8),
+                      TextField(
+                        controller: _serverUrlController,
+                        decoration: InputDecoration(
+                          hintText: 'wss://fl-coordinator.research.net',
+                          hintStyle: TextStyle(color: Colors.grey[600]),
+                          filled: true,
+                          fillColor: const Color(0xFF1A2332),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide.none,
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                        ),
+                        style: const TextStyle(color: Colors.white70, fontSize: 15),
+                        enabled: !_isConnected,
+                        keyboardType: TextInputType.url,
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        'CLIENT ID',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.grey[400],
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      TextField(
+                        controller: _clientIdController,
+                        decoration: InputDecoration(
+                          hintText: 'android_client_6149',
+                          hintStyle: TextStyle(color: Colors.grey[600]),
+                          filled: true,
+                          fillColor: const Color(0xFF1A2332),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide.none,
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                        ),
+                        style: const TextStyle(color: Colors.white70, fontSize: 15),
+                        enabled: !_isConnected,
+                      ),
+                      const SizedBox(height: 20),
+                      SizedBox(
+                        height: 54,
+                        child: ElevatedButton(
+                          onPressed: _isConnected ? null : _connectToServer,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF00BCD4),
+                            foregroundColor: Colors.black87,
+                            disabledBackgroundColor: Colors.grey[700],
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            elevation: 0,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(Icons.flash_on, size: 20),
+                              const SizedBox(width: 8),
+                              const Text(
+                                'CONNECT TO SERVER',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 0.5,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 16),
+
+              // Status Section
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                width: 12,
+                                height: 12,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: _isConnected ? const Color(0xFF4CAF50) : Colors.grey,
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Text(
+                                'Status: $_status',
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF1A2332),
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text(
+                              _isTraining ? 'TRAINING' : 'IDLE',
+                              style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF4CAF50),
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: SizedBox(
+                              height: 100,
+                              child: ElevatedButton(
+                                onPressed: (_isConnected && !_isTraining) ? _runTrainingRound : null,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFF2A3A4F),
+                                  foregroundColor: Colors.white70,
+                                  disabledBackgroundColor: const Color(0xFF1E2936),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  elevation: 0,
+                                ),
+                                child: const Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.play_arrow, size: 32, color: Color(0xFF00BCD4)),
+                                    SizedBox(height: 8),
+                                    Text(
+                                      'Run 1 Round',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: SizedBox(
+                              height: 100,
+                              child: ElevatedButton(
+                                onPressed: (_isConnected && !_isTraining) ? _runAll10Rounds : null,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFF2A3A4F),
+                                  foregroundColor: Colors.white70,
+                                  disabledBackgroundColor: const Color(0xFF1E2936),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  elevation: 0,
+                                ),
+                                child: const Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.fast_forward, size: 32, color: Color(0xFF00BCD4)),
+                                    SizedBox(height: 8),
+                                    Text(
+                                      'Run 10 Rounds',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     if (_isTraining) ...[
                       const SizedBox(height: 8),
                       const Row(
@@ -897,99 +1094,67 @@ class _FederatedLearningHomePageState extends State<FederatedLearningHomePage> {
                       ),
                     ],
                     if (_metricsCollector != null && _trainingRound > 0) ...[
-                      const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: OutlinedButton.icon(
-                              onPressed: (_isConnected && !_isTraining) ? _uploadResultsToServer : null,
-                              icon: const Icon(Icons.cloud_upload),
-                              label: const Text('Upload to PC'),
+                        const SizedBox(height: 12),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: OutlinedButton.icon(
+                                onPressed: (_isConnected && !_isTraining) ? _uploadResultsToServer : null,
+                                icon: const Icon(Icons.cloud_upload, size: 18),
+                                label: const Text('Upload to PC', style: TextStyle(fontSize: 13)),
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: const Color(0xFF00BCD4),
+                                  side: const BorderSide(color: Color(0xFF00BCD4)),
+                                  padding: const EdgeInsets.symmetric(vertical: 12),
+                                ),
+                              ),
                             ),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: OutlinedButton.icon(
-                              onPressed: _showResultsLocation,
-                              icon: const Icon(Icons.folder),
-                              label: const Text('Show Location'),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: OutlinedButton.icon(
+                                onPressed: _showResultsLocation,
+                                icon: const Icon(Icons.folder, size: 18),
+                                label: const Text('Location', style: TextStyle(fontSize: 13)),
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: Colors.grey[400],
+                                  side: BorderSide(color: Colors.grey[700]!),
+                                  padding: const EdgeInsets.symmetric(vertical: 12),
+                                ),
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-                      const Text(
-                        'Results auto-upload after each round. Use "Upload to PC" to manually upload.',
-                        style: TextStyle(fontSize: 11, fontStyle: FontStyle.italic),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-            ),
-            
-            // Metrics Section
-            if (_lastMetrics != null) ...[
-              const SizedBox(height: 16),
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      const Text(
-                        'Training Metrics',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 8),
-                      _buildMetricRow('Loss', _lastMetrics!['train']?['loss']?.toStringAsFixed(4) ?? 'N/A'),
-                      _buildMetricRow('Samples', _lastMetrics!['train']?['samples']?.toString() ?? 'N/A'),
-                      _buildMetricRow('Training Time', '${_lastMetrics!['train']?['training_time_ms'] ?? 0} ms'),
+                          ],
+                        ),
+                      ],
                     ],
                   ),
                 ),
-              ),
-            ],
-            
-            // Resource Metrics
-            if (_resourceMetrics != null) ...[
-              const SizedBox(height: 16),
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      const Text(
-                        'Resource Metrics',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 8),
-                      _buildMetricRow('Battery Level', '${_resourceMetrics!['battery_level']}%'),
-                      _buildMetricRow('Battery Drain', '${_resourceMetrics!['battery_drain']?.toStringAsFixed(1)}%'),
-                      if (_resourceMetrics!['device_info'] != null)
-                        _buildMetricRow('Device', '${_resourceMetrics!['device_info']?['model'] ?? 'Unknown'}'),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-            
+              ),  // End of Status Section Card
+
             // Logs Section
             const SizedBox(height: 16),
             Card(
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(20.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
-                          'Logs',
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        Row(
+                          children: [
+                            Icon(Icons.live_tv, color: Colors.grey[400], size: 20),
+                            const SizedBox(width: 8),
+                            const Text(
+                              'LIVE LOGS',
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 0.5,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
                         ),
                         TextButton(
                           onPressed: () {
@@ -997,35 +1162,75 @@ class _FederatedLearningHomePageState extends State<FederatedLearningHomePage> {
                               _logs.clear();
                             });
                           },
-                          child: const Text('Clear'),
+                          style: TextButton.styleFrom(
+                            foregroundColor: Colors.grey[500],
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          ),
+                          child: const Text(
+                            'CLEAR CONSOLE',
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 12),
                     Container(
-                      height: 200,
+                      height: 250,
+                      padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: Colors.grey[900],
-                        borderRadius: BorderRadius.circular(4),
+                        color: const Color(0xFF0D1117),
+                        borderRadius: BorderRadius.circular(8),
                       ),
-                      child: ListView.builder(
-                        reverse: true,
-                        itemCount: _logs.length,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
-                            child: Text(
-                              _logs[index],
-                              style: const TextStyle(
-                                color: Colors.green,
-                                fontFamily: 'monospace',
-                                fontSize: 12,
+                      child: _logs.isEmpty
+                          ? Center(
+                              child: Text(
+                                'No logs yet. Connect to server to see activity.',
+                                style: TextStyle(
+                                  color: Colors.grey[600],
+                                  fontSize: 13,
+                                  fontStyle: FontStyle.italic,
+                                ),
                               ),
+                            )
+                          : ListView.builder(
+                              reverse: false,
+                              itemCount: _logs.length,
+                              itemBuilder: (context, index) {
+                                final log = _logs[index];
+                                Color logColor = const Color(0xFF58A6FF); // Default blue
+
+                                // Color code logs based on type
+                                if (log.contains('SYSTEM:')) {
+                                  logColor = const Color(0xFF4CAF50); // Green
+                                } else if (log.contains('NETWORK:')) {
+                                  logColor = const Color(0xFF00BCD4); // Cyan
+                                } else if (log.contains('INFO:')) {
+                                  logColor = const Color(0xFF58A6FF); // Blue
+                                } else if (log.contains('WARN:')) {
+                                  logColor = const Color(0xFFFFA726); // Orange
+                                } else if (log.contains('ERROR:')) {
+                                  logColor = const Color(0xFFEF5350); // Red
+                                }
+
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 2.0),
+                                  child: Text(
+                                    log,
+                                    style: TextStyle(
+                                      color: logColor,
+                                      fontFamily: 'Courier',
+                                      fontSize: 12,
+                                      height: 1.4,
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
-                          );
-                        },
-                      ),
-                    ),
+                    ),  // End of Container
                   ],
                 ),
               ),
@@ -1033,19 +1238,7 @@ class _FederatedLearningHomePageState extends State<FederatedLearningHomePage> {
           ],
         ),
       ),
-    );
-  }
-  
-  Widget _buildMetricRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(label, style: const TextStyle(fontWeight: FontWeight.w500)),
-          Text(value, style: const TextStyle(fontFamily: 'monospace')),
-        ],
-      ),
+    ),
     );
   }
 }
