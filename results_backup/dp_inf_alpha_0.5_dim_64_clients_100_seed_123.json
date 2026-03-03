@@ -1,0 +1,177 @@
+{
+  "experiment_id": "dp_inf_alpha_0.5_dim_64_clients_100_seed_123",
+  "timestamp": "2026-02-11T02:09:30.261904",
+  "config": {
+    "num_users": 943,
+    "num_items": 1682,
+    "embedding_dim": 64,
+    "num_clients": 100,
+    "alpha": 0.5,
+    "dp_epsilon": null,
+    "use_dp": false,
+    "dp_sigma": 0.0,
+    "dp_clip_norm": 1.0,
+    "num_rounds": 10,
+    "local_epochs": 3,
+    "learning_rate": 0.01,
+    "batch_size": 32,
+    "seed": 123
+  },
+  "rounds": [
+    {
+      "round": 1,
+      "train_loss": 13.72604914243546,
+      "test_metrics": {
+        "mse": 13.685133767700195,
+        "mae": 3.521554398727417,
+        "samples": 20000,
+        "NDCG@10": 0.039105890351920955,
+        "Hit@10": 0.04,
+        "Precision@10": 0.004,
+        "Recall@10": 0.0023614718614718613,
+        "num_users_evaluated": 100
+      },
+      "aggregation": {
+        "num_clients": 100,
+        "total_samples": 80000
+      }
+    },
+    {
+      "round": 2,
+      "train_loss": 13.721697556470144,
+      "test_metrics": {
+        "mse": 13.685116149902344,
+        "mae": 3.5215523292541504,
+        "samples": 20000
+      },
+      "aggregation": {
+        "num_clients": 100,
+        "total_samples": 80000
+      }
+    },
+    {
+      "round": 3,
+      "train_loss": 13.716468174163426,
+      "test_metrics": {
+        "mse": 13.685094821166992,
+        "mae": 3.521549824142456,
+        "samples": 20000
+      },
+      "aggregation": {
+        "num_clients": 100,
+        "total_samples": 80000
+      }
+    },
+    {
+      "round": 4,
+      "train_loss": 13.72688887396247,
+      "test_metrics": {
+        "mse": 13.68507374572754,
+        "mae": 3.521547329711914,
+        "samples": 20000
+      },
+      "aggregation": {
+        "num_clients": 100,
+        "total_samples": 80000
+      }
+    },
+    {
+      "round": 5,
+      "train_loss": 13.7228971265283,
+      "test_metrics": {
+        "mse": 13.685051594543458,
+        "mae": 3.5215446388244627,
+        "samples": 20000,
+        "NDCG@10": 0.039105890351920955,
+        "Hit@10": 0.04,
+        "Precision@10": 0.004,
+        "Recall@10": 0.0023614718614718613,
+        "num_users_evaluated": 100
+      },
+      "aggregation": {
+        "num_clients": 100,
+        "total_samples": 80000
+      }
+    },
+    {
+      "round": 6,
+      "train_loss": 13.731610071622235,
+      "test_metrics": {
+        "mse": 13.685030517578125,
+        "mae": 3.521542232513428,
+        "samples": 20000
+      },
+      "aggregation": {
+        "num_clients": 100,
+        "total_samples": 80000
+      }
+    },
+    {
+      "round": 7,
+      "train_loss": 13.714259418429437,
+      "test_metrics": {
+        "mse": 13.685006246948243,
+        "mae": 3.521539258956909,
+        "samples": 20000
+      },
+      "aggregation": {
+        "num_clients": 100,
+        "total_samples": 80000
+      }
+    },
+    {
+      "round": 8,
+      "train_loss": 13.722299991741497,
+      "test_metrics": {
+        "mse": 13.68498218383789,
+        "mae": 3.5215363761901854,
+        "samples": 20000
+      },
+      "aggregation": {
+        "num_clients": 100,
+        "total_samples": 80000
+      }
+    },
+    {
+      "round": 9,
+      "train_loss": 13.716793745279674,
+      "test_metrics": {
+        "mse": 13.684957339477538,
+        "mae": 3.521533363723755,
+        "samples": 20000
+      },
+      "aggregation": {
+        "num_clients": 100,
+        "total_samples": 80000
+      }
+    },
+    {
+      "round": 10,
+      "train_loss": 13.716583412823606,
+      "test_metrics": {
+        "mse": 13.684931239318848,
+        "mae": 3.5215301780700683,
+        "samples": 20000,
+        "NDCG@10": 0.039105890351920955,
+        "Hit@10": 0.04,
+        "Precision@10": 0.004,
+        "Recall@10": 0.0023614718614718613,
+        "num_users_evaluated": 100
+      },
+      "aggregation": {
+        "num_clients": 100,
+        "total_samples": 80000
+      }
+    }
+  ],
+  "final_metrics": {
+    "mse": 13.684931239318848,
+    "mae": 3.5215301780700683,
+    "samples": 20000,
+    "NDCG@10": 0.039105890351920955,
+    "Hit@10": 0.04,
+    "Precision@10": 0.004,
+    "Recall@10": 0.0023614718614718613,
+    "num_users_evaluated": 100
+  }
+}
