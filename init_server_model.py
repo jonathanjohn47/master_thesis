@@ -3,10 +3,11 @@ Quick script to initialize the server model.
 Run this before starting federated learning experiments.
 """
 
+import os
 import requests
 import sys
 
-SERVER_URL = "http://localhost:8000"
+SERVER_URL = os.getenv("FL_SERVER_URL", "http://localhost:8080")
 
 def initialize_model(num_users=50, num_items=4032, embedding_dim=16):
     """Initialize the global model on the server"""

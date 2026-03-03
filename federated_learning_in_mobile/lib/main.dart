@@ -103,7 +103,7 @@ class _FederatedLearningHomePageState extends State<FederatedLearningHomePage> {
       final host = uri.host.toLowerCase();
       
       // Check for invalid addresses
-      if (host == 'localhost' || host == '127.0.0.1' || host == '0.0.0.0' || host.isEmpty) {
+      if (host == 'localhost' || host == '192.168.29.147' || host == '127.0.0.1' || host == '0.0.0.0' || host.isEmpty) {
         String errorMsg = 'Invalid server address: $host\n\n';
         if (host == '0.0.0.0') {
           errorMsg += '0.0.0.0 is not a valid address to connect to!\n\n';

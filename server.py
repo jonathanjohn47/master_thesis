@@ -494,5 +494,6 @@ async def upload_mobile_results(request: MobileResultsRequest):
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
-
+    # Allow overriding port for local conflicts, default to showcase port 8080.
+    port = int(os.getenv("FL_SERVER_PORT", "8080"))
+    uvicorn.run(app, host="0.0.0.0", port=port)
