@@ -5,17 +5,26 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:federated_learning_in_mobile/main.dart';
 
 void main() {
-  testWidgets('App launches and shows connection UI', (WidgetTester tester) async {
+  testWidgets('App launches and shows dashboard controls', (
+    WidgetTester tester,
+  ) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(const FederatedLearningApp());
 
     // Verify that the app shows the server URL field
-    expect(find.text('Server URL'), findsOneWidget);
-    expect(find.text('Connect to Server'), findsOneWidget);
+    expect(find.text('Federated Client'), findsOneWidget);
+    expect(find.text('SERVER URL'), findsOneWidget);
+    expect(find.text('CONNECT TO SERVER'), findsOneWidget);
+    expect(
+      find.text('Demo Mode: Train and Show Recommendations'),
+      findsOneWidget,
+    );
+    expect(find.byIcon(Icons.movie), findsOneWidget);
   });
 }
