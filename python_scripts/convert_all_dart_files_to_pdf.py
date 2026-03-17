@@ -1,62 +1,198 @@
+import argparse
 import os
+from pathlib import Path
 
-def create_txt_from_content(combined_content, txt_file_path):
-    """Creates a text file from the given content.
+try:
+    from reportlab.lib.pagesizes import A4
+    from reportlab.pdfbase.pdfmetrics import stringWidth
+    from reportlab.pdfgen import canvas
+except ImportError as exc:
+    raise SystemExit(
+        "Missing dependency: reportlab. Install it with `pip install reportlab` and try again."
+    ) from exc
 
-    Args:
-        combined_content (str): The combined text content of the Dart files.
-        txt_file_path (str): Absolute path where the text file should be saved.
-    """
-    try:
-        # Create the text file
-        with open(txt_file_path, 'w', encoding='utf-8') as f:
-            f.write(combined_content)
+SUPPORTED_EXTENSIONS = {
+    ".dart", ".php", ".md", ".py", ".json", ".csv", ".txt",
+    ".yaml", ".yml", ".xml", ".html", ".css", ".js", ".ts",
+    ".java", ".c", ".cpp", ".h", ".hpp", ".sh", ".bat", ".ini",
+    ".cfg", ".conf"
+}
 
-        print(f"Successfully created text file: '{os.path.basename(txt_file_path)}'")
+SKIP_DIRECTORIES = {
+    ".git", "__pycache__", "node_modules", ".idea", ".vscode",
+    ".venv", "venv", "build", "dist"
+}
 
-    except Exception as e:
-        print(f"Error creating text file '{os.path.basename(txt_file_path)}': {e}")
+PAGE_WIDTH, PAGE_HEIGHT = A4
+LEFT_MARGIN = 40
+RIGHT_MARGIN = 40
+TOP_MARGIN = 50
+BOTTOM_MARGIN = 40
+TITLE_FONT = "Helvetica-Bold"
+BODY_FONT = "Courier"
+TITLE_FONT_SIZE = 14
+HEADING_FONT_SIZE = 10
+BODY_FONT_SIZE = 8
+LINE_HEIGHT = 10
 
-def main(lib_directory_path, output_path):
-    """Walks through the lib directory, concatenates Dart files, and creates a single text file.
 
-    Args:
-        lib_directory_path (str): Absolute path to the 'lib' directory.
-        output_path (str): Absolute path to the folder where the text file should be saved.
-    """
-    if not os.path.exists(output_path):
-        os.makedirs(output_path)
+def parse_arguments():
+    parser = argparse.ArgumentParser(
+        description="Export all supported code/text files in a folder to a single PDF."
+    )
+    parser.add_argument(
+        "source_directory",
+        nargs="?",
+        help="Absolute or relative path to the folder containing code files.",
+    )
+    parser.add_argument(
+        "output_directory",
+        nargs="?",
+        help="Directory where the generated PDF should be saved.",
+    )
+    parser.add_argument(
+        "--output-name",
+        default=None,
+        help="Name of the generated PDF file without extension.",
+    )
+    return parser.parse_args()
 
-    combined_dart_code = ""
-    dart_files_found = False
 
-    for root, _, files in os.walk(lib_directory_path):
-        for file in files:
-            if file.endswith('.dart') or file.endswith('.php') or file.endswith('.md') or file.endswith('.py') or file.endswith('.json') or file.endswith('.csv'):
-                dart_file_path = os.path.join(root, file)
-                try:
-                    with open(dart_file_path, 'r', encoding='utf-8') as f:
-                        dart_code = f.read()
-                        combined_dart_code += f"```\nContent of {os.path.relpath(dart_file_path, lib_directory_path)}\n```\n"
-                        combined_dart_code += dart_code + "\n\n"  # Add separator
-                        dart_files_found = True
-                except Exception as e:
-                    print(f"Error reading '{dart_file_path}': {e}")
+def prompt_for_missing_values(args):
+    source_directory = args.source_directory or input(
+        "Enter the absolute path to the folder containing the code files: "
+    ).strip()
+    output_directory = args.output_directory or input(
+        "Enter the absolute path to the folder where you want to save the PDF: "
+    ).strip()
+    output_name = args.output_name or input(
+        "Enter the name of the PDF file (without extension): "
+    ).strip()
+    return source_directory, output_directory, output_name
 
-    if dart_files_found:
-        txt_file_name = input("Enter the name of the text file (without extension): ")
-        txt_file_path = os.path.join(output_path, f"{txt_file_name}.txt")
-        create_txt_from_content(combined_dart_code, txt_file_path)
-    else:
-        print(f"No Dart files found in '{lib_directory_path}' or its subdirectories.")
+
+def normalize_output_name(output_name):
+    cleaned_name = output_name.strip() or "combined_code_export"
+    return cleaned_name if cleaned_name.lower().endswith(".pdf") else f"{cleaned_name}.pdf"
+
+
+def iter_supported_files(source_directory):
+    for root, dirs, files in os.walk(source_directory):
+        dirs[:] = sorted(directory for directory in dirs if directory not in SKIP_DIRECTORIES)
+
+        for file_name in sorted(files):
+            file_path = Path(root) / file_name
+            if file_path.suffix.lower() in SUPPORTED_EXTENSIONS:
+                yield file_path, file_path.relative_to(source_directory)
+
+
+def read_file_content(file_path):
+    with open(file_path, "r", encoding="utf-8", errors="replace") as file_handle:
+        return file_handle.read()
+
+
+def wrap_text_line(text, font_name, font_size, max_width):
+    expanded_text = text.expandtabs(4)
+    if not expanded_text:
+        return [""]
+
+    wrapped_lines = []
+    current_line = ""
+
+    for character in expanded_text:
+        candidate = f"{current_line}{character}"
+        if current_line and stringWidth(candidate, font_name, font_size) > max_width:
+            wrapped_lines.append(current_line)
+            current_line = character
+        else:
+            current_line = candidate
+
+    if current_line:
+        wrapped_lines.append(current_line)
+
+    return wrapped_lines
+
+
+def start_page(pdf_canvas, page_number, pdf_title):
+    pdf_canvas.setFont(TITLE_FONT, TITLE_FONT_SIZE)
+    pdf_canvas.drawString(LEFT_MARGIN, PAGE_HEIGHT - TOP_MARGIN + 12, pdf_title)
+    pdf_canvas.setFont("Helvetica", 9)
+    pdf_canvas.drawRightString(PAGE_WIDTH - RIGHT_MARGIN, PAGE_HEIGHT - TOP_MARGIN + 12, f"Page {page_number}")
+    pdf_canvas.line(LEFT_MARGIN, PAGE_HEIGHT - TOP_MARGIN + 6, PAGE_WIDTH - RIGHT_MARGIN, PAGE_HEIGHT - TOP_MARGIN + 6)
+    return PAGE_HEIGHT - TOP_MARGIN - 8
+
+
+def create_pdf_from_files(file_entries, pdf_file_path, source_directory):
+    pdf_title = f"Code Export: {Path(source_directory).name}"
+    pdf_canvas = canvas.Canvas(str(pdf_file_path), pagesize=A4)
+    pdf_canvas.setTitle(pdf_title)
+
+    page_number = 1
+    usable_width = PAGE_WIDTH - LEFT_MARGIN - RIGHT_MARGIN
+    y_position = start_page(pdf_canvas, page_number, pdf_title)
+
+    pdf_canvas.setFont("Helvetica", 9)
+    pdf_canvas.drawString(LEFT_MARGIN, y_position, f"Source folder: {Path(source_directory).resolve()}")
+    y_position -= LINE_HEIGHT
+    pdf_canvas.drawString(LEFT_MARGIN, y_position, f"Files included: {len(file_entries)}")
+    y_position -= LINE_HEIGHT * 2
+
+    for file_path, relative_path in file_entries:
+        if y_position <= BOTTOM_MARGIN + (LINE_HEIGHT * 4):
+            pdf_canvas.showPage()
+            page_number += 1
+            y_position = start_page(pdf_canvas, page_number, pdf_title)
+
+        pdf_canvas.setFont(TITLE_FONT, HEADING_FONT_SIZE)
+        pdf_canvas.drawString(LEFT_MARGIN, y_position, f"File: {relative_path}")
+        y_position -= LINE_HEIGHT
+
+        pdf_canvas.setFont("Helvetica", 8)
+        pdf_canvas.drawString(LEFT_MARGIN, y_position, "-" * 110)
+        y_position -= LINE_HEIGHT
+
+        pdf_canvas.setFont(BODY_FONT, BODY_FONT_SIZE)
+        file_content = read_file_content(file_path)
+        content_lines = file_content.splitlines() or [""]
+
+        for line in content_lines:
+            for wrapped_line in wrap_text_line(line, BODY_FONT, BODY_FONT_SIZE, usable_width):
+                if y_position <= BOTTOM_MARGIN + LINE_HEIGHT:
+                    pdf_canvas.showPage()
+                    page_number += 1
+                    y_position = start_page(pdf_canvas, page_number, pdf_title)
+                    pdf_canvas.setFont(BODY_FONT, BODY_FONT_SIZE)
+
+                pdf_canvas.drawString(LEFT_MARGIN, y_position, wrapped_line)
+                y_position -= LINE_HEIGHT
+
+        y_position -= LINE_HEIGHT
+
+    pdf_canvas.save()
+
+
+def main(source_directory, output_directory, output_name):
+    source_directory = Path(source_directory).expanduser().resolve()
+    output_directory = Path(output_directory).expanduser().resolve()
+
+    if not source_directory.is_dir():
+        print(f"Error: '{source_directory}' is not a valid directory.")
+        return 1
+
+    output_directory.mkdir(parents=True, exist_ok=True)
+
+    file_entries = list(iter_supported_files(source_directory))
+    if not file_entries:
+        print(f"No supported code or text files found in '{source_directory}'.")
+        return 1
+
+    pdf_file_path = output_directory / normalize_output_name(output_name)
+    create_pdf_from_files(file_entries, pdf_file_path, source_directory)
+    print(f"Successfully created PDF: '{pdf_file_path}'")
+    return 0
+
 
 if __name__ == "__main__":
-    lib_directory = input("Enter the absolute path to the 'lib' directory: ")
-    text_output_directory = input("Enter the absolute path to the folder where you want to save the text file: ")
-
-    if not os.path.isdir(lib_directory):
-        print(f"Error: '{lib_directory}' is not a valid directory.")
-    elif not os.path.isdir(text_output_directory):
-        print(f"Error: '{text_output_directory}' is not a valid directory.")
-    else:
-        main(lib_directory, text_output_directory)
+    cli_args = parse_arguments()
+    source_dir, output_dir, output_name = prompt_for_missing_values(cli_args)
+    raise SystemExit(main(source_dir, output_dir, output_name))
