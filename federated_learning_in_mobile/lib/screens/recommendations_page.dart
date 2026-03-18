@@ -25,6 +25,7 @@ class _RecommendationsPageState extends State<RecommendationsPage> {
   int _topN = 10;
   bool _excludeSeenItems = true;
   bool _isLoadingTitles = true;
+  final Set<int> _submittingSeenItems = <int>{};
   String? _error;
 
   @override
@@ -87,6 +88,58 @@ class _RecommendationsPageState extends State<RecommendationsPage> {
     }
   }
 
+  Future<void> _markAsSeen(MovieRecommendation rec, int index) async {
+    final userId = _selectedUserId;
+    if (userId == null ||
+        rec.isSeen ||
+        _submittingSeenItems.contains(rec.itemId)) {
+      return;
+    }
+
+    setState(() {
+      _submittingSeenItems.add(rec.itemId);
+      _recommendations[index] = rec.copyWith(
+        isSeen: true,
+        explanation:
+            'Predicted score ${rec.score.toStringAsFixed(4)} - Seen before',
+      );
+    });
+
+    try {
+      await widget.client.markRecommendationSeen(
+        userId: userId,
+        itemId: rec.itemId,
+        rating: 1.0,
+      );
+
+      if (!mounted) {
+        return;
+      }
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Marked "${rec.title}" as seen')));
+    } catch (e) {
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        _recommendations[index] = rec;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to send seen event: $e'),
+          backgroundColor: Colors.redAccent,
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _submittingSeenItems.remove(rec.itemId);
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -125,36 +178,59 @@ class _RecommendationsPageState extends State<RecommendationsPage> {
                       separatorBuilder: (_, __) => const Divider(height: 1),
                       itemBuilder: (context, index) {
                         final rec = _recommendations[index];
+                        final isSubmitting = _submittingSeenItems.contains(
+                          rec.itemId,
+                        );
                         return ListTile(
                           leading: CircleAvatar(child: Text('${index + 1}')),
                           title: Text(rec.title),
                           subtitle: Text(rec.explanation),
-                          trailing: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 4,
-                            ),
-                            decoration: BoxDecoration(
-                              color: rec.isSeen
-                                  ? Colors.orange.withValues(alpha: 0.15)
-                                  : Colors.green.withValues(alpha: 0.15),
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(
-                                color: rec.isSeen
-                                    ? Colors.orange
-                                    : Colors.green,
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: rec.isSeen
+                                      ? Colors.orange.withValues(alpha: 0.15)
+                                      : Colors.green.withValues(alpha: 0.15),
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(
+                                    color: rec.isSeen
+                                        ? Colors.orange
+                                        : Colors.green,
+                                  ),
+                                ),
+                                child: Text(
+                                  rec.isSeen ? 'Seen' : 'Unseen',
+                                  style: TextStyle(
+                                    color: rec.isSeen
+                                        ? Colors.orange
+                                        : Colors.green,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
                               ),
-                            ),
-                            child: Text(
-                              rec.isSeen ? 'Seen' : 'Unseen',
-                              style: TextStyle(
-                                color: rec.isSeen
-                                    ? Colors.orange
-                                    : Colors.green,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
+                              const SizedBox(width: 8),
+                              FilledButton.tonal(
+                                onPressed: (rec.isSeen || isSubmitting)
+                                    ? null
+                                    : () => _markAsSeen(rec, index),
+                                child: isSubmitting
+                                    ? const SizedBox(
+                                        height: 14,
+                                        width: 14,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                        ),
+                                      )
+                                    : Text(rec.isSeen ? 'Seen' : 'Mark seen'),
                               ),
-                            ),
+                            ],
                           ),
                         );
                       },

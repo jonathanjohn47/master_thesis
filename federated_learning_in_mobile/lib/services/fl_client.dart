@@ -7,32 +7,32 @@ import 'api_client.dart';
 class FederatedLearningClient {
   final ApiClient apiClient;
   final ResourceMonitor resourceMonitor;
-  
+
   MatrixFactorization? model;
   String clientId;
   String serverUrl;
-  
+
   int numUsers;
   int numItems;
   int embeddingDim;
-  
+
   // Training configuration
   double learningRate = 0.01;
   int localEpochs = 1;
   int batchSize = 32;
-  
+
   // Local training data: List of (user_id, item_id, rating) tuples
   List<List<dynamic>> localData = [];
-  
+
   FederatedLearningClient({
     required this.clientId,
     required this.serverUrl,
     required this.numUsers,
     required this.numItems,
     this.embeddingDim = 16,
-  })  : apiClient = ApiClient(serverUrl: serverUrl),
-        resourceMonitor = ResourceMonitor();
-  
+  }) : apiClient = ApiClient(serverUrl: serverUrl),
+       resourceMonitor = ResourceMonitor();
+
   /// Initialize client (check server, register, initialize monitoring)
   Future<void> initialize() async {
     print('[FL_CLIENT] Initializing client: $clientId');
@@ -41,12 +41,12 @@ class FederatedLearningClient {
       print('[FL_CLIENT] Checking server health...');
       await apiClient.healthCheck();
       print('[FL_CLIENT] Server health check passed');
-      
+
       // Register with server
       print('[FL_CLIENT] Registering client...');
       await apiClient.register(clientId);
       print('[FL_CLIENT] Client registered successfully');
-      
+
       // Initialize resource monitoring
       print('[FL_CLIENT] Initializing resource monitoring...');
       await resourceMonitor.initialize();
@@ -57,25 +57,73 @@ class FederatedLearningClient {
       rethrow;
     }
   }
-  
+
   /// Load local training data
   void loadLocalData(List<List<dynamic>> data) {
     localData = data; // data: [[user_id, item_id, rating], ...]
   }
-  
+
+  /// Check if local data already contains a user-item interaction.
+  bool hasInteraction({required int userId, required int itemId}) {
+    for (final sample in localData) {
+      if (sample.length < 2) {
+        continue;
+      }
+      final sampleUserId = sample[0];
+      final sampleItemId = sample[1];
+      if (sampleUserId == userId && sampleItemId == itemId) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /// Add a seen interaction to local data if it does not exist yet.
+  bool addSeenInteraction({
+    required int userId,
+    required int itemId,
+    double rating = 1.0,
+  }) {
+    if (userId < 0 || userId >= numUsers || itemId < 0 || itemId >= numItems) {
+      return false;
+    }
+    if (hasInteraction(userId: userId, itemId: itemId)) {
+      return false;
+    }
+    localData.add([userId, itemId, rating]);
+    return true;
+  }
+
+  /// Mark recommendation as seen and upload feedback event to server.
+  Future<Map<String, dynamic>> markRecommendationSeen({
+    required int userId,
+    required int itemId,
+    double rating = 1.0,
+  }) async {
+    addSeenInteraction(userId: userId, itemId: itemId, rating: rating);
+    return apiClient.sendRecommendationSeenEvent(
+      clientId: clientId,
+      userId: userId,
+      itemId: itemId,
+      rating: rating,
+    );
+  }
+
   /// Fetch global model from server
   Future<void> fetchGlobalModel() async {
     print('[FL_CLIENT] Fetching global model...');
     try {
       final response = await apiClient.fetchGlobalParams();
-      
+
       // Extract model config
       final modelConfig = response['model_config'] as Map<String, dynamic>;
       numUsers = modelConfig['num_users'] as int;
       numItems = modelConfig['num_items'] as int;
       embeddingDim = modelConfig['embedding_dim'] as int;
-      print('[FL_CLIENT] Model config: numUsers=$numUsers, numItems=$numItems, embeddingDim=$embeddingDim');
-      
+      print(
+        '[FL_CLIENT] Model config: numUsers=$numUsers, numItems=$numItems, embeddingDim=$embeddingDim',
+      );
+
       // Decode parameters
       final paramsJson = response['params'] as List;
       print('[FL_CLIENT] Decoding ${paramsJson.length} parameter tensors...');
@@ -83,7 +131,7 @@ class FederatedLearningClient {
         paramsJson.map((p) => p as Map<String, dynamic>).toList(),
       );
       print('[FL_CLIENT] Parameters decoded successfully');
-      
+
       // Create and load model
       print('[FL_CLIENT] Creating model instance...');
       model = MatrixFactorization(
@@ -99,7 +147,7 @@ class FederatedLearningClient {
       rethrow;
     }
   }
-  
+
   /// Train model locally using local data
   Future<Map<String, dynamic>> trainLocal() async {
     print('[FL_CLIENT] Starting local training...');
@@ -107,35 +155,35 @@ class FederatedLearningClient {
       print('[FL_CLIENT_ERROR] Model not initialized');
       throw StateError('Model not initialized. Call fetchGlobalModel() first.');
     }
-    
+
     if (localData.isEmpty) {
       print('[FL_CLIENT] No local data available, returning empty metrics');
-      return {
-        'loss': 0.0,
-        'samples': 0,
-        'epochs': 0,
-      };
+      return {'loss': 0.0, 'samples': 0, 'epochs': 0};
     }
-    
-    print('[FL_CLIENT] Training with ${localData.length} samples, $localEpochs epochs, batch size $batchSize');
-    
+
+    print(
+      '[FL_CLIENT] Training with ${localData.length} samples, $localEpochs epochs, batch size $batchSize',
+    );
+
     final startTime = DateTime.now();
     double totalLoss = 0.0;
     int numBatches = 0;
-    
+
     // Simple SGD training (one epoch for mobile efficiency)
     for (int epoch = 0; epoch < localEpochs; epoch++) {
       // Shuffle data
       localData.shuffle();
-      
+
       // Process in batches
       for (int i = 0; i < localData.length; i += batchSize) {
-        final batchEnd = (i + batchSize < localData.length) ? i + batchSize : localData.length;
+        final batchEnd = (i + batchSize < localData.length)
+            ? i + batchSize
+            : localData.length;
         final batch = localData.sublist(i, batchEnd);
-        
+
         // Compute gradients (simplified - full implementation would use proper backprop)
         double batchLoss = 0.0;
-        
+
         // Initialize gradients
         final userGrad = List.generate(
           numUsers,
@@ -145,34 +193,39 @@ class FederatedLearningClient {
           numItems,
           (_) => List.filled(embeddingDim, 0.0),
         );
-        
+
         // Compute gradients for batch
         for (var sample in batch) {
           final userId = sample[0] as int;
           final itemId = sample[1] as int;
           final rating = (sample[2] as num).toDouble();
-          
+
           // Validate IDs are in range before accessing embeddings
-          if (userId < 0 || userId >= numUsers || itemId < 0 || itemId >= numItems) {
-            print('[FL_CLIENT_ERROR] Invalid IDs in sample: user=$userId (valid: 0-${numUsers-1}), item=$itemId (valid: 0-${numItems-1})');
+          if (userId < 0 ||
+              userId >= numUsers ||
+              itemId < 0 ||
+              itemId >= numItems) {
+            print(
+              '[FL_CLIENT_ERROR] Invalid IDs in sample: user=$userId (valid: 0-${numUsers - 1}), item=$itemId (valid: 0-${numItems - 1})',
+            );
             continue; // Skip invalid samples
           }
-          
+
           // Forward pass
           final prediction = model!.predict(userId, itemId);
           final error = prediction - rating;
           batchLoss += error * error;
-          
+
           // Backward pass (simplified gradient)
           final userEmb = model!.userEmbeddings[userId];
           final itemEmb = model!.itemEmbeddings[itemId];
-          
+
           for (int j = 0; j < embeddingDim; j++) {
             userGrad[userId][j] += error * itemEmb[j];
             itemGrad[itemId][j] += error * userEmb[j];
           }
         }
-        
+
         // Average gradients
         final actualBatchSize = batch.length;
         for (int u = 0; u < numUsers; u++) {
@@ -185,20 +238,22 @@ class FederatedLearningClient {
             itemGrad[i][j] /= actualBatchSize;
           }
         }
-        
+
         // Update parameters
         model!.updateParameters(userGrad, itemGrad, learningRate);
-        
+
         totalLoss += batchLoss / actualBatchSize;
         numBatches++;
       }
     }
-    
+
     final trainingTime = DateTime.now().difference(startTime).inMilliseconds;
     final avgLoss = numBatches > 0 ? totalLoss / numBatches : 0.0;
-    
-    print('[FL_CLIENT] Training complete: loss=$avgLoss, samples=${localData.length}, time=${trainingTime}ms');
-    
+
+    print(
+      '[FL_CLIENT] Training complete: loss=$avgLoss, samples=${localData.length}, time=${trainingTime}ms',
+    );
+
     return {
       'loss': avgLoss,
       'samples': localData.length,
@@ -206,7 +261,7 @@ class FederatedLearningClient {
       'training_time_ms': trainingTime,
     };
   }
-  
+
   /// Upload local model parameters to server
   Future<Map<String, dynamic>> uploadParams() async {
     print('[FL_CLIENT] Uploading parameters...');
@@ -214,18 +269,18 @@ class FederatedLearningClient {
       print('[FL_CLIENT_ERROR] Model not initialized');
       throw StateError('Model not initialized');
     }
-    
+
     print('[FL_CLIENT] Getting model state dict...');
     final stateDict = model!.getStateDict();
     print('[FL_CLIENT] Encoding parameters to JSON...');
     final paramsJson = ModelEncoder.modelToJsonParams(stateDict);
     print('[FL_CLIENT] Encoded ${paramsJson.length} parameter tensors');
-    
+
     // Get resource metrics
     print('[FL_CLIENT] Getting resource metrics...');
     final metrics = await resourceMonitor.getMetrics();
     print('[FL_CLIENT] Resource metrics: $metrics');
-    
+
     print('[FL_CLIENT] Uploading to server...');
     final response = await apiClient.uploadParams(
       clientId: clientId,
@@ -233,13 +288,10 @@ class FederatedLearningClient {
       sampleCount: localData.length,
     );
     print('[FL_CLIENT] Upload successful');
-    
-    return {
-      ...response,
-      'resource_metrics': metrics,
-    };
+
+    return {...response, 'resource_metrics': metrics};
   }
-  
+
   /// Evaluate model on local data (used as test set proxy)
   Map<String, dynamic> evaluateModel() {
     print('[FL_CLIENT] Evaluating model on local data...');
@@ -255,7 +307,7 @@ class FederatedLearningClient {
         'Recall@10': 0.0,
       };
     }
-    
+
     if (localData.isEmpty) {
       print('[FL_CLIENT] No local data for evaluation');
       return {
@@ -268,30 +320,33 @@ class FederatedLearningClient {
         'Recall@10': 0.0,
       };
     }
-    
+
     double totalLoss = 0.0;
     double totalMae = 0.0;
     int correctPredictions = 0;
     int totalSamples = 0;
-    
+
     // Evaluate on local data
     for (var sample in localData) {
       final userId = sample[0] as int;
       final itemId = sample[1] as int;
       final rating = (sample[2] as num).toDouble();
-      
+
       // Validate IDs
-      if (userId < 0 || userId >= numUsers || itemId < 0 || itemId >= numItems) {
+      if (userId < 0 ||
+          userId >= numUsers ||
+          itemId < 0 ||
+          itemId >= numItems) {
         continue;
       }
-      
+
       try {
         final prediction = model!.predict(userId, itemId);
         final error = prediction - rating;
-        
+
         totalLoss += error * error; // MSE
         totalMae += error.abs();
-        
+
         // Binary classification accuracy (threshold at 0.5)
         final predBinary = prediction > 0.5 ? 1.0 : 0.0;
         if (predBinary == rating) {
@@ -299,10 +354,12 @@ class FederatedLearningClient {
         }
         totalSamples++;
       } catch (e) {
-        print('[FL_CLIENT_ERROR] Evaluation error for user=$userId, item=$itemId: $e');
+        print(
+          '[FL_CLIENT_ERROR] Evaluation error for user=$userId, item=$itemId: $e',
+        );
       }
     }
-    
+
     if (totalSamples == 0) {
       return {
         'accuracy': 0.0,
@@ -314,20 +371,22 @@ class FederatedLearningClient {
         'Recall@10': 0.0,
       };
     }
-    
+
     final mse = totalLoss / totalSamples;
     final mae = totalMae / totalSamples;
     final accuracy = correctPredictions / totalSamples;
-    
+
     // For recommendation metrics, we'll use simplified versions
     // Since we don't have a full test set, we compute basic metrics
     final hitAt10 = accuracy; // Simplified: using accuracy as proxy
     final ndcgAt10 = accuracy; // Simplified
     final precisionAt10 = accuracy;
     final recallAt10 = accuracy;
-    
-    print('[FL_CLIENT] Evaluation complete: accuracy=$accuracy, mse=$mse, mae=$mae');
-    
+
+    print(
+      '[FL_CLIENT] Evaluation complete: accuracy=$accuracy, mse=$mse, mae=$mae',
+    );
+
     return {
       'accuracy': accuracy,
       'mse': mse,
@@ -339,7 +398,7 @@ class FederatedLearningClient {
       'samples': totalSamples,
     };
   }
-  
+
   /// Execute one complete federated learning round
   Future<Map<String, dynamic>> runTrainingRound() async {
     print('[FL_CLIENT] ========== Starting training round ==========');
@@ -347,19 +406,19 @@ class FederatedLearningClient {
       // 1. Fetch global model (will throw if not initialized)
       print('[FL_CLIENT] Step 1/3: Fetching global model...');
       await fetchGlobalModel();
-      
+
       // 2. Train locally
       print('[FL_CLIENT] Step 2/3: Training locally...');
       final trainMetrics = await trainLocal();
-      
+
       // 2.5. Evaluate model after training (before uploading)
       print('[FL_CLIENT] Step 2.5/3: Evaluating model...');
       final testMetrics = evaluateModel();
-      
+
       // 3. Upload parameters
       print('[FL_CLIENT] Step 3/3: Uploading parameters...');
       final uploadMetrics = await uploadParams();
-      
+
       print('[FL_CLIENT] ========== Training round complete ==========');
       return {
         'train': trainMetrics,
@@ -373,4 +432,3 @@ class FederatedLearningClient {
     }
   }
 }
-

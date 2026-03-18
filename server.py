@@ -53,6 +53,14 @@ class MobileResultsRequest(BaseModel):
     experiment_data: Dict  # Full experiment data JSON
 
 
+class SeenEventRequest(BaseModel):
+    """Recommendation feedback event from mobile client."""
+    client_id: str
+    user_id: int
+    item_id: int
+    rating: float = 1.0
+
+
 class ServerState:
     """Server state management"""
     
@@ -60,6 +68,7 @@ class ServerState:
         self.clients = {}  # client_id -> metadata
         self.global_model = None
         self.uploaded_params = defaultdict(list)  # round -> [client_params]
+        self.seen_events = []  # persisted recommendation feedback events
         self.current_round = 0
         self.model_config = None
         
@@ -68,6 +77,7 @@ class ServerState:
         self.clients.clear()
         self.global_model = None
         self.uploaded_params.clear()
+        self.seen_events.clear()
         self.current_round = 0
         self.model_config = None
 
@@ -491,6 +501,41 @@ async def upload_mobile_results(request: MobileResultsRequest):
     except Exception as e:
         logger.error(f"Failed to save mobile results: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Failed to save results: {str(e)}")
+
+
+@app.post("/recommendation-events")
+async def upload_recommendation_event(request: SeenEventRequest):
+    """Save recommendation feedback (e.g., item marked as seen)."""
+    if server_state.model_config is not None:
+        max_users = server_state.model_config.get("num_users", 0)
+        max_items = server_state.model_config.get("num_items", 0)
+        if request.user_id < 0 or request.user_id >= max_users:
+            raise HTTPException(status_code=400, detail="Invalid user_id for current model")
+        if request.item_id < 0 or request.item_id >= max_items:
+            raise HTTPException(status_code=400, detail="Invalid item_id for current model")
+
+    event = {
+        "client_id": request.client_id,
+        "user_id": request.user_id,
+        "item_id": request.item_id,
+        "rating": request.rating,
+        "event": "seen",
+        "server_received_at": datetime.now().isoformat(),
+    }
+    server_state.seen_events.append(event)
+
+    # Append to disk so events survive process restarts and can be reused later.
+    results_dir = Path("mobile_results")
+    results_dir.mkdir(exist_ok=True)
+    events_file = results_dir / "recommendation_events.jsonl"
+    with open(events_file, "a", encoding="utf-8") as f:
+        f.write(json.dumps(event) + "\n")
+
+    return {
+        "status": "saved",
+        "event": "seen",
+        "total_events": len(server_state.seen_events),
+    }
 
 
 if __name__ == "__main__":

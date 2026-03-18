@@ -16,6 +16,22 @@ class MovieRecommendation {
     required this.isSeen,
     required this.explanation,
   });
+
+  MovieRecommendation copyWith({
+    int? itemId,
+    String? title,
+    double? score,
+    bool? isSeen,
+    String? explanation,
+  }) {
+    return MovieRecommendation(
+      itemId: itemId ?? this.itemId,
+      title: title ?? this.title,
+      score: score ?? this.score,
+      isSeen: isSeen ?? this.isSeen,
+      explanation: explanation ?? this.explanation,
+    );
+  }
 }
 
 class RecommendationService {
