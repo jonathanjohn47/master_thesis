@@ -931,24 +931,31 @@ class _FederatedLearningHomePageState extends State<FederatedLearningHomePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Federated Client',
-                        style: TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Federated Client',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'Researcher Edition v2.4',
-                        style: TextStyle(fontSize: 16, color: Colors.grey[400]),
-                      ),
-                    ],
+                        const SizedBox(height: 4),
+                        Text(
+                          'Researcher Edition v2.4',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(fontSize: 16, color: Colors.grey[400]),
+                        ),
+                      ],
+                    ),
                   ),
+                  const SizedBox(width: 12),
                   Container(
                     decoration: BoxDecoration(
                       color: const Color(0xFF212D3F),
@@ -1134,29 +1141,36 @@ class _FederatedLearningHomePageState extends State<FederatedLearningHomePage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Row(
-                            children: [
-                              Container(
-                                width: 12,
-                                height: 12,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: _isConnected
-                                      ? const Color(0xFF4CAF50)
-                                      : Colors.grey,
+                          Expanded(
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 12,
+                                  height: 12,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: _isConnected
+                                        ? const Color(0xFF4CAF50)
+                                        : Colors.grey,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(width: 10),
-                              Text(
-                                'Status: $_status',
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: Text(
+                                    'Status: $_status',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
+                          const SizedBox(width: 8),
                           Container(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 12,

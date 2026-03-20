@@ -49,8 +49,12 @@ class FederatedLearningClient {
 
       // Initialize resource monitoring
       print('[FL_CLIENT] Initializing resource monitoring...');
-      await resourceMonitor.initialize();
-      print('[FL_CLIENT] Resource monitoring initialized');
+      try {
+        await resourceMonitor.initialize();
+        print('[FL_CLIENT] Resource monitoring initialized');
+      } catch (e) {
+        print('[FL_CLIENT_WARN] Resource monitoring unavailable: $e');
+      }
     } catch (e, stackTrace) {
       print('[FL_CLIENT_ERROR] Initialization failed: $e');
       print('[FL_CLIENT_ERROR] Stack trace: $stackTrace');

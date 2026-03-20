@@ -181,54 +181,90 @@ class _RecommendationsPageState extends State<RecommendationsPage> {
                         final isSubmitting = _submittingSeenItems.contains(
                           rec.itemId,
                         );
-                        return ListTile(
-                          leading: CircleAvatar(child: Text('${index + 1}')),
-                          title: Text(rec.title),
-                          subtitle: Text(rec.explanation),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 10,
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 4,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: rec.isSeen
-                                      ? Colors.orange.withValues(alpha: 0.15)
-                                      : Colors.green.withValues(alpha: 0.15),
-                                  borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(
-                                    color: rec.isSeen
-                                        ? Colors.orange
-                                        : Colors.green,
-                                  ),
-                                ),
-                                child: Text(
-                                  rec.isSeen ? 'Seen' : 'Unseen',
-                                  style: TextStyle(
-                                    color: rec.isSeen
-                                        ? Colors.orange
-                                        : Colors.green,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                              CircleAvatar(child: Text('${index + 1}')),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      rec.title,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium,
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(rec.explanation),
+                                  ],
                                 ),
                               ),
-                              const SizedBox(width: 8),
-                              FilledButton.tonal(
-                                onPressed: (rec.isSeen || isSubmitting)
-                                    ? null
-                                    : () => _markAsSeen(rec, index),
-                                child: isSubmitting
-                                    ? const SizedBox(
-                                        height: 14,
-                                        width: 14,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                        ),
-                                      )
-                                    : Text(rec.isSeen ? 'Seen' : 'Mark seen'),
+                              const SizedBox(width: 10),
+                              Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 2,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: rec.isSeen
+                                          ? Colors.orange.withValues(alpha: 0.15)
+                                          : Colors.green.withValues(alpha: 0.15),
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(
+                                        color: rec.isSeen
+                                            ? Colors.orange
+                                            : Colors.green,
+                                      ),
+                                    ),
+                                    child: Text(
+                                      rec.isSeen ? 'Seen' : 'Unseen',
+                                      style: TextStyle(
+                                        color: rec.isSeen
+                                            ? Colors.orange
+                                            : Colors.green,
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 6),
+                                  FilledButton.tonal(
+                                    style: FilledButton.styleFrom(
+                                      minimumSize: const Size(0, 28),
+                                      tapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                      visualDensity: VisualDensity.compact,
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 10,
+                                        vertical: 6,
+                                      ),
+                                    ),
+                                    onPressed: (rec.isSeen || isSubmitting)
+                                        ? null
+                                        : () => _markAsSeen(rec, index),
+                                    child: isSubmitting
+                                        ? const SizedBox(
+                                            height: 12,
+                                            width: 12,
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                            ),
+                                          )
+                                        : Text(rec.isSeen ? 'Seen' : 'Mark seen'),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
