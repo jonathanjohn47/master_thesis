@@ -12,10 +12,7 @@ except ImportError as exc:
     ) from exc
 
 SUPPORTED_EXTENSIONS = {
-    ".dart", ".php", ".md", ".py", ".json", ".csv", ".txt",
-    ".yaml", ".yml", ".xml", ".html", ".css", ".js", ".ts",
-    ".java", ".c", ".cpp", ".h", ".hpp", ".sh", ".bat", ".ini",
-    ".cfg", ".conf"
+    ".dart", ".py", ".json", ".csv", ".md"
 }
 
 SKIP_DIRECTORIES = {
@@ -122,53 +119,84 @@ def start_page(pdf_canvas, page_number, pdf_title):
     return PAGE_HEIGHT - TOP_MARGIN - 8
 
 
+MAX_PDF_SIZE_BYTES = 1 * 1024 * 1024  # 1 MB
+MAX_PAGES_PER_PDF = 40  # ~5MB depending on content (adjust if needed)
 def create_pdf_from_files(file_entries, pdf_file_path, source_directory):
     pdf_title = f"Code Export: {Path(source_directory).name}"
-    pdf_canvas = canvas.Canvas(str(pdf_file_path), pagesize=A4)
-    pdf_canvas.setTitle(pdf_title)
 
-    page_number = 1
+    base_name = pdf_file_path.stem
+    output_dir = pdf_file_path.parent
+
+    TOTAL_PARTS = 19
+    total_files = len(file_entries)
+
+    if total_files == 0:
+        return
+
+    # Compute chunk size (balanced split)
+    chunk_size = (total_files + TOTAL_PARTS - 1) // TOTAL_PARTS  # ceil division
+
     usable_width = PAGE_WIDTH - LEFT_MARGIN - RIGHT_MARGIN
-    y_position = start_page(pdf_canvas, page_number, pdf_title)
 
-    pdf_canvas.setFont("Helvetica", 9)
-    pdf_canvas.drawString(LEFT_MARGIN, y_position, f"Source folder: {Path(source_directory).resolve()}")
-    y_position -= LINE_HEIGHT
-    pdf_canvas.drawString(LEFT_MARGIN, y_position, f"Files included: {len(file_entries)}")
-    y_position -= LINE_HEIGHT * 2
+    for part_number in range(TOTAL_PARTS):
+        start_idx = part_number * chunk_size
+        end_idx = min(start_idx + chunk_size, total_files)
 
-    for file_path, relative_path in file_entries:
-        if y_position <= BOTTOM_MARGIN + (LINE_HEIGHT * 4):
-            pdf_canvas.showPage()
-            page_number += 1
-            y_position = start_page(pdf_canvas, page_number, pdf_title)
+        if start_idx >= total_files:
+            break  # no more files
 
-        pdf_canvas.setFont(TITLE_FONT, HEADING_FONT_SIZE)
-        pdf_canvas.drawString(LEFT_MARGIN, y_position, f"File: {relative_path}")
+        part_entries = file_entries[start_idx:end_idx]
+
+        part_path = output_dir / f"{base_name}_part{part_number + 1}.pdf"
+        pdf_canvas = canvas.Canvas(str(part_path), pagesize=A4)
+        pdf_canvas.setTitle(f"{pdf_title} (Part {part_number + 1})")
+
+        page_number = 1
+        y_position = start_page(pdf_canvas, page_number, pdf_title)
+
+        # Header
+        pdf_canvas.setFont("Helvetica", 9)
+        pdf_canvas.drawString(LEFT_MARGIN, y_position, f"Source folder: {Path(source_directory).resolve()}")
         y_position -= LINE_HEIGHT
+        pdf_canvas.drawString(LEFT_MARGIN, y_position, f"Files in this part: {len(part_entries)}")
+        y_position -= LINE_HEIGHT * 2
 
-        pdf_canvas.setFont("Helvetica", 8)
-        pdf_canvas.drawString(LEFT_MARGIN, y_position, "-" * 110)
-        y_position -= LINE_HEIGHT
+        for file_path, relative_path in part_entries:
 
-        pdf_canvas.setFont(BODY_FONT, BODY_FONT_SIZE)
-        file_content = read_file_content(file_path)
-        content_lines = file_content.splitlines() or [""]
+            if y_position <= BOTTOM_MARGIN + (LINE_HEIGHT * 4):
+                pdf_canvas.showPage()
+                page_number += 1
+                y_position = start_page(pdf_canvas, page_number, pdf_title)
 
-        for line in content_lines:
-            for wrapped_line in wrap_text_line(line, BODY_FONT, BODY_FONT_SIZE, usable_width):
-                if y_position <= BOTTOM_MARGIN + LINE_HEIGHT:
-                    pdf_canvas.showPage()
-                    page_number += 1
-                    y_position = start_page(pdf_canvas, page_number, pdf_title)
-                    pdf_canvas.setFont(BODY_FONT, BODY_FONT_SIZE)
+            pdf_canvas.setFont(TITLE_FONT, HEADING_FONT_SIZE)
+            pdf_canvas.drawString(LEFT_MARGIN, y_position, f"File: {relative_path}")
+            y_position -= LINE_HEIGHT
 
-                pdf_canvas.drawString(LEFT_MARGIN, y_position, wrapped_line)
-                y_position -= LINE_HEIGHT
+            pdf_canvas.setFont("Helvetica", 8)
+            pdf_canvas.drawString(LEFT_MARGIN, y_position, "-" * 110)
+            y_position -= LINE_HEIGHT
 
-        y_position -= LINE_HEIGHT
+            pdf_canvas.setFont(BODY_FONT, BODY_FONT_SIZE)
 
-    pdf_canvas.save()
+            file_content = read_file_content(file_path)
+            content_lines = file_content.splitlines() or [""]
+
+            for line in content_lines:
+                for wrapped_line in wrap_text_line(line, BODY_FONT, BODY_FONT_SIZE, usable_width):
+
+                    if y_position <= BOTTOM_MARGIN + LINE_HEIGHT:
+                        pdf_canvas.showPage()
+                        page_number += 1
+                        y_position = start_page(pdf_canvas, page_number, pdf_title)
+                        pdf_canvas.setFont(BODY_FONT, BODY_FONT_SIZE)
+
+                    pdf_canvas.drawString(LEFT_MARGIN, y_position, wrapped_line)
+                    y_position -= LINE_HEIGHT
+
+            y_position -= LINE_HEIGHT
+
+        pdf_canvas.save()
+        print(f"Created: {part_path}")
 
 
 def main(source_directory, output_directory, output_name):

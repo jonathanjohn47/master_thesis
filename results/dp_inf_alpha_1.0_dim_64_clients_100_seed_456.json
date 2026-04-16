@@ -1,6 +1,6 @@
 {
   "experiment_id": "dp_inf_alpha_1.0_dim_64_clients_100_seed_456",
-  "timestamp": "2026-02-11T03:05:31.166801",
+  "timestamp": "2026-04-16T06:48:02.928818",
   "config": {
     "num_users": 943,
     "num_items": 1682,
@@ -9,7 +9,7 @@
     "alpha": 1.0,
     "dp_epsilon": null,
     "use_dp": false,
-    "dp_sigma": 0.0,
+    "dp_sigma": 1.0,
     "dp_clip_norm": 1.0,
     "num_rounds": 10,
     "local_epochs": 3,
@@ -20,158 +20,6256 @@
   "rounds": [
     {
       "round": 1,
-      "train_loss": 13.72330759866843,
+      "train_loss": 13.725422344352083,
       "test_metrics": {
-        "mse": 13.688510116577149,
-        "mae": 3.5223534229278566,
+        "mse": 13.689578178405762,
+        "mae": 3.522486710357666,
+        "accuracy": 0.0,
         "samples": 20000,
-        "NDCG@10": 0.0577968700397596,
-        "Hit@10": 0.09,
-        "Precision@10": 0.009,
-        "Recall@10": 0.0037602713721248985,
+        "NDCG@10": 0.043655897309337714,
+        "Hit@10": 0.05,
+        "Precision@10": 0.005,
+        "Recall@10": 0.0015836157453654864,
         "num_users_evaluated": 100
       },
       "aggregation": {
+        "status": "aggregated",
+        "round": 230,
         "num_clients": 100,
         "total_samples": 80000
-      }
+      },
+      "client_metrics": [
+        {
+          "client_id": "client_0",
+          "loss": 13.868508166730438,
+          "samples": 774,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_1",
+          "loss": 14.102110275584412,
+          "samples": 659,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_2",
+          "loss": 13.612791473754902,
+          "samples": 815,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_3",
+          "loss": 12.930259673309816,
+          "samples": 828,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_4",
+          "loss": 13.244929645143223,
+          "samples": 817,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_5",
+          "loss": 13.795547126656054,
+          "samples": 863,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_6",
+          "loss": 13.413081547362555,
+          "samples": 803,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_7",
+          "loss": 13.802522613300297,
+          "samples": 760,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_8",
+          "loss": 13.855453056818455,
+          "samples": 812,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_9",
+          "loss": 13.506400130803927,
+          "samples": 822,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_10",
+          "loss": 13.540451524218627,
+          "samples": 803,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_11",
+          "loss": 14.18443550270769,
+          "samples": 771,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_12",
+          "loss": 13.654925166021432,
+          "samples": 864,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_13",
+          "loss": 13.43312200987016,
+          "samples": 851,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_14",
+          "loss": 14.218210335936558,
+          "samples": 788,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_15",
+          "loss": 13.901126523636021,
+          "samples": 798,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_16",
+          "loss": 13.854515544898403,
+          "samples": 690,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_17",
+          "loss": 13.913983161480411,
+          "samples": 839,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_18",
+          "loss": 13.361427771611428,
+          "samples": 804,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_19",
+          "loss": 13.581441546205696,
+          "samples": 820,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_20",
+          "loss": 13.254605434437293,
+          "samples": 784,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_21",
+          "loss": 14.076003925538595,
+          "samples": 767,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_22",
+          "loss": 13.455116490722165,
+          "samples": 832,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_23",
+          "loss": 13.575880412874783,
+          "samples": 864,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_24",
+          "loss": 14.100338581068296,
+          "samples": 764,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_25",
+          "loss": 13.540067797371037,
+          "samples": 787,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_26",
+          "loss": 13.732053526254472,
+          "samples": 751,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_27",
+          "loss": 13.941771156069354,
+          "samples": 772,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_28",
+          "loss": 13.419559642751386,
+          "samples": 835,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_29",
+          "loss": 13.626124607238424,
+          "samples": 778,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_30",
+          "loss": 13.66667618578608,
+          "samples": 757,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_31",
+          "loss": 13.30740848599969,
+          "samples": 798,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_32",
+          "loss": 13.198774706523622,
+          "samples": 829,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_33",
+          "loss": 13.639073062534765,
+          "samples": 816,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_34",
+          "loss": 13.687823595567236,
+          "samples": 758,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_35",
+          "loss": 13.690673213250335,
+          "samples": 785,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_36",
+          "loss": 13.991777668592963,
+          "samples": 817,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_37",
+          "loss": 13.618830359080514,
+          "samples": 721,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_38",
+          "loss": 13.910912493557625,
+          "samples": 770,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_39",
+          "loss": 14.138218722893681,
+          "samples": 820,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_40",
+          "loss": 13.878182581297214,
+          "samples": 854,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_41",
+          "loss": 14.10135686510284,
+          "samples": 799,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_42",
+          "loss": 14.006648091939352,
+          "samples": 823,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_43",
+          "loss": 14.045528120726082,
+          "samples": 840,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_44",
+          "loss": 13.58340725907345,
+          "samples": 800,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_45",
+          "loss": 13.6055543940317,
+          "samples": 825,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_46",
+          "loss": 14.353186142133977,
+          "samples": 802,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_47",
+          "loss": 13.859885195452069,
+          "samples": 750,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_48",
+          "loss": 13.374752915647944,
+          "samples": 834,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_49",
+          "loss": 13.68853446914191,
+          "samples": 735,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_50",
+          "loss": 13.733326258335923,
+          "samples": 792,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_51",
+          "loss": 13.523948080345455,
+          "samples": 802,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_52",
+          "loss": 13.369836440217316,
+          "samples": 827,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_53",
+          "loss": 13.360794360701142,
+          "samples": 813,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_54",
+          "loss": 13.52294779200803,
+          "samples": 855,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_55",
+          "loss": 13.755879255008864,
+          "samples": 914,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_56",
+          "loss": 13.64473131424538,
+          "samples": 791,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_57",
+          "loss": 14.411997221475291,
+          "samples": 792,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_58",
+          "loss": 13.768060608418102,
+          "samples": 847,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_59",
+          "loss": 13.675551039114865,
+          "samples": 767,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_60",
+          "loss": 13.29376400507998,
+          "samples": 802,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_61",
+          "loss": 13.514904109046885,
+          "samples": 770,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_62",
+          "loss": 13.93082209602349,
+          "samples": 830,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_63",
+          "loss": 13.608962704472653,
+          "samples": 762,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_64",
+          "loss": 13.838539470734299,
+          "samples": 833,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_65",
+          "loss": 14.197195800306384,
+          "samples": 812,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_66",
+          "loss": 13.450448744066952,
+          "samples": 805,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_67",
+          "loss": 14.351042848610446,
+          "samples": 779,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_68",
+          "loss": 14.090771970427891,
+          "samples": 783,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_69",
+          "loss": 13.434554441315683,
+          "samples": 804,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_70",
+          "loss": 13.65351971895492,
+          "samples": 753,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_71",
+          "loss": 13.686659116387341,
+          "samples": 869,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_72",
+          "loss": 14.193975662079623,
+          "samples": 765,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_73",
+          "loss": 13.919614237521191,
+          "samples": 774,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_74",
+          "loss": 13.437765108620468,
+          "samples": 841,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_75",
+          "loss": 13.75947664352599,
+          "samples": 769,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_76",
+          "loss": 14.047043167757195,
+          "samples": 855,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_77",
+          "loss": 13.578830116975793,
+          "samples": 816,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_78",
+          "loss": 13.635409779453726,
+          "samples": 827,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_79",
+          "loss": 13.191976721647181,
+          "samples": 747,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_80",
+          "loss": 13.851514836679458,
+          "samples": 730,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_81",
+          "loss": 13.868045164951832,
+          "samples": 881,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_82",
+          "loss": 13.66689953100969,
+          "samples": 762,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_83",
+          "loss": 14.273033374806426,
+          "samples": 817,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_84",
+          "loss": 14.125002121777824,
+          "samples": 766,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_85",
+          "loss": 13.617145864411624,
+          "samples": 871,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_86",
+          "loss": 13.431675808154642,
+          "samples": 781,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_87",
+          "loss": 13.725272840206541,
+          "samples": 801,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_88",
+          "loss": 13.071408809580923,
+          "samples": 785,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_89",
+          "loss": 13.673762199755318,
+          "samples": 854,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_90",
+          "loss": 13.755700093283375,
+          "samples": 776,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_91",
+          "loss": 13.370645217639444,
+          "samples": 781,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_92",
+          "loss": 14.1166556319887,
+          "samples": 789,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_93",
+          "loss": 13.470615464780542,
+          "samples": 765,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_94",
+          "loss": 14.065266374104544,
+          "samples": 768,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_95",
+          "loss": 14.219641660182013,
+          "samples": 756,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_96",
+          "loss": 13.776877677331248,
+          "samples": 795,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_97",
+          "loss": 13.81687011850571,
+          "samples": 855,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_98",
+          "loss": 13.36631911310088,
+          "samples": 749,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_99",
+          "loss": 13.853564801369219,
+          "samples": 874,
+          "epochs": 3
+        }
+      ],
+      "timestamp": "2026-04-16T06:48:11.860289"
     },
     {
       "round": 2,
-      "train_loss": 13.719931132283033,
+      "train_loss": 13.720230753072503,
       "test_metrics": {
-        "mse": 13.68849630279541,
-        "mae": 3.522351094818115,
-        "samples": 20000
+        "mse": 13.68955005493164,
+        "mae": 3.522483349609375,
+        "accuracy": 0.0,
+        "samples": 20000,
+        "NDCG@10": 0.043655897309337714,
+        "Hit@10": 0.05,
+        "Precision@10": 0.005,
+        "Recall@10": 0.0015836157453654864,
+        "num_users_evaluated": 100
       },
       "aggregation": {
+        "status": "aggregated",
+        "round": 231,
         "num_clients": 100,
         "total_samples": 80000
-      }
+      },
+      "client_metrics": [
+        {
+          "client_id": "client_0",
+          "loss": 13.953542040108372,
+          "samples": 774,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_1",
+          "loss": 14.087043901907661,
+          "samples": 659,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_2",
+          "loss": 13.668834755569701,
+          "samples": 815,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_3",
+          "loss": 12.932238865382423,
+          "samples": 828,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_4",
+          "loss": 13.239640775304336,
+          "samples": 817,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_5",
+          "loss": 13.795425350688983,
+          "samples": 863,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_6",
+          "loss": 13.239355076490671,
+          "samples": 803,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_7",
+          "loss": 13.791055938125051,
+          "samples": 760,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_8",
+          "loss": 13.895750919112782,
+          "samples": 812,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_9",
+          "loss": 13.507254977551689,
+          "samples": 822,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_10",
+          "loss": 13.39269005588075,
+          "samples": 803,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_11",
+          "loss": 14.301796620731091,
+          "samples": 771,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_12",
+          "loss": 13.6541865982544,
+          "samples": 864,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_13",
+          "loss": 13.460734354247542,
+          "samples": 851,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_14",
+          "loss": 14.208033295972154,
+          "samples": 788,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_15",
+          "loss": 13.901439201651058,
+          "samples": 798,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_16",
+          "loss": 13.829332821280936,
+          "samples": 690,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_17",
+          "loss": 13.90693912291253,
+          "samples": 839,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_18",
+          "loss": 13.545242380445236,
+          "samples": 804,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_19",
+          "loss": 13.607041343444227,
+          "samples": 820,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_20",
+          "loss": 13.199270148716764,
+          "samples": 784,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_21",
+          "loss": 14.075926545465274,
+          "samples": 767,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_22",
+          "loss": 13.454355373041274,
+          "samples": 832,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_23",
+          "loss": 13.575144270501662,
+          "samples": 864,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_24",
+          "loss": 14.106726278305391,
+          "samples": 764,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_25",
+          "loss": 13.560085662602992,
+          "samples": 787,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_26",
+          "loss": 13.733000935447281,
+          "samples": 751,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_27",
+          "loss": 13.942931790412603,
+          "samples": 772,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_28",
+          "loss": 13.496388421800532,
+          "samples": 835,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_29",
+          "loss": 13.666249220147439,
+          "samples": 778,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_30",
+          "loss": 13.644821745718419,
+          "samples": 757,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_31",
+          "loss": 13.307617073643394,
+          "samples": 798,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_32",
+          "loss": 13.197737573491233,
+          "samples": 829,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_33",
+          "loss": 13.654239320540947,
+          "samples": 816,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_34",
+          "loss": 13.685906471799306,
+          "samples": 758,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_35",
+          "loss": 13.68338762476512,
+          "samples": 785,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_36",
+          "loss": 13.9935617731374,
+          "samples": 817,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_37",
+          "loss": 13.56960488431679,
+          "samples": 721,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_38",
+          "loss": 13.58404856689571,
+          "samples": 770,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_39",
+          "loss": 14.119556062583097,
+          "samples": 820,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_40",
+          "loss": 13.852008342449949,
+          "samples": 854,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_41",
+          "loss": 14.098668482672052,
+          "samples": 799,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_42",
+          "loss": 13.994654879515487,
+          "samples": 823,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_43",
+          "loss": 14.022381515225861,
+          "samples": 840,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_44",
+          "loss": 13.582741937732225,
+          "samples": 800,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_45",
+          "loss": 13.592785233068854,
+          "samples": 825,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_46",
+          "loss": 14.366682577566507,
+          "samples": 802,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_47",
+          "loss": 13.83800207892793,
+          "samples": 750,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_48",
+          "loss": 13.41727332045672,
+          "samples": 834,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_49",
+          "loss": 13.686048848375206,
+          "samples": 735,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_50",
+          "loss": 13.714247380823382,
+          "samples": 792,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_51",
+          "loss": 13.573930089494542,
+          "samples": 802,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_52",
+          "loss": 13.371939243151658,
+          "samples": 827,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_53",
+          "loss": 13.31179905599896,
+          "samples": 813,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_54",
+          "loss": 13.54264045997328,
+          "samples": 855,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_55",
+          "loss": 13.792856529248356,
+          "samples": 914,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_56",
+          "loss": 13.638178134909742,
+          "samples": 791,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_57",
+          "loss": 14.42722891326846,
+          "samples": 792,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_58",
+          "loss": 13.769914716098903,
+          "samples": 847,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_59",
+          "loss": 13.676964463905009,
+          "samples": 767,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_60",
+          "loss": 13.301169726209306,
+          "samples": 802,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_61",
+          "loss": 13.703735041689457,
+          "samples": 770,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_62",
+          "loss": 13.928083766978162,
+          "samples": 830,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_63",
+          "loss": 13.593002448435676,
+          "samples": 762,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_64",
+          "loss": 13.619537044088109,
+          "samples": 833,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_65",
+          "loss": 14.169693997480918,
+          "samples": 812,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_66",
+          "loss": 13.298848177288091,
+          "samples": 805,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_67",
+          "loss": 14.301380399117988,
+          "samples": 779,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_68",
+          "loss": 14.092859449037753,
+          "samples": 783,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_69",
+          "loss": 13.513835990486584,
+          "samples": 804,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_70",
+          "loss": 13.680377505290304,
+          "samples": 753,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_71",
+          "loss": 13.791227460348605,
+          "samples": 869,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_72",
+          "loss": 14.199150007448091,
+          "samples": 765,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_73",
+          "loss": 13.981566598755707,
+          "samples": 774,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_74",
+          "loss": 13.492347774414345,
+          "samples": 841,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_75",
+          "loss": 13.519027059227914,
+          "samples": 769,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_76",
+          "loss": 14.040327063638783,
+          "samples": 855,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_77",
+          "loss": 13.58398263584237,
+          "samples": 816,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_78",
+          "loss": 13.636364627510895,
+          "samples": 827,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_79",
+          "loss": 13.202339094961275,
+          "samples": 747,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_80",
+          "loss": 13.854637180167488,
+          "samples": 730,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_81",
+          "loss": 13.847686977382477,
+          "samples": 881,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_82",
+          "loss": 13.674708229449447,
+          "samples": 762,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_83",
+          "loss": 14.282252923329334,
+          "samples": 817,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_84",
+          "loss": 14.123097740158222,
+          "samples": 766,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_85",
+          "loss": 13.65527353606233,
+          "samples": 871,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_86",
+          "loss": 13.399757804226374,
+          "samples": 781,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_87",
+          "loss": 13.580656391041703,
+          "samples": 801,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_88",
+          "loss": 13.04772992856933,
+          "samples": 785,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_89",
+          "loss": 13.68351865287817,
+          "samples": 854,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_90",
+          "loss": 13.719878573273528,
+          "samples": 776,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_91",
+          "loss": 13.352244199106309,
+          "samples": 781,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_92",
+          "loss": 14.119844121224345,
+          "samples": 789,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_93",
+          "loss": 13.46739923792956,
+          "samples": 765,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_94",
+          "loss": 14.064601914779292,
+          "samples": 768,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_95",
+          "loss": 14.233486189777427,
+          "samples": 756,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_96",
+          "loss": 13.777902190562216,
+          "samples": 795,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_97",
+          "loss": 13.830615708828542,
+          "samples": 855,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_98",
+          "loss": 13.380256029894413,
+          "samples": 749,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_99",
+          "loss": 13.839587569102113,
+          "samples": 874,
+          "epochs": 3
+        }
+      ],
+      "timestamp": "2026-04-16T06:48:22.692615"
     },
     {
       "round": 3,
-      "train_loss": 13.726395302521766,
+      "train_loss": 13.72591238895044,
       "test_metrics": {
-        "mse": 13.688480722045899,
-        "mae": 3.5223484970092773,
-        "samples": 20000
+        "mse": 13.689520376586914,
+        "mae": 3.522479777908325,
+        "accuracy": 0.0,
+        "samples": 20000,
+        "NDCG@10": 0.04351154849812024,
+        "Hit@10": 0.05,
+        "Precision@10": 0.005,
+        "Recall@10": 0.0015836157453654864,
+        "num_users_evaluated": 100
       },
       "aggregation": {
+        "status": "aggregated",
+        "round": 232,
         "num_clients": 100,
         "total_samples": 80000
-      }
+      },
+      "client_metrics": [
+        {
+          "client_id": "client_0",
+          "loss": 13.83950352335903,
+          "samples": 774,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_1",
+          "loss": 14.102788913244732,
+          "samples": 659,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_2",
+          "loss": 13.61929825903979,
+          "samples": 815,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_3",
+          "loss": 12.927603213535523,
+          "samples": 828,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_4",
+          "loss": 13.202767080599166,
+          "samples": 817,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_5",
+          "loss": 13.7942676607257,
+          "samples": 863,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_6",
+          "loss": 13.195600585001065,
+          "samples": 803,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_7",
+          "loss": 13.785104467408795,
+          "samples": 760,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_8",
+          "loss": 13.923993922498093,
+          "samples": 812,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_9",
+          "loss": 13.528993922182496,
+          "samples": 822,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_10",
+          "loss": 13.577915677810614,
+          "samples": 803,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_11",
+          "loss": 14.194199461826365,
+          "samples": 771,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_12",
+          "loss": 13.65341295646572,
+          "samples": 864,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_13",
+          "loss": 13.439605700028409,
+          "samples": 851,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_14",
+          "loss": 14.210652339923236,
+          "samples": 788,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_15",
+          "loss": 13.898507123646533,
+          "samples": 798,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_16",
+          "loss": 13.852890469438258,
+          "samples": 690,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_17",
+          "loss": 13.88449026556435,
+          "samples": 839,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_18",
+          "loss": 13.430925514962782,
+          "samples": 804,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_19",
+          "loss": 13.626328599291078,
+          "samples": 820,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_20",
+          "loss": 13.211346615434,
+          "samples": 784,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_21",
+          "loss": 14.076856285192521,
+          "samples": 767,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_22",
+          "loss": 13.453602361591969,
+          "samples": 832,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_23",
+          "loss": 13.574441636240527,
+          "samples": 864,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_24",
+          "loss": 14.103358019875914,
+          "samples": 764,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_25",
+          "loss": 13.517786723144193,
+          "samples": 787,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_26",
+          "loss": 13.729544250217138,
+          "samples": 751,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_27",
+          "loss": 14.092515210761093,
+          "samples": 772,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_28",
+          "loss": 13.437834197025648,
+          "samples": 835,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_29",
+          "loss": 13.735947107910354,
+          "samples": 778,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_30",
+          "loss": 13.644075482330718,
+          "samples": 757,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_31",
+          "loss": 13.30602259378591,
+          "samples": 798,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_32",
+          "loss": 13.190573767743734,
+          "samples": 829,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_33",
+          "loss": 13.674821360428034,
+          "samples": 816,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_34",
+          "loss": 13.684868768193656,
+          "samples": 758,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_35",
+          "loss": 13.702742724502981,
+          "samples": 785,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_36",
+          "loss": 14.015618499163589,
+          "samples": 817,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_37",
+          "loss": 13.595307222232089,
+          "samples": 721,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_38",
+          "loss": 13.746643913085927,
+          "samples": 770,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_39",
+          "loss": 14.114193894315317,
+          "samples": 820,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_40",
+          "loss": 13.873243490299766,
+          "samples": 854,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_41",
+          "loss": 14.097385612714383,
+          "samples": 799,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_42",
+          "loss": 14.001681979719459,
+          "samples": 823,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_43",
+          "loss": 14.041141218924773,
+          "samples": 840,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_44",
+          "loss": 13.582072687252866,
+          "samples": 800,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_45",
+          "loss": 13.596869991285965,
+          "samples": 825,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_46",
+          "loss": 14.334312071792706,
+          "samples": 802,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_47",
+          "loss": 13.818025516281526,
+          "samples": 750,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_48",
+          "loss": 13.506364714511237,
+          "samples": 834,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_49",
+          "loss": 13.688378163305853,
+          "samples": 735,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_50",
+          "loss": 13.723864410521001,
+          "samples": 792,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_51",
+          "loss": 13.596886118162981,
+          "samples": 802,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_52",
+          "loss": 13.36697820496813,
+          "samples": 827,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_53",
+          "loss": 13.33734011056833,
+          "samples": 813,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_54",
+          "loss": 13.54675522315882,
+          "samples": 855,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_55",
+          "loss": 13.792296448386718,
+          "samples": 914,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_56",
+          "loss": 13.64473670568411,
+          "samples": 791,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_57",
+          "loss": 14.42096585437166,
+          "samples": 792,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_58",
+          "loss": 13.753943591388007,
+          "samples": 847,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_59",
+          "loss": 13.674341793343933,
+          "samples": 767,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_60",
+          "loss": 13.095517522473882,
+          "samples": 802,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_61",
+          "loss": 13.927169842990926,
+          "samples": 770,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_62",
+          "loss": 13.926275661630406,
+          "samples": 830,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_63",
+          "loss": 13.582028995066358,
+          "samples": 762,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_64",
+          "loss": 13.76569901649591,
+          "samples": 833,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_65",
+          "loss": 14.155020727957028,
+          "samples": 812,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_66",
+          "loss": 13.390673416808461,
+          "samples": 805,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_67",
+          "loss": 14.368954263471723,
+          "samples": 779,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_68",
+          "loss": 14.0907520068458,
+          "samples": 783,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_69",
+          "loss": 13.475396252534608,
+          "samples": 804,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_70",
+          "loss": 13.699478952554268,
+          "samples": 753,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_71",
+          "loss": 13.757046240564659,
+          "samples": 869,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_72",
+          "loss": 14.191347401927494,
+          "samples": 765,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_73",
+          "loss": 13.914128728357678,
+          "samples": 774,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_74",
+          "loss": 13.497678342826967,
+          "samples": 841,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_75",
+          "loss": 13.465479957331606,
+          "samples": 769,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_76",
+          "loss": 14.050709633377018,
+          "samples": 855,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_77",
+          "loss": 13.583952020451887,
+          "samples": 816,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_78",
+          "loss": 13.639000094223901,
+          "samples": 827,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_79",
+          "loss": 13.20323397259455,
+          "samples": 747,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_80",
+          "loss": 13.847356250044154,
+          "samples": 730,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_81",
+          "loss": 13.88376572520184,
+          "samples": 881,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_82",
+          "loss": 13.671778409535372,
+          "samples": 762,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_83",
+          "loss": 14.303923276769801,
+          "samples": 817,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_84",
+          "loss": 14.121294858624527,
+          "samples": 766,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_85",
+          "loss": 13.715930684609688,
+          "samples": 871,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_86",
+          "loss": 13.433488069076116,
+          "samples": 781,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_87",
+          "loss": 13.608887644670524,
+          "samples": 801,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_88",
+          "loss": 13.057412723646932,
+          "samples": 785,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_89",
+          "loss": 13.691406445956758,
+          "samples": 854,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_90",
+          "loss": 13.70939976532812,
+          "samples": 776,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_91",
+          "loss": 13.403258717163908,
+          "samples": 781,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_92",
+          "loss": 14.110723676094485,
+          "samples": 789,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_93",
+          "loss": 13.466773905741693,
+          "samples": 765,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_94",
+          "loss": 14.063949111473303,
+          "samples": 768,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_95",
+          "loss": 14.18861605223229,
+          "samples": 756,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_96",
+          "loss": 13.775297947636327,
+          "samples": 795,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_97",
+          "loss": 13.82777483081261,
+          "samples": 855,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_98",
+          "loss": 13.37530969215726,
+          "samples": 749,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_99",
+          "loss": 13.860813861414174,
+          "samples": 874,
+          "epochs": 3
+        }
+      ],
+      "timestamp": "2026-04-16T06:48:32.250927"
     },
     {
       "round": 4,
-      "train_loss": 13.716910944022791,
+      "train_loss": 13.730359335596852,
       "test_metrics": {
-        "mse": 13.688465667724609,
-        "mae": 3.5223459297180177,
-        "samples": 20000
+        "mse": 13.68949239654541,
+        "mae": 3.5224763717651366,
+        "accuracy": 0.0,
+        "samples": 20000,
+        "NDCG@10": 0.04351154849812024,
+        "Hit@10": 0.05,
+        "Precision@10": 0.005,
+        "Recall@10": 0.0015836157453654864,
+        "num_users_evaluated": 100
       },
       "aggregation": {
+        "status": "aggregated",
+        "round": 233,
         "num_clients": 100,
         "total_samples": 80000
-      }
+      },
+      "client_metrics": [
+        {
+          "client_id": "client_0",
+          "loss": 13.886744352196924,
+          "samples": 774,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_1",
+          "loss": 14.087764183345804,
+          "samples": 659,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_2",
+          "loss": 13.605196839527194,
+          "samples": 815,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_3",
+          "loss": 12.930918222096633,
+          "samples": 828,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_4",
+          "loss": 13.245214977159078,
+          "samples": 817,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_5",
+          "loss": 13.792819912488726,
+          "samples": 863,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_6",
+          "loss": 13.12517130970662,
+          "samples": 803,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_7",
+          "loss": 13.792428897984692,
+          "samples": 760,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_8",
+          "loss": 13.895258383014454,
+          "samples": 812,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_9",
+          "loss": 13.50306271089667,
+          "samples": 822,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_10",
+          "loss": 13.523030657891429,
+          "samples": 803,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_11",
+          "loss": 14.329077669459954,
+          "samples": 771,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_12",
+          "loss": 13.652645566541926,
+          "samples": 864,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_13",
+          "loss": 13.451349563307089,
+          "samples": 851,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_14",
+          "loss": 14.225507190494215,
+          "samples": 788,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_15",
+          "loss": 13.897542933494186,
+          "samples": 798,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_16",
+          "loss": 13.817814747651001,
+          "samples": 690,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_17",
+          "loss": 13.866817697590815,
+          "samples": 839,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_18",
+          "loss": 13.464684646939679,
+          "samples": 804,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_19",
+          "loss": 13.590461153242755,
+          "samples": 820,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_20",
+          "loss": 13.205907925320968,
+          "samples": 784,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_21",
+          "loss": 14.075523101498607,
+          "samples": 767,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_22",
+          "loss": 13.452868289136216,
+          "samples": 832,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_23",
+          "loss": 13.57369704030999,
+          "samples": 864,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_24",
+          "loss": 14.111907921931374,
+          "samples": 764,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_25",
+          "loss": 13.534475120647103,
+          "samples": 787,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_26",
+          "loss": 13.757475635399306,
+          "samples": 751,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_27",
+          "loss": 13.945554579124783,
+          "samples": 772,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_28",
+          "loss": 13.592424695842762,
+          "samples": 835,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_29",
+          "loss": 13.720291883001089,
+          "samples": 778,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_30",
+          "loss": 13.668095200167278,
+          "samples": 757,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_31",
+          "loss": 13.300579898240803,
+          "samples": 798,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_32",
+          "loss": 13.195707995626222,
+          "samples": 829,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_33",
+          "loss": 13.641246950884549,
+          "samples": 816,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_34",
+          "loss": 13.688506691277828,
+          "samples": 758,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_35",
+          "loss": 13.716583793857822,
+          "samples": 785,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_36",
+          "loss": 13.993981328698268,
+          "samples": 817,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_37",
+          "loss": 13.603271536010743,
+          "samples": 721,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_38",
+          "loss": 13.970572857548937,
+          "samples": 770,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_39",
+          "loss": 14.116723087476377,
+          "samples": 820,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_40",
+          "loss": 13.863280890468273,
+          "samples": 854,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_41",
+          "loss": 14.09767341890358,
+          "samples": 799,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_42",
+          "loss": 13.992270644848663,
+          "samples": 823,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_43",
+          "loss": 14.038911175187838,
+          "samples": 840,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_44",
+          "loss": 13.5814044540261,
+          "samples": 800,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_45",
+          "loss": 13.600419701538653,
+          "samples": 825,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_46",
+          "loss": 14.511413058056961,
+          "samples": 802,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_47",
+          "loss": 13.793274462709208,
+          "samples": 750,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_48",
+          "loss": 13.366750987770478,
+          "samples": 834,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_49",
+          "loss": 13.68558196260794,
+          "samples": 735,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_50",
+          "loss": 13.718299911693828,
+          "samples": 792,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_51",
+          "loss": 13.596700273939604,
+          "samples": 802,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_52",
+          "loss": 13.36808196070928,
+          "samples": 827,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_53",
+          "loss": 13.260408745000957,
+          "samples": 813,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_54",
+          "loss": 13.561157789113732,
+          "samples": 855,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_55",
+          "loss": 13.798714062603036,
+          "samples": 914,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_56",
+          "loss": 13.632961053273574,
+          "samples": 791,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_57",
+          "loss": 14.424997633289257,
+          "samples": 792,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_58",
+          "loss": 13.772239326650837,
+          "samples": 847,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_59",
+          "loss": 13.674188980282329,
+          "samples": 767,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_60",
+          "loss": 13.241126330885187,
+          "samples": 802,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_61",
+          "loss": 13.681469124526213,
+          "samples": 770,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_62",
+          "loss": 13.928079206458733,
+          "samples": 830,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_63",
+          "loss": 13.576172958007797,
+          "samples": 762,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_64",
+          "loss": 13.870552645267338,
+          "samples": 833,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_65",
+          "loss": 14.157462244215072,
+          "samples": 812,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_66",
+          "loss": 13.425432607729174,
+          "samples": 805,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_67",
+          "loss": 14.260124181711529,
+          "samples": 779,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_68",
+          "loss": 14.12855607586079,
+          "samples": 783,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_69",
+          "loss": 13.471948340900596,
+          "samples": 804,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_70",
+          "loss": 13.676086249081084,
+          "samples": 753,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_71",
+          "loss": 13.80228715314471,
+          "samples": 869,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_72",
+          "loss": 14.20037433981668,
+          "samples": 765,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_73",
+          "loss": 14.033389502015744,
+          "samples": 774,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_74",
+          "loss": 13.488048698952237,
+          "samples": 841,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_75",
+          "loss": 13.829392998998394,
+          "samples": 769,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_76",
+          "loss": 14.021589718304122,
+          "samples": 855,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_77",
+          "loss": 13.593434440738127,
+          "samples": 816,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_78",
+          "loss": 13.63613215105936,
+          "samples": 827,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_79",
+          "loss": 13.197872813026473,
+          "samples": 747,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_80",
+          "loss": 13.841072033959321,
+          "samples": 730,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_81",
+          "loss": 13.876586589919322,
+          "samples": 881,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_82",
+          "loss": 13.6674420524789,
+          "samples": 762,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_83",
+          "loss": 14.268815028827166,
+          "samples": 817,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_84",
+          "loss": 14.116351024282418,
+          "samples": 766,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_85",
+          "loss": 13.756311037148322,
+          "samples": 871,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_86",
+          "loss": 13.454516879932614,
+          "samples": 781,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_87",
+          "loss": 13.509994082985713,
+          "samples": 801,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_88",
+          "loss": 13.068250507315906,
+          "samples": 785,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_89",
+          "loss": 13.680613007425821,
+          "samples": 854,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_90",
+          "loss": 13.739034164347059,
+          "samples": 776,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_91",
+          "loss": 13.379053763975085,
+          "samples": 781,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_92",
+          "loss": 14.126115636033303,
+          "samples": 789,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_93",
+          "loss": 13.461850231014715,
+          "samples": 765,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_94",
+          "loss": 14.063313487550246,
+          "samples": 768,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_95",
+          "loss": 14.17939852518271,
+          "samples": 756,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_96",
+          "loss": 13.772239628585307,
+          "samples": 795,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_97",
+          "loss": 13.817615597468011,
+          "samples": 855,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_98",
+          "loss": 13.355953627099826,
+          "samples": 749,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_99",
+          "loss": 13.794237233748822,
+          "samples": 874,
+          "epochs": 3
+        }
+      ],
+      "timestamp": "2026-04-16T06:48:41.666224"
     },
     {
       "round": 5,
-      "train_loss": 13.724981207493943,
+      "train_loss": 13.723251840615434,
       "test_metrics": {
-        "mse": 13.688449787902831,
-        "mae": 3.522343238067627,
+        "mse": 13.689463671875,
+        "mae": 3.5224728828430174,
+        "accuracy": 0.0,
         "samples": 20000,
-        "NDCG@10": 0.0577968700397596,
-        "Hit@10": 0.09,
-        "Precision@10": 0.009,
-        "Recall@10": 0.0037602713721248985,
+        "NDCG@10": 0.04351154849812024,
+        "Hit@10": 0.05,
+        "Precision@10": 0.005,
+        "Recall@10": 0.0015836157453654864,
         "num_users_evaluated": 100
       },
       "aggregation": {
+        "status": "aggregated",
+        "round": 234,
         "num_clients": 100,
         "total_samples": 80000
-      }
+      },
+      "client_metrics": [
+        {
+          "client_id": "client_0",
+          "loss": 13.932986480588339,
+          "samples": 774,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_1",
+          "loss": 14.075656591757582,
+          "samples": 659,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_2",
+          "loss": 13.649422837374061,
+          "samples": 815,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_3",
+          "loss": 12.930948739674367,
+          "samples": 828,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_4",
+          "loss": 13.238074218540596,
+          "samples": 817,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_5",
+          "loss": 13.792830037919614,
+          "samples": 863,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_6",
+          "loss": 13.180023550128247,
+          "samples": 803,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_7",
+          "loss": 13.789306184197327,
+          "samples": 760,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_8",
+          "loss": 13.891087671844028,
+          "samples": 812,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_9",
+          "loss": 13.51577117904867,
+          "samples": 822,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_10",
+          "loss": 13.552983538171166,
+          "samples": 803,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_11",
+          "loss": 14.25355355649396,
+          "samples": 771,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_12",
+          "loss": 13.651894530366393,
+          "samples": 864,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_13",
+          "loss": 13.440414156816086,
+          "samples": 851,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_14",
+          "loss": 14.19055009358889,
+          "samples": 788,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_15",
+          "loss": 13.89905172253657,
+          "samples": 798,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_16",
+          "loss": 13.82493401301277,
+          "samples": 690,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_17",
+          "loss": 13.938099229893199,
+          "samples": 839,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_18",
+          "loss": 13.433882871206636,
+          "samples": 804,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_19",
+          "loss": 13.593657539392337,
+          "samples": 820,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_20",
+          "loss": 13.24420283142658,
+          "samples": 784,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_21",
+          "loss": 14.075002302610747,
+          "samples": 767,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_22",
+          "loss": 13.452146993470823,
+          "samples": 832,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_23",
+          "loss": 13.572984622056916,
+          "samples": 864,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_24",
+          "loss": 14.110412441414729,
+          "samples": 764,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_25",
+          "loss": 13.553829482876838,
+          "samples": 787,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_26",
+          "loss": 13.768093063607587,
+          "samples": 751,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_27",
+          "loss": 13.997663680043358,
+          "samples": 772,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_28",
+          "loss": 13.520689032078142,
+          "samples": 835,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_29",
+          "loss": 13.71700436422575,
+          "samples": 778,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_30",
+          "loss": 13.658347761342053,
+          "samples": 757,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_31",
+          "loss": 13.302091866197532,
+          "samples": 798,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_32",
+          "loss": 13.189963905252805,
+          "samples": 829,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_33",
+          "loss": 13.644401778842337,
+          "samples": 816,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_34",
+          "loss": 13.699518794947378,
+          "samples": 758,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_35",
+          "loss": 13.67650798364184,
+          "samples": 785,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_36",
+          "loss": 14.025396668523467,
+          "samples": 817,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_37",
+          "loss": 13.59368129047438,
+          "samples": 721,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_38",
+          "loss": 13.672894149308922,
+          "samples": 770,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_39",
+          "loss": 14.122047646742109,
+          "samples": 820,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_40",
+          "loss": 13.859337423671104,
+          "samples": 854,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_41",
+          "loss": 14.09618273695731,
+          "samples": 799,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_42",
+          "loss": 13.995082541307942,
+          "samples": 823,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_43",
+          "loss": 13.997800995652963,
+          "samples": 840,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_44",
+          "loss": 13.580728362523068,
+          "samples": 800,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_45",
+          "loss": 13.597610005866228,
+          "samples": 825,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_46",
+          "loss": 14.270339440522617,
+          "samples": 802,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_47",
+          "loss": 13.794975897138906,
+          "samples": 750,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_48",
+          "loss": 13.222978793658761,
+          "samples": 834,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_49",
+          "loss": 13.687903537573233,
+          "samples": 735,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_50",
+          "loss": 13.720533366050441,
+          "samples": 792,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_51",
+          "loss": 13.525965517202978,
+          "samples": 802,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_52",
+          "loss": 13.375206188973156,
+          "samples": 827,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_53",
+          "loss": 13.381773434763609,
+          "samples": 813,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_54",
+          "loss": 13.530493934210423,
+          "samples": 855,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_55",
+          "loss": 13.791920437627807,
+          "samples": 914,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_56",
+          "loss": 13.657775531499029,
+          "samples": 791,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_57",
+          "loss": 14.437020541657597,
+          "samples": 792,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_58",
+          "loss": 13.775230555541707,
+          "samples": 847,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_59",
+          "loss": 13.672979549074727,
+          "samples": 767,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_60",
+          "loss": 13.410752650258562,
+          "samples": 802,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_61",
+          "loss": 13.65205525315326,
+          "samples": 770,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_62",
+          "loss": 13.926050545588245,
+          "samples": 830,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_63",
+          "loss": 13.588765511925308,
+          "samples": 762,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_64",
+          "loss": 13.70225170079158,
+          "samples": 833,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_65",
+          "loss": 14.140900821834844,
+          "samples": 812,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_66",
+          "loss": 13.367901899664695,
+          "samples": 805,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_67",
+          "loss": 14.282755839328066,
+          "samples": 779,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_68",
+          "loss": 14.1550339655224,
+          "samples": 783,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_69",
+          "loss": 13.398753997000526,
+          "samples": 804,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_70",
+          "loss": 13.654740806181783,
+          "samples": 753,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_71",
+          "loss": 13.790911305963215,
+          "samples": 869,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_72",
+          "loss": 14.190132884456943,
+          "samples": 765,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_73",
+          "loss": 13.939512982474788,
+          "samples": 774,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_74",
+          "loss": 13.512986216493383,
+          "samples": 841,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_75",
+          "loss": 13.622652868787297,
+          "samples": 769,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_76",
+          "loss": 14.047923503330427,
+          "samples": 855,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_77",
+          "loss": 13.595192343692384,
+          "samples": 816,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_78",
+          "loss": 13.641188385500996,
+          "samples": 827,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_79",
+          "loss": 13.134820053672035,
+          "samples": 747,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_80",
+          "loss": 13.843708749906835,
+          "samples": 730,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_81",
+          "loss": 13.884528585173022,
+          "samples": 881,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_82",
+          "loss": 13.677117237230183,
+          "samples": 762,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_83",
+          "loss": 14.268392697829539,
+          "samples": 817,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_84",
+          "loss": 14.114368070496617,
+          "samples": 766,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_85",
+          "loss": 13.747308908018633,
+          "samples": 871,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_86",
+          "loss": 13.450622989603673,
+          "samples": 781,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_87",
+          "loss": 13.662451312161489,
+          "samples": 801,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_88",
+          "loss": 13.038217942917349,
+          "samples": 785,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_89",
+          "loss": 13.687986546352832,
+          "samples": 854,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_90",
+          "loss": 13.707612350801172,
+          "samples": 776,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_91",
+          "loss": 13.455202864217087,
+          "samples": 781,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_92",
+          "loss": 14.106647188925532,
+          "samples": 789,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_93",
+          "loss": 13.467563746746857,
+          "samples": 765,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_94",
+          "loss": 14.062649134188806,
+          "samples": 768,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_95",
+          "loss": 14.213646227729475,
+          "samples": 756,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_96",
+          "loss": 13.768063259927613,
+          "samples": 795,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_97",
+          "loss": 13.827184647703124,
+          "samples": 855,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_98",
+          "loss": 13.367554346496574,
+          "samples": 749,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_99",
+          "loss": 13.875225526387029,
+          "samples": 874,
+          "epochs": 3
+        }
+      ],
+      "timestamp": "2026-04-16T06:48:51.087528"
     },
     {
       "round": 6,
-      "train_loss": 13.716727754199491,
+      "train_loss": 13.714286577675187,
       "test_metrics": {
-        "mse": 13.688433050537109,
-        "mae": 3.522340389251709,
-        "samples": 20000
-      },
-      "aggregation": {
-        "num_clients": 100,
-        "total_samples": 80000
-      }
-    },
-    {
-      "round": 7,
-      "train_loss": 13.717107462780824,
-      "test_metrics": {
-        "mse": 13.688415927124023,
-        "mae": 3.5223376194000244,
-        "samples": 20000
-      },
-      "aggregation": {
-        "num_clients": 100,
-        "total_samples": 80000
-      }
-    },
-    {
-      "round": 8,
-      "train_loss": 13.721387370022974,
-      "test_metrics": {
-        "mse": 13.68839663848877,
-        "mae": 3.522334504699707,
-        "samples": 20000
-      },
-      "aggregation": {
-        "num_clients": 100,
-        "total_samples": 80000
-      }
-    },
-    {
-      "round": 9,
-      "train_loss": 13.718756730316883,
-      "test_metrics": {
-        "mse": 13.688377203369141,
-        "mae": 3.5223312973022463,
-        "samples": 20000
-      },
-      "aggregation": {
-        "num_clients": 100,
-        "total_samples": 80000
-      }
-    },
-    {
-      "round": 10,
-      "train_loss": 13.718138670994527,
-      "test_metrics": {
-        "mse": 13.68835595703125,
-        "mae": 3.5223278732299805,
+        "mse": 13.689435820007324,
+        "mae": 3.5224695056915283,
+        "accuracy": 0.0,
         "samples": 20000,
-        "NDCG@10": 0.057916521733220525,
-        "Hit@10": 0.09,
-        "Precision@10": 0.009,
-        "Recall@10": 0.0037602713721248985,
+        "NDCG@10": 0.04351154849812024,
+        "Hit@10": 0.05,
+        "Precision@10": 0.005,
+        "Recall@10": 0.0015836157453654864,
         "num_users_evaluated": 100
       },
       "aggregation": {
+        "status": "aggregated",
+        "round": 235,
         "num_clients": 100,
         "total_samples": 80000
-      }
+      },
+      "client_metrics": [
+        {
+          "client_id": "client_0",
+          "loss": 13.826779397348671,
+          "samples": 774,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_1",
+          "loss": 14.10250423389696,
+          "samples": 659,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_2",
+          "loss": 13.630171209821086,
+          "samples": 815,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_3",
+          "loss": 12.937246548020703,
+          "samples": 828,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_4",
+          "loss": 13.259357514706098,
+          "samples": 817,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_5",
+          "loss": 13.79144294807792,
+          "samples": 863,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_6",
+          "loss": 13.338924420346041,
+          "samples": 803,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_7",
+          "loss": 13.780250106259988,
+          "samples": 760,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_8",
+          "loss": 13.87636537367963,
+          "samples": 812,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_9",
+          "loss": 13.50874134008772,
+          "samples": 822,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_10",
+          "loss": 13.511109545690278,
+          "samples": 803,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_11",
+          "loss": 14.175737217402931,
+          "samples": 771,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_12",
+          "loss": 13.651113659491008,
+          "samples": 864,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_13",
+          "loss": 13.398930513714014,
+          "samples": 851,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_14",
+          "loss": 14.173620213036626,
+          "samples": 788,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_15",
+          "loss": 13.89730283645149,
+          "samples": 798,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_16",
+          "loss": 13.82046279774571,
+          "samples": 690,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_17",
+          "loss": 14.056313294079713,
+          "samples": 839,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_18",
+          "loss": 13.317683773595816,
+          "samples": 804,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_19",
+          "loss": 13.589975207278401,
+          "samples": 820,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_20",
+          "loss": 13.226875395846251,
+          "samples": 784,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_21",
+          "loss": 14.07390588180807,
+          "samples": 767,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_22",
+          "loss": 13.451377182681851,
+          "samples": 832,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_23",
+          "loss": 13.572269672446119,
+          "samples": 864,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_24",
+          "loss": 14.102903832489034,
+          "samples": 764,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_25",
+          "loss": 13.54069918062271,
+          "samples": 787,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_26",
+          "loss": 13.777507471418863,
+          "samples": 751,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_27",
+          "loss": 14.100047012520207,
+          "samples": 772,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_28",
+          "loss": 13.471138717209701,
+          "samples": 835,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_29",
+          "loss": 13.689524976673033,
+          "samples": 778,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_30",
+          "loss": 13.647896192989663,
+          "samples": 757,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_31",
+          "loss": 13.300010554681501,
+          "samples": 798,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_32",
+          "loss": 13.197827524540667,
+          "samples": 829,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_33",
+          "loss": 13.664425968167855,
+          "samples": 816,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_34",
+          "loss": 13.684161711416198,
+          "samples": 758,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_35",
+          "loss": 13.702212023826464,
+          "samples": 785,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_36",
+          "loss": 13.994483181460954,
+          "samples": 817,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_37",
+          "loss": 13.581449380941228,
+          "samples": 721,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_38",
+          "loss": 13.602263396415623,
+          "samples": 770,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_39",
+          "loss": 14.094204330702997,
+          "samples": 820,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_40",
+          "loss": 13.861761016196853,
+          "samples": 854,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_41",
+          "loss": 14.096717811819968,
+          "samples": 799,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_42",
+          "loss": 13.983714450163873,
+          "samples": 823,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_43",
+          "loss": 14.093608976549925,
+          "samples": 840,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_44",
+          "loss": 13.580085433454492,
+          "samples": 800,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_45",
+          "loss": 13.595353673595508,
+          "samples": 825,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_46",
+          "loss": 14.12802379174958,
+          "samples": 802,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_47",
+          "loss": 13.78809019647889,
+          "samples": 750,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_48",
+          "loss": 13.21534951695927,
+          "samples": 834,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_49",
+          "loss": 13.685685982213755,
+          "samples": 735,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_50",
+          "loss": 13.709312256174014,
+          "samples": 792,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_51",
+          "loss": 13.687701563314349,
+          "samples": 802,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_52",
+          "loss": 13.374047963757324,
+          "samples": 827,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_53",
+          "loss": 13.362738230144714,
+          "samples": 813,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_54",
+          "loss": 13.543163732822602,
+          "samples": 855,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_55",
+          "loss": 13.808011904763081,
+          "samples": 914,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_56",
+          "loss": 13.642855004557669,
+          "samples": 791,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_57",
+          "loss": 14.407597476864359,
+          "samples": 792,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_58",
+          "loss": 13.801776633177726,
+          "samples": 847,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_59",
+          "loss": 13.673055776791598,
+          "samples": 767,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_60",
+          "loss": 13.345710082005338,
+          "samples": 802,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_61",
+          "loss": 13.46042924735663,
+          "samples": 770,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_62",
+          "loss": 13.92562332395316,
+          "samples": 830,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_63",
+          "loss": 13.586120999573597,
+          "samples": 762,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_64",
+          "loss": 13.758474064587892,
+          "samples": 833,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_65",
+          "loss": 14.137234164213957,
+          "samples": 812,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_66",
+          "loss": 13.405432749325007,
+          "samples": 805,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_67",
+          "loss": 14.286395899704338,
+          "samples": 779,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_68",
+          "loss": 14.095225375112978,
+          "samples": 783,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_69",
+          "loss": 13.483831281676393,
+          "samples": 804,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_70",
+          "loss": 13.642560464736336,
+          "samples": 753,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_71",
+          "loss": 13.818377682258753,
+          "samples": 869,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_72",
+          "loss": 14.188899505427951,
+          "samples": 765,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_73",
+          "loss": 13.863361567983143,
+          "samples": 774,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_74",
+          "loss": 13.416605259832568,
+          "samples": 841,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_75",
+          "loss": 13.720059923979116,
+          "samples": 769,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_76",
+          "loss": 14.04500372936986,
+          "samples": 855,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_77",
+          "loss": 13.589084463251703,
+          "samples": 816,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_78",
+          "loss": 13.63006756498677,
+          "samples": 827,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_79",
+          "loss": 13.167888816097946,
+          "samples": 747,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_80",
+          "loss": 13.839918585622394,
+          "samples": 730,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_81",
+          "loss": 13.867174028887229,
+          "samples": 881,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_82",
+          "loss": 13.671242788959383,
+          "samples": 762,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_83",
+          "loss": 14.26927462648222,
+          "samples": 817,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_84",
+          "loss": 14.117135315432956,
+          "samples": 766,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_85",
+          "loss": 13.568359815194988,
+          "samples": 871,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_86",
+          "loss": 13.385494136356254,
+          "samples": 781,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_87",
+          "loss": 13.439338462876446,
+          "samples": 801,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_88",
+          "loss": 13.02145540041624,
+          "samples": 785,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_89",
+          "loss": 13.687324095923818,
+          "samples": 854,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_90",
+          "loss": 13.773221951265082,
+          "samples": 776,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_91",
+          "loss": 13.378107591909249,
+          "samples": 781,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_92",
+          "loss": 14.09724221824608,
+          "samples": 789,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_93",
+          "loss": 13.462629661075402,
+          "samples": 765,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_94",
+          "loss": 14.061993695033006,
+          "samples": 768,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_95",
+          "loss": 14.203683218775309,
+          "samples": 756,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_96",
+          "loss": 13.769163011703315,
+          "samples": 795,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_97",
+          "loss": 13.813634737219095,
+          "samples": 855,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_98",
+          "loss": 13.437212121619938,
+          "samples": 749,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_99",
+          "loss": 13.840799007947904,
+          "samples": 874,
+          "epochs": 3
+        }
+      ],
+      "timestamp": "2026-04-16T06:49:00.571083"
+    },
+    {
+      "round": 7,
+      "train_loss": 13.716796818422322,
+      "test_metrics": {
+        "mse": 13.689405506896973,
+        "mae": 3.522465746307373,
+        "accuracy": 0.0,
+        "samples": 20000,
+        "NDCG@10": 0.04351154849812024,
+        "Hit@10": 0.05,
+        "Precision@10": 0.005,
+        "Recall@10": 0.0015836157453654864,
+        "num_users_evaluated": 100
+      },
+      "aggregation": {
+        "status": "aggregated",
+        "round": 236,
+        "num_clients": 100,
+        "total_samples": 80000
+      },
+      "client_metrics": [
+        {
+          "client_id": "client_0",
+          "loss": 13.871180056953602,
+          "samples": 774,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_1",
+          "loss": 14.089641665291255,
+          "samples": 659,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_2",
+          "loss": 13.652848875632046,
+          "samples": 815,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_3",
+          "loss": 12.93079126114824,
+          "samples": 828,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_4",
+          "loss": 13.205926652475288,
+          "samples": 817,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_5",
+          "loss": 13.791238237767615,
+          "samples": 863,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_6",
+          "loss": 13.153858444106026,
+          "samples": 803,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_7",
+          "loss": 13.790687422479738,
+          "samples": 760,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_8",
+          "loss": 13.88277380824525,
+          "samples": 812,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_9",
+          "loss": 13.50956866477319,
+          "samples": 822,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_10",
+          "loss": 13.573862403072134,
+          "samples": 803,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_11",
+          "loss": 14.189790231335024,
+          "samples": 771,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_12",
+          "loss": 13.650366320275124,
+          "samples": 864,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_13",
+          "loss": 13.403068730223195,
+          "samples": 851,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_14",
+          "loss": 14.216447666078876,
+          "samples": 788,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_15",
+          "loss": 13.90169332406385,
+          "samples": 798,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_16",
+          "loss": 13.827251398217694,
+          "samples": 690,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_17",
+          "loss": 13.988782686441896,
+          "samples": 839,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_18",
+          "loss": 13.311671355341653,
+          "samples": 804,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_19",
+          "loss": 13.610465780018442,
+          "samples": 820,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_20",
+          "loss": 13.185523721999822,
+          "samples": 784,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_21",
+          "loss": 14.073495748875805,
+          "samples": 767,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_22",
+          "loss": 13.450642168778389,
+          "samples": 832,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_23",
+          "loss": 13.571538686978496,
+          "samples": 864,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_24",
+          "loss": 14.096745811813284,
+          "samples": 764,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_25",
+          "loss": 13.51197265410957,
+          "samples": 787,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_26",
+          "loss": 13.74364648380203,
+          "samples": 751,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_27",
+          "loss": 13.94965874192203,
+          "samples": 772,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_28",
+          "loss": 13.56457917221102,
+          "samples": 835,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_29",
+          "loss": 13.6844734783273,
+          "samples": 778,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_30",
+          "loss": 13.65607278453734,
+          "samples": 757,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_31",
+          "loss": 13.302647985473158,
+          "samples": 798,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_32",
+          "loss": 13.191354851452044,
+          "samples": 829,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_33",
+          "loss": 13.674559735777255,
+          "samples": 816,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_34",
+          "loss": 13.682320656419423,
+          "samples": 758,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_35",
+          "loss": 13.692860929387344,
+          "samples": 785,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_36",
+          "loss": 14.016851710078237,
+          "samples": 817,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_37",
+          "loss": 13.610070224828403,
+          "samples": 721,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_38",
+          "loss": 13.55784442626406,
+          "samples": 770,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_39",
+          "loss": 14.10804005410913,
+          "samples": 820,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_40",
+          "loss": 13.860245769011874,
+          "samples": 854,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_41",
+          "loss": 14.096870692168677,
+          "samples": 799,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_42",
+          "loss": 13.984285713298672,
+          "samples": 823,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_43",
+          "loss": 14.092419674049507,
+          "samples": 840,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_44",
+          "loss": 13.579390573641167,
+          "samples": 800,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_45",
+          "loss": 13.599068724074034,
+          "samples": 825,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_46",
+          "loss": 14.309066313913009,
+          "samples": 802,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_47",
+          "loss": 13.811989486443723,
+          "samples": 750,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_48",
+          "loss": 13.423368853399225,
+          "samples": 834,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_49",
+          "loss": 13.68442605406774,
+          "samples": 735,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_50",
+          "loss": 13.718273653861333,
+          "samples": 792,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_51",
+          "loss": 13.52628990095893,
+          "samples": 802,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_52",
+          "loss": 13.371622488790141,
+          "samples": 827,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_53",
+          "loss": 13.319481654454638,
+          "samples": 813,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_54",
+          "loss": 13.539360515016998,
+          "samples": 855,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_55",
+          "loss": 13.767551888692521,
+          "samples": 914,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_56",
+          "loss": 13.641533224688411,
+          "samples": 791,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_57",
+          "loss": 14.418032161478648,
+          "samples": 792,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_58",
+          "loss": 13.780169281552695,
+          "samples": 847,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_59",
+          "loss": 13.672053862463269,
+          "samples": 767,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_60",
+          "loss": 13.169279553230108,
+          "samples": 802,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_61",
+          "loss": 13.592137384384294,
+          "samples": 770,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_62",
+          "loss": 13.92694946920609,
+          "samples": 830,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_63",
+          "loss": 13.594668437970439,
+          "samples": 762,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_64",
+          "loss": 13.839030036087099,
+          "samples": 833,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_65",
+          "loss": 14.203196331254876,
+          "samples": 812,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_66",
+          "loss": 13.453934668180601,
+          "samples": 805,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_67",
+          "loss": 14.371219608697054,
+          "samples": 779,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_68",
+          "loss": 14.12754716474143,
+          "samples": 783,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_69",
+          "loss": 13.418431305637787,
+          "samples": 804,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_70",
+          "loss": 13.641428956666589,
+          "samples": 753,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_71",
+          "loss": 13.774323322166433,
+          "samples": 869,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_72",
+          "loss": 14.19317731747859,
+          "samples": 765,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_73",
+          "loss": 13.854903252564506,
+          "samples": 774,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_74",
+          "loss": 13.438712036562427,
+          "samples": 841,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_75",
+          "loss": 13.520565679202516,
+          "samples": 769,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_76",
+          "loss": 14.044448114010478,
+          "samples": 855,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_77",
+          "loss": 13.558602513811831,
+          "samples": 816,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_78",
+          "loss": 13.627722553232354,
+          "samples": 827,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_79",
+          "loss": 13.146700795686048,
+          "samples": 747,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_80",
+          "loss": 13.833912151365581,
+          "samples": 730,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_81",
+          "loss": 13.880676955780022,
+          "samples": 881,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_82",
+          "loss": 13.670353024080011,
+          "samples": 762,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_83",
+          "loss": 14.291334189078135,
+          "samples": 817,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_84",
+          "loss": 14.117266564858928,
+          "samples": 766,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_85",
+          "loss": 13.621329996892388,
+          "samples": 871,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_86",
+          "loss": 13.428130771885991,
+          "samples": 781,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_87",
+          "loss": 13.653143539595499,
+          "samples": 801,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_88",
+          "loss": 13.077777866197662,
+          "samples": 785,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_89",
+          "loss": 13.693533975592825,
+          "samples": 854,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_90",
+          "loss": 13.782483807220691,
+          "samples": 776,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_91",
+          "loss": 13.353055025714964,
+          "samples": 781,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_92",
+          "loss": 14.113420310986916,
+          "samples": 789,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_93",
+          "loss": 13.460728272933476,
+          "samples": 765,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_94",
+          "loss": 14.061333580224025,
+          "samples": 768,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_95",
+          "loss": 14.227465220046328,
+          "samples": 756,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_96",
+          "loss": 13.772088541144289,
+          "samples": 795,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_97",
+          "loss": 13.805846314648297,
+          "samples": 855,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_98",
+          "loss": 13.39260231066861,
+          "samples": 749,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_99",
+          "loss": 13.873905425436789,
+          "samples": 874,
+          "epochs": 3
+        }
+      ],
+      "timestamp": "2026-04-16T06:49:10.018642"
+    },
+    {
+      "round": 8,
+      "train_loss": 13.722041167424807,
+      "test_metrics": {
+        "mse": 13.689376835632324,
+        "mae": 3.5224622226715088,
+        "accuracy": 0.0,
+        "samples": 20000,
+        "NDCG@10": 0.04351154849812024,
+        "Hit@10": 0.05,
+        "Precision@10": 0.005,
+        "Recall@10": 0.0015836157453654864,
+        "num_users_evaluated": 100
+      },
+      "aggregation": {
+        "status": "aggregated",
+        "round": 237,
+        "num_clients": 100,
+        "total_samples": 80000
+      },
+      "client_metrics": [
+        {
+          "client_id": "client_0",
+          "loss": 13.962479761241644,
+          "samples": 774,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_1",
+          "loss": 14.096159151154561,
+          "samples": 659,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_2",
+          "loss": 13.63019283866524,
+          "samples": 815,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_3",
+          "loss": 12.934877425423622,
+          "samples": 828,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_4",
+          "loss": 13.227396061849227,
+          "samples": 817,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_5",
+          "loss": 13.790431770744846,
+          "samples": 863,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_6",
+          "loss": 13.257906578725146,
+          "samples": 803,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_7",
+          "loss": 13.772472243289368,
+          "samples": 760,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_8",
+          "loss": 13.882238870320167,
+          "samples": 812,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_9",
+          "loss": 13.498216908358229,
+          "samples": 822,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_10",
+          "loss": 13.508763396862653,
+          "samples": 803,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_11",
+          "loss": 14.08703494680625,
+          "samples": 771,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_12",
+          "loss": 13.64960195620684,
+          "samples": 864,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_13",
+          "loss": 13.426755810031493,
+          "samples": 851,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_14",
+          "loss": 14.229624596648625,
+          "samples": 788,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_15",
+          "loss": 13.896079335898142,
+          "samples": 798,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_16",
+          "loss": 13.82720199499893,
+          "samples": 690,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_17",
+          "loss": 13.94862612234287,
+          "samples": 839,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_18",
+          "loss": 13.4798401547134,
+          "samples": 804,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_19",
+          "loss": 13.592876492363807,
+          "samples": 820,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_20",
+          "loss": 13.245448368214172,
+          "samples": 784,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_21",
+          "loss": 14.070928907997896,
+          "samples": 767,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_22",
+          "loss": 13.449884181105471,
+          "samples": 832,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_23",
+          "loss": 13.570796304514246,
+          "samples": 864,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_24",
+          "loss": 14.099159044901004,
+          "samples": 764,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_25",
+          "loss": 13.522218727377904,
+          "samples": 787,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_26",
+          "loss": 13.77201032054425,
+          "samples": 751,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_27",
+          "loss": 13.964505263737424,
+          "samples": 772,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_28",
+          "loss": 13.384536619131019,
+          "samples": 835,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_29",
+          "loss": 13.685932765315494,
+          "samples": 778,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_30",
+          "loss": 13.638966741807021,
+          "samples": 757,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_31",
+          "loss": 13.300890414594086,
+          "samples": 798,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_32",
+          "loss": 13.188374558118515,
+          "samples": 829,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_33",
+          "loss": 13.640647004161064,
+          "samples": 816,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_34",
+          "loss": 13.689573707122824,
+          "samples": 758,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_35",
+          "loss": 13.718017903844396,
+          "samples": 785,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_36",
+          "loss": 14.012663196987466,
+          "samples": 817,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_37",
+          "loss": 13.571050792773176,
+          "samples": 721,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_38",
+          "loss": 13.784786065999402,
+          "samples": 770,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_39",
+          "loss": 14.140336796843483,
+          "samples": 820,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_40",
+          "loss": 13.873504137728851,
+          "samples": 854,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_41",
+          "loss": 14.09521929702875,
+          "samples": 799,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_42",
+          "loss": 13.98755783096928,
+          "samples": 823,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_43",
+          "loss": 14.016646212147856,
+          "samples": 840,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_44",
+          "loss": 13.578736798116843,
+          "samples": 800,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_45",
+          "loss": 13.593698718559727,
+          "samples": 825,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_46",
+          "loss": 14.364231475659048,
+          "samples": 802,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_47",
+          "loss": 13.805682599858345,
+          "samples": 750,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_48",
+          "loss": 13.414089213881175,
+          "samples": 834,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_49",
+          "loss": 13.683985304504912,
+          "samples": 735,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_50",
+          "loss": 13.71379826380463,
+          "samples": 792,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_51",
+          "loss": 13.401313450980851,
+          "samples": 802,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_52",
+          "loss": 13.37391083028302,
+          "samples": 827,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_53",
+          "loss": 13.292520401560736,
+          "samples": 813,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_54",
+          "loss": 13.521015942210765,
+          "samples": 855,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_55",
+          "loss": 13.782281322569471,
+          "samples": 914,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_56",
+          "loss": 13.6355438321698,
+          "samples": 791,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_57",
+          "loss": 14.421532527642913,
+          "samples": 792,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_58",
+          "loss": 13.749782039292754,
+          "samples": 847,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_59",
+          "loss": 13.67053485798048,
+          "samples": 767,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_60",
+          "loss": 13.222400263459969,
+          "samples": 802,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_61",
+          "loss": 13.768374844396115,
+          "samples": 770,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_62",
+          "loss": 13.926839723301548,
+          "samples": 830,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_63",
+          "loss": 13.574019243539826,
+          "samples": 762,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_64",
+          "loss": 13.872567040873859,
+          "samples": 833,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_65",
+          "loss": 14.178542053182566,
+          "samples": 812,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_66",
+          "loss": 13.328674793535276,
+          "samples": 805,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_67",
+          "loss": 14.321951573465288,
+          "samples": 779,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_68",
+          "loss": 14.056808869175818,
+          "samples": 783,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_69",
+          "loss": 13.350125532900723,
+          "samples": 804,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_70",
+          "loss": 13.692220669887677,
+          "samples": 753,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_71",
+          "loss": 13.857181747410317,
+          "samples": 869,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_72",
+          "loss": 14.190057385241277,
+          "samples": 765,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_73",
+          "loss": 13.883477038601166,
+          "samples": 774,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_74",
+          "loss": 13.42351974586698,
+          "samples": 841,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_75",
+          "loss": 13.8883134134553,
+          "samples": 769,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_76",
+          "loss": 14.054758286917862,
+          "samples": 855,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_77",
+          "loss": 13.577744199834767,
+          "samples": 816,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_78",
+          "loss": 13.623614344408635,
+          "samples": 827,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_79",
+          "loss": 13.174108931567213,
+          "samples": 747,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_80",
+          "loss": 13.845765438379242,
+          "samples": 730,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_81",
+          "loss": 13.896463342263608,
+          "samples": 881,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_82",
+          "loss": 13.6726735388327,
+          "samples": 762,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_83",
+          "loss": 14.257706544945927,
+          "samples": 817,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_84",
+          "loss": 14.117483870145286,
+          "samples": 766,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_85",
+          "loss": 13.658519128141002,
+          "samples": 871,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_86",
+          "loss": 13.46415166068794,
+          "samples": 781,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_87",
+          "loss": 13.70374421132629,
+          "samples": 801,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_88",
+          "loss": 13.036026462945754,
+          "samples": 785,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_89",
+          "loss": 13.672445257956918,
+          "samples": 854,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_90",
+          "loss": 13.731979237886762,
+          "samples": 776,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_91",
+          "loss": 13.34958253227168,
+          "samples": 781,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_92",
+          "loss": 14.126322570641547,
+          "samples": 789,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_93",
+          "loss": 13.463427118229514,
+          "samples": 765,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_94",
+          "loss": 14.060696896662854,
+          "samples": 768,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_95",
+          "loss": 14.220727815740455,
+          "samples": 756,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_96",
+          "loss": 13.764268653451516,
+          "samples": 795,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_97",
+          "loss": 13.83482306083793,
+          "samples": 855,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_98",
+          "loss": 13.39169445246843,
+          "samples": 749,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_99",
+          "loss": 13.84522608895788,
+          "samples": 874,
+          "epochs": 3
+        }
+      ],
+      "timestamp": "2026-04-16T06:49:19.443876"
+    },
+    {
+      "round": 9,
+      "train_loss": 13.72423634163926,
+      "test_metrics": {
+        "mse": 13.689349111938476,
+        "mae": 3.522458837890625,
+        "accuracy": 0.0,
+        "samples": 20000,
+        "NDCG@10": 0.04351154849812024,
+        "Hit@10": 0.05,
+        "Precision@10": 0.005,
+        "Recall@10": 0.0015836157453654864,
+        "num_users_evaluated": 100
+      },
+      "aggregation": {
+        "status": "aggregated",
+        "round": 238,
+        "num_clients": 100,
+        "total_samples": 80000
+      },
+      "client_metrics": [
+        {
+          "client_id": "client_0",
+          "loss": 13.913025111022133,
+          "samples": 774,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_1",
+          "loss": 14.120129103796392,
+          "samples": 659,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_2",
+          "loss": 13.641096123625365,
+          "samples": 815,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_3",
+          "loss": 12.931218874034322,
+          "samples": 828,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_4",
+          "loss": 13.225561412566671,
+          "samples": 817,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_5",
+          "loss": 13.789314888622794,
+          "samples": 863,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_6",
+          "loss": 13.156906405522074,
+          "samples": 803,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_7",
+          "loss": 13.792285197810873,
+          "samples": 760,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_8",
+          "loss": 13.892009459191987,
+          "samples": 812,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_9",
+          "loss": 13.521162312116791,
+          "samples": 822,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_10",
+          "loss": 13.516406222209207,
+          "samples": 803,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_11",
+          "loss": 14.212267965918947,
+          "samples": 771,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_12",
+          "loss": 13.64883988802114,
+          "samples": 864,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_13",
+          "loss": 13.414627733745615,
+          "samples": 851,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_14",
+          "loss": 14.222044551685402,
+          "samples": 788,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_15",
+          "loss": 13.896823646903028,
+          "samples": 798,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_16",
+          "loss": 13.812906720654423,
+          "samples": 690,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_17",
+          "loss": 13.948323854683327,
+          "samples": 839,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_18",
+          "loss": 13.523778754250088,
+          "samples": 804,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_19",
+          "loss": 13.601801098768258,
+          "samples": 820,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_20",
+          "loss": 13.28441520780285,
+          "samples": 784,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_21",
+          "loss": 14.070857806280404,
+          "samples": 767,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_22",
+          "loss": 13.449162115164677,
+          "samples": 832,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_23",
+          "loss": 13.570089631854513,
+          "samples": 864,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_24",
+          "loss": 14.103604306264705,
+          "samples": 764,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_25",
+          "loss": 13.554807647536647,
+          "samples": 787,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_26",
+          "loss": 13.760492186693062,
+          "samples": 751,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_27",
+          "loss": 14.173116876454797,
+          "samples": 772,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_28",
+          "loss": 13.534364486131436,
+          "samples": 835,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_29",
+          "loss": 13.674343422716925,
+          "samples": 778,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_30",
+          "loss": 13.64243977195508,
+          "samples": 757,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_31",
+          "loss": 13.30123424596971,
+          "samples": 798,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_32",
+          "loss": 13.194162725362016,
+          "samples": 829,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_33",
+          "loss": 13.667471600417814,
+          "samples": 816,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_34",
+          "loss": 13.682625752723576,
+          "samples": 758,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_35",
+          "loss": 13.675620252737335,
+          "samples": 785,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_36",
+          "loss": 14.029315071707469,
+          "samples": 817,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_37",
+          "loss": 13.532956825611091,
+          "samples": 721,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_38",
+          "loss": 13.542374436693716,
+          "samples": 770,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_39",
+          "loss": 14.117624603132073,
+          "samples": 820,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_40",
+          "loss": 13.85683706625071,
+          "samples": 854,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_41",
+          "loss": 14.093648442862683,
+          "samples": 799,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_42",
+          "loss": 13.98350563217104,
+          "samples": 823,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_43",
+          "loss": 14.003063864963712,
+          "samples": 840,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_44",
+          "loss": 13.578076079843589,
+          "samples": 800,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_45",
+          "loss": 13.585054296775208,
+          "samples": 825,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_46",
+          "loss": 14.364604875828915,
+          "samples": 802,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_47",
+          "loss": 13.824661062873632,
+          "samples": 750,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_48",
+          "loss": 13.551397556614932,
+          "samples": 834,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_49",
+          "loss": 13.68508402022969,
+          "samples": 735,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_50",
+          "loss": 13.730888056464137,
+          "samples": 792,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_51",
+          "loss": 13.568884565548938,
+          "samples": 802,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_52",
+          "loss": 13.372768401826175,
+          "samples": 827,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_53",
+          "loss": 13.39534134686258,
+          "samples": 813,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_54",
+          "loss": 13.554222328131496,
+          "samples": 855,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_55",
+          "loss": 13.779673363159063,
+          "samples": 914,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_56",
+          "loss": 13.620809462452522,
+          "samples": 791,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_57",
+          "loss": 14.40359130728073,
+          "samples": 792,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_58",
+          "loss": 13.775841719485895,
+          "samples": 847,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_59",
+          "loss": 13.670838417809367,
+          "samples": 767,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_60",
+          "loss": 13.19066829153919,
+          "samples": 802,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_61",
+          "loss": 13.74922826872367,
+          "samples": 770,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_62",
+          "loss": 13.924178837500355,
+          "samples": 830,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_63",
+          "loss": 13.583194835411017,
+          "samples": 762,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_64",
+          "loss": 13.672802297133313,
+          "samples": 833,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_65",
+          "loss": 14.154869472767068,
+          "samples": 812,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_66",
+          "loss": 13.45453470049024,
+          "samples": 805,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_67",
+          "loss": 14.265654437273371,
+          "samples": 779,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_68",
+          "loss": 14.079127416444969,
+          "samples": 783,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_69",
+          "loss": 13.367180573432815,
+          "samples": 804,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_70",
+          "loss": 13.676984371856086,
+          "samples": 753,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_71",
+          "loss": 13.762940787911536,
+          "samples": 869,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_72",
+          "loss": 14.183114093249731,
+          "samples": 765,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_73",
+          "loss": 14.083745005698178,
+          "samples": 774,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_74",
+          "loss": 13.49996493591804,
+          "samples": 841,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_75",
+          "loss": 13.74696503111855,
+          "samples": 769,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_76",
+          "loss": 14.028027314204314,
+          "samples": 855,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_77",
+          "loss": 13.552143779039962,
+          "samples": 816,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_78",
+          "loss": 13.6300490416974,
+          "samples": 827,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_79",
+          "loss": 13.194216041629337,
+          "samples": 747,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_80",
+          "loss": 13.831545767529434,
+          "samples": 730,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_81",
+          "loss": 13.811353751792748,
+          "samples": 881,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_82",
+          "loss": 13.659499601218124,
+          "samples": 762,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_83",
+          "loss": 14.270322800128667,
+          "samples": 817,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_84",
+          "loss": 14.114198157524937,
+          "samples": 766,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_85",
+          "loss": 13.706857586217133,
+          "samples": 871,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_86",
+          "loss": 13.470561356545673,
+          "samples": 781,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_87",
+          "loss": 13.47905883869981,
+          "samples": 801,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_88",
+          "loss": 12.993053886105798,
+          "samples": 785,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_89",
+          "loss": 13.691412062038774,
+          "samples": 854,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_90",
+          "loss": 13.742440269343147,
+          "samples": 776,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_91",
+          "loss": 13.403684984146343,
+          "samples": 781,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_92",
+          "loss": 14.102366755327818,
+          "samples": 789,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_93",
+          "loss": 13.461790361461238,
+          "samples": 765,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_94",
+          "loss": 14.060044133093294,
+          "samples": 768,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_95",
+          "loss": 14.196793862363798,
+          "samples": 756,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_96",
+          "loss": 13.768614013195824,
+          "samples": 795,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_97",
+          "loss": 13.833731998564646,
+          "samples": 855,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_98",
+          "loss": 13.42285850213783,
+          "samples": 749,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_99",
+          "loss": 13.863455777657748,
+          "samples": 874,
+          "epochs": 3
+        }
+      ],
+      "timestamp": "2026-04-16T06:49:28.900507"
+    },
+    {
+      "round": 10,
+      "train_loss": 13.71682867354699,
+      "test_metrics": {
+        "mse": 13.68931933746338,
+        "mae": 3.5224551277160643,
+        "accuracy": 0.0,
+        "samples": 20000,
+        "NDCG@10": 0.047202250962405656,
+        "Hit@10": 0.05,
+        "Precision@10": 0.005,
+        "Recall@10": 0.0015836157453654864,
+        "num_users_evaluated": 100
+      },
+      "aggregation": {
+        "status": "aggregated",
+        "round": 239,
+        "num_clients": 100,
+        "total_samples": 80000
+      },
+      "client_metrics": [
+        {
+          "client_id": "client_0",
+          "loss": 13.911600474200307,
+          "samples": 774,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_1",
+          "loss": 14.072256258467567,
+          "samples": 659,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_2",
+          "loss": 13.602585055726074,
+          "samples": 815,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_3",
+          "loss": 12.931783901606362,
+          "samples": 828,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_4",
+          "loss": 13.22307405880906,
+          "samples": 817,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_5",
+          "loss": 13.789393537318535,
+          "samples": 863,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_6",
+          "loss": 13.2304366689692,
+          "samples": 803,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_7",
+          "loss": 13.786745144838093,
+          "samples": 760,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_8",
+          "loss": 13.88500040544023,
+          "samples": 812,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_9",
+          "loss": 13.527826135770434,
+          "samples": 822,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_10",
+          "loss": 13.532855153814621,
+          "samples": 803,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_11",
+          "loss": 14.063747507770437,
+          "samples": 771,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_12",
+          "loss": 13.648062078322537,
+          "samples": 864,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_13",
+          "loss": 13.413648757637517,
+          "samples": 851,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_14",
+          "loss": 14.224073500124334,
+          "samples": 788,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_15",
+          "loss": 13.892316785594305,
+          "samples": 798,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_16",
+          "loss": 13.803637497726166,
+          "samples": 690,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_17",
+          "loss": 13.967090434256239,
+          "samples": 839,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_18",
+          "loss": 13.45499744037986,
+          "samples": 804,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_19",
+          "loss": 13.596890568643067,
+          "samples": 820,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_20",
+          "loss": 13.242416650318397,
+          "samples": 784,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_21",
+          "loss": 14.07248531770613,
+          "samples": 767,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_22",
+          "loss": 13.44840329608339,
+          "samples": 832,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_23",
+          "loss": 13.569352429843276,
+          "samples": 864,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_24",
+          "loss": 14.103654917230156,
+          "samples": 764,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_25",
+          "loss": 13.542287010191382,
+          "samples": 787,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_26",
+          "loss": 13.728854068176656,
+          "samples": 751,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_27",
+          "loss": 13.919802963308063,
+          "samples": 772,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_28",
+          "loss": 13.335971876617949,
+          "samples": 835,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_29",
+          "loss": 13.704342316054733,
+          "samples": 778,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_30",
+          "loss": 13.648791852106047,
+          "samples": 757,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_31",
+          "loss": 13.296351942161108,
+          "samples": 798,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_32",
+          "loss": 13.190803285359607,
+          "samples": 829,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_33",
+          "loss": 13.618488406156636,
+          "samples": 816,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_34",
+          "loss": 13.666786348413572,
+          "samples": 758,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_35",
+          "loss": 13.706655395857876,
+          "samples": 785,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_36",
+          "loss": 14.001659128215941,
+          "samples": 817,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_37",
+          "loss": 13.571580662508513,
+          "samples": 721,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_38",
+          "loss": 13.58681787812791,
+          "samples": 770,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_39",
+          "loss": 14.094671936776887,
+          "samples": 820,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_40",
+          "loss": 13.855536136761623,
+          "samples": 854,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_41",
+          "loss": 14.092833165773945,
+          "samples": 799,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_42",
+          "loss": 14.001579092933952,
+          "samples": 823,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_43",
+          "loss": 13.988156075328725,
+          "samples": 840,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_44",
+          "loss": 13.57741635339161,
+          "samples": 800,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_45",
+          "loss": 13.599606535248622,
+          "samples": 825,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_46",
+          "loss": 14.37196343898656,
+          "samples": 802,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_47",
+          "loss": 13.807152980197149,
+          "samples": 750,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_48",
+          "loss": 13.329035559094903,
+          "samples": 834,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_49",
+          "loss": 13.683579909998114,
+          "samples": 735,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_50",
+          "loss": 13.728766245579342,
+          "samples": 792,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_51",
+          "loss": 13.42289634759699,
+          "samples": 802,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_52",
+          "loss": 13.363004782112732,
+          "samples": 827,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_53",
+          "loss": 13.315553910153092,
+          "samples": 813,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_54",
+          "loss": 13.538251568407063,
+          "samples": 855,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_55",
+          "loss": 13.74916352439702,
+          "samples": 914,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_56",
+          "loss": 13.640034519162333,
+          "samples": 791,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_57",
+          "loss": 14.424374642371458,
+          "samples": 792,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_58",
+          "loss": 13.79837537143089,
+          "samples": 847,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_59",
+          "loss": 13.670110764316055,
+          "samples": 767,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_60",
+          "loss": 13.538548956208382,
+          "samples": 802,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_61",
+          "loss": 13.66256849509886,
+          "samples": 770,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_62",
+          "loss": 13.918973719827925,
+          "samples": 830,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_63",
+          "loss": 13.583598199904825,
+          "samples": 762,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_64",
+          "loss": 13.707671143407763,
+          "samples": 833,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_65",
+          "loss": 14.13403517379993,
+          "samples": 812,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_66",
+          "loss": 13.352610123448171,
+          "samples": 805,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_67",
+          "loss": 14.308323364215031,
+          "samples": 779,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_68",
+          "loss": 14.087460686088903,
+          "samples": 783,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_69",
+          "loss": 13.53525417043316,
+          "samples": 804,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_70",
+          "loss": 13.671598959820662,
+          "samples": 753,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_71",
+          "loss": 13.808842085888042,
+          "samples": 869,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_72",
+          "loss": 14.190460034479356,
+          "samples": 765,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_73",
+          "loss": 13.86470613431043,
+          "samples": 774,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_74",
+          "loss": 13.49063857813282,
+          "samples": 841,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_75",
+          "loss": 14.03037254699819,
+          "samples": 769,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_76",
+          "loss": 14.052273152965071,
+          "samples": 855,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_77",
+          "loss": 13.582004495256816,
+          "samples": 816,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_78",
+          "loss": 13.627658400295509,
+          "samples": 827,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_79",
+          "loss": 13.180812639381042,
+          "samples": 747,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_80",
+          "loss": 13.833397429848153,
+          "samples": 730,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_81",
+          "loss": 13.84209037378307,
+          "samples": 881,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_82",
+          "loss": 13.672439915119378,
+          "samples": 762,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_83",
+          "loss": 14.274452564436983,
+          "samples": 817,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_84",
+          "loss": 14.113430542429228,
+          "samples": 766,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_85",
+          "loss": 13.66687711839722,
+          "samples": 871,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_86",
+          "loss": 13.419559897468206,
+          "samples": 781,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_87",
+          "loss": 13.39001892954322,
+          "samples": 801,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_88",
+          "loss": 13.06058511486033,
+          "samples": 785,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_89",
+          "loss": 13.673917978332165,
+          "samples": 854,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_90",
+          "loss": 13.78676504190482,
+          "samples": 776,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_91",
+          "loss": 13.397032940574555,
+          "samples": 781,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_92",
+          "loss": 14.0889300565934,
+          "samples": 789,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_93",
+          "loss": 13.462644284081383,
+          "samples": 765,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_94",
+          "loss": 14.059396522014065,
+          "samples": 768,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_95",
+          "loss": 14.215225340184316,
+          "samples": 756,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_96",
+          "loss": 13.770171007295344,
+          "samples": 795,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_97",
+          "loss": 13.808144811007544,
+          "samples": 855,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_98",
+          "loss": 13.3687691023857,
+          "samples": 749,
+          "epochs": 3
+        },
+        {
+          "client_id": "client_99",
+          "loss": 13.885017354607628,
+          "samples": 874,
+          "epochs": 3
+        }
+      ],
+      "timestamp": "2026-04-16T06:49:38.309774"
     }
   ],
   "final_metrics": {
-    "mse": 13.68835595703125,
-    "mae": 3.5223278732299805,
+    "mse": 13.68931933746338,
+    "mae": 3.5224551277160643,
+    "accuracy": 0.0,
     "samples": 20000,
-    "NDCG@10": 0.057916521733220525,
-    "Hit@10": 0.09,
-    "Precision@10": 0.009,
-    "Recall@10": 0.0037602713721248985,
+    "NDCG@10": 0.047202250962405656,
+    "Hit@10": 0.05,
+    "Precision@10": 0.005,
+    "Recall@10": 0.0015836157453654864,
     "num_users_evaluated": 100
-  }
+  },
+  "client_metrics": [],
+  "mobile_metrics": []
 }

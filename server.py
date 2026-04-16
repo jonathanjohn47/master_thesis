@@ -540,5 +540,5 @@ async def upload_recommendation_event(request: SeenEventRequest):
 
 if __name__ == "__main__":
     # Allow overriding port for local conflicts, default to showcase port 8080.
-    port = int(os.getenv("FL_SERVER_PORT", "8080"))
+    port = int(os.getenv("FL_SERVER_PORT", "8000"))
     uvicorn.run(app, host="0.0.0.0", port=port)
