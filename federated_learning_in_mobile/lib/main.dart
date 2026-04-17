@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'services/fl_client.dart';
 import 'services/api_client.dart';
@@ -108,37 +110,38 @@ class _FederatedLearningHomePageState extends State<FederatedLearningHomePage> {
       final uri = Uri.parse(serverUrl);
       final host = uri.host.toLowerCase();
 
-      // Check for invalid addresses
-      if (host == 'localhost' ||
-          host == '192.168.29.147' ||
-          host == '127.0.0.1' ||
-          host == '0.0.0.0' ||
-          host.isEmpty) {
+      // ❌ Only block truly invalid cases
+      if (host == '0.0.0.0' || host.isEmpty) {
         String errorMsg = 'Invalid server address: $host\n\n';
-        if (host == '0.0.0.0') {
-          errorMsg += '0.0.0.0 is not a valid address to connect to!\n\n';
-        } else {
-          errorMsg +=
-              'localhost/127.0.0.1 will not work from mobile device!\n\n';
-        }
-        errorMsg += 'Use your PC\'s actual IP address instead:\n';
-        errorMsg += '• Windows: Run "ipconfig" and look for "IPv4 Address"\n';
-        errorMsg += '• Mac/Linux: Run "ifconfig" or "ip addr"\n';
-        errorMsg += '• Example: http://192.168.1.100:8000';
+        errorMsg += '0.0.0.0 is not a usable address.\n';
+        errorMsg += 'Use your machine IP (e.g., http://192.168.x.x:8000)';
         _showError(errorMsg);
         return;
       }
 
+      // ⚠️ Allow localhost ONLY for iOS simulator
+      if ((host == 'localhost' || host == '127.0.0.1') && !Platform.isIOS) {
+        String errorMsg = 'Invalid server address: $host\n\n';
+        errorMsg += 'localhost/127.0.0.1 only works on iOS Simulator.\n\n';
+        errorMsg += 'Use your PC IP instead:\n';
+        errorMsg += 'Example: http://192.168.1.6:8000';
+        _showError(errorMsg);
+        return;
+      }
+
+      // ❌ Remove this garbage restriction (DO NOT block real IPs)
+      // host == '192.168.29.147'  ← deleted
+
       // Warn if port is missing
-      if (uri.port == 0) {
-        _showError('Server URL must include a port number (e.g., :8000)');
+      if (uri.hasPort == false || uri.port == 0) {
+        _showError('Server URL must include a port (e.g., :8000)');
         return;
       }
 
       _addLog('NETWORK: DNS lookup resolved for coordinator.');
     } catch (e) {
       _showError(
-        'Invalid URL format: $e\n\nPlease use format: http://IP_ADDRESS:PORT\nExample: http://192.168.1.100:8000',
+        'Invalid URL format: $e\n\nUse format: http://IP:PORT\nExample: http://192.168.1.6:8000',
       );
       return;
     }

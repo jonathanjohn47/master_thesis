@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:battery_plus/battery_plus.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 
+import '../battery_helper.dart';
+
 /// Resource monitoring utilities for mobile devices
 /// Tracks CPU, memory, battery, and network usage
 
@@ -17,7 +19,7 @@ class ResourceMonitor {
     print('[RESOURCE_MONITOR] Initializing resource monitoring...');
     try {
       _startTime = DateTime.now();
-      _initialBatteryLevel = await _battery.batteryLevel;
+      _initialBatteryLevel = await getSafeBatteryLevel();
       print('[RESOURCE_MONITOR] Initial battery level: $_initialBatteryLevel%');
       print('[RESOURCE_MONITOR] Start time: $_startTime');
     } catch (e, stackTrace) {
@@ -29,7 +31,7 @@ class ResourceMonitor {
 
   /// Get current battery level
   Future<int> getBatteryLevel() async {
-    return await _battery.batteryLevel;
+    return await  getSafeBatteryLevel();
   }
 
   /// Calculate battery drain since initialization
@@ -38,7 +40,7 @@ class ResourceMonitor {
       await initialize();
     }
 
-    final currentLevel = await _battery.batteryLevel;
+    final currentLevel = await  getSafeBatteryLevel();
     return (_initialBatteryLevel! - currentLevel).toDouble();
   }
 
